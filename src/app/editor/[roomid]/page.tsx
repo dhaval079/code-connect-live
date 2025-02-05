@@ -18,10 +18,14 @@ import {
   Download,
   Share,
   Upload,
+  Terminal,
+  Bot,
+  Sparkles,
+  MessageSquare,
 } from "lucide-react"
 import { Resizable } from "re-resizable"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism"
+// import { onedarkpro } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import { useSocket } from "@/providers/socketProvider"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -34,6 +38,9 @@ import dynamic from "next/dynamic"
 import { Client } from "@/components/Client"
 import { Chat } from "@/components/Chat"
 import { Skeleton } from "@/components/ui/skeleton"
+import ConsoleOutput from "@/components/ConsoleOutput"
+import AiAssistant from "@/components/AiAssistant"
+import WaveLoader from "@/components/Dashboard"
 
 const MonacoEditor = dynamic(() => import("@/components/monaco-editor"), { ssr: false })
 
@@ -52,6 +59,11 @@ export default function EditorPage() {
   const [typingUser, setTypingUser] = useState<string | null>(null)
   const [consoleHeight, setConsoleHeight] = useState(150)
   const typingTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({})
+  const [isConsoleOpen, setIsConsoleOpen] = useState(true);
+  const [showConnectingSplash, setShowConnectingSplash] = useState(true);
+  const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true);
+
 
   // Editor State
   const [fontSize, setFontSize] = useState(14)
@@ -72,13 +84,42 @@ export default function EditorPage() {
   const editorRef = useRef(null)
   const outputRef = useRef(null)
   const controls = useAnimation()
-  const [code, setCode] = useState("// Start coding here...")
-  const [typingUsers, setTypingUsers] = useState(new Set())
+  const [code, setCode] = 
+  useState(`//Start Coding Here
+  // Function to print a pyramid pattern
+  function printPyramid(height) {
+      let pattern = '';
+      
+      // Loop through each row
+      for (let i = 1; i <= height; i++) {
+          // Add spaces before stars
+          let spaces = ' '.repeat(height - i);
+          
+          // Add stars for this row
+          let stars = '*'.repeat(2 * i - 1);
+          
+          // Combine spaces and stars for this row
+          pattern += spaces + stars + '\\n';
+      }
+      
+      return pattern;
+  }
+  console.log(printPyramid(5));`);
+
+    const [typingUsers, setTypingUsers] = useState(new Set())
   const [output, setOutput] = useState("")
   const [consoleOutput, setConsoleOutput] = useState<Array<{ type: "log" | "error" | "info"; content: string }>>([])
   const lastTypingEventRef = useRef<number>(0)
   const TYPING_INTERVAL = 1000 // Minimum time between typing events in ms
   const { socket, isConnected } = useSocket()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowConnectingSplash(false);
+    }, 2000); // 2 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Memoized variants
   const pageVariants = useMemo(
@@ -348,6 +389,40 @@ export default function EditorPage() {
     </div>
   )
 
+  if (showConnectingSplash) {
+    return (
+      <div className="flex h-screen w-full  overflow-hidden items-center justify-center bg-black/100">
+        <motion.div
+          className="flex flex-col items-center space-y-8 p-12 backdrop-blur-lg rounded-3xl shadow-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          variants={pageVariants}
+        >
+          <motion.h2
+            className="text-4xl font-bold text-white text-center"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            Connecting to session
+          </motion.h2>
+          <div className="relative w-40 h-40">
+            <WaveLoader />
+          </div>
+          <motion.div
+            className="text-blue-300 text-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Please wait...
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  }
+
   if (connectionStatus === "connecting") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
@@ -393,7 +468,7 @@ export default function EditorPage() {
 
   return (
     <motion.div
-      className={`min-h-screen flex ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+      className={`h-screen w-full overflow-hidden flex ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
       initial="hidden"
       animate={isPageLoaded ? "visible" : "hidden"}
       variants={pageVariants}
@@ -410,10 +485,10 @@ export default function EditorPage() {
           >
             {/* Connected Users */}
             <ScrollArea className="flex-1 p-4">
-              <motion.h2 variants={itemVariants} className="text-sm font-semibold text-gray-400 uppercase mb-4">
-                Connected Users ({clients.length})
+              <motion.h2 variants={itemVariants} className="text-sm  justify-center items-center text-center mx-auto font-semibold uppercase mb-4">
+                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-gray-400 lowercase">({clients.length} users)</span>
               </motion.h2>
-              <motion.div className="space-y-3" variants={itemVariants}>
+              <motion.div className="max-h-[calc(100vh-200px)] overflow-y-auto space-y-3" variants={itemVariants}>
                 {clients.map((client) => (
                   <motion.div key={client.socketId} variants={itemVariants}>
                     <Client
@@ -422,6 +497,7 @@ export default function EditorPage() {
                       isTyping={typingUsers.has(client.username)}
                       lastActive={new Date().toISOString()}
                       messageCount={0}
+                      mood="busy"
                     />
                   </motion.div>
                 ))}
@@ -430,11 +506,11 @@ export default function EditorPage() {
 
             {/* Room Controls */}
             <motion.div variants={itemVariants} className="p-4 border-t border-gray-700 space-y-3">
-              <Button variant="secondary" className="w-full" onClick={() => setIsShareDialogOpen(true)}>
+              <Button data-color="white" effect="gooeyLeft" variant="secondary" className="w-full" onClick={() => setIsShareDialogOpen(true)}>
                 <Share className="h-5 w-5 mr-2" />
                 Share Room
               </Button>
-              <Button variant="destructive" className="w-full" onClick={leaveRoom}>
+              <Button data-color="red" effect="gooeyLeft" variant="destructive" className="w-full" onClick={leaveRoom}>
                 <LogOut className="h-5 w-5 mr-2" />
                 Leave Room
               </Button>
@@ -444,130 +520,196 @@ export default function EditorPage() {
       </AnimatePresence>
 
       {/* Editor Section */}
-      <motion.div className="flex-1 flex flex-col" variants={itemVariants}>
+      <motion.div className="flex-1 h-full flex flex-col overflow-hidden" variants={itemVariants}>
         {/* Editor Header */}
         <motion.div
-          variants={itemVariants}
-          className={`${
-            isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-          } border-b p-4 flex items-center justify-between`}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 200,
+            damping: 15,
+            duration: 0.5
+          }}
+          className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+            } border-b p-4 flex items-center justify-between`}
         >
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              {isSidebarOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-            </Button>
-            <Button
-              variant="default"
-              className="bg-green-600 hover:bg-green-700 transition-colors duration-300"
-              onClick={handleRunCode}
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Play className="h-5 w-5 mr-2" />
-              Run Code
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              >
+                {isSidebarOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              </Button>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ backgroundColor: "transparent" }}
+              animate={{
+                backgroundColor: isSidebarOpen ? "rgba(22, 163, 74, 0.2)" : "transparent"
+              }}
+              transition={{ duration: 0.3 }}
+              className="rounded-md"
+            >
+              <Button
+                variant="default"
+                className="bg-green-600 hover:bg-green-700 transition-colors duration-300"
+                onClick={handleRunCode}
+              >
+                <Play className="h-5 w-5 mr-2" />
+                Run Code
+              </Button>
+            </motion.div>
+
+            <div className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+              Language: {language}
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              onClick={() => setIsAiPanelOpen(!isAiPanelOpen)}
+              className="relative h-10 px-4 group"
+            >
+              <span className="flex items-center">
+                <Bot className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors" />
+                Ask AI
+              </span>
+              <motion.div
+                className="absolute -top-1 -right-1"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Sparkles className="h-3 w-3 text-blue-400" />
+              </motion.div>
+              <motion.div
+                className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-400"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isAiPanelOpen ? 1 : 0 }}
+                transition={{ duration: 0.2 }}
+              />
             </Button>
-            <div className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Language: {language}</div>
+
+            <Button
+              variant="ghost"
+              onClick={() => setIsChatOpen(!isChatOpen)}
+              className="relative h-10 px-4 group "
+            >
+              <span className="flex items-center">
+                <MessageSquare className="h-5 w-5 mr-2 hover:bg-white group-hover:text-blue-400 transition-colors" />
+                Chat
+              </span>
+              <motion.div
+                className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-400"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isChatOpen ? 1 : 0 }}
+                transition={{ duration: 0.2 }}
+              />
+            </Button>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" onClick={toggleFullscreen}>
-              {isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleSettings}>
-              <Settings className="h-5 w-5" />
-            </Button>
+            {[
+              {
+                icon: isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />,
+                onClick: toggleFullscreen
+              },
+              {
+                icon: isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />,
+                onClick: toggleDarkMode
+              },
+              {
+                icon: <Settings className="h-5 w-5" />,
+                onClick: toggleSettings
+              }
+            ].map((button, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ rotate: 1, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button variant="ghost" size="icon" onClick={button.onClick}>
+                  {button.icon}
+                </Button>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
-
         {/* Editor and Output */}
         <motion.div className="flex-1 flex" variants={itemVariants}>
           {/* Code Editor */}
-          <motion.div className="flex-1 flex flex-col overflow-hidden" variants={itemVariants}>
-            <motion.div className="flex-1" ref={editorRef} variants={itemVariants}>
-              {isLoading ? (
-                renderSkeleton()
-              ) : (
-                <MonacoEditor
-                  roomId={roomId as string}
-                  language={language}
-                  fontSize={fontSize}
-                  value={code}
-                  onChange={handleCodeChange}
-                  theme={theme}
-                />
-              )}
-            </motion.div>
+          {/* Code Editor */}
+<motion.div 
+  className="flex-1 flex flex-col overflow-hidden" 
+  variants={itemVariants}
+>
+  <motion.div 
+    className="flex-1" 
+    ref={editorRef}
+    style={{ 
+      height: isConsoleOpen ? `calc(100vh - ${consoleHeight + 120}px)` : 'calc(100vh - 120px)',
+      transition: 'height 0.3s ease'
+    }}
+  >
+    {isLoading ? (
+      renderSkeleton()
+    ) : (
+      <MonacoEditor
+        roomId={roomId as string}
+        language={language}
+        fontSize={fontSize}
+        value={code}
+        onChange={handleCodeChange}
+        theme={theme}
+      />
+    )}
+  </motion.div>
 
-            <AnimatePresence>
-              {isOutputPanelOpen && (
-                <Resizable
-                  defaultSize={{ width: "100%", height: consoleHeight }}
-                  minHeight={100}
-                  maxHeight={300}
-                  enable={{ top: true }}
-                  onResizeStop={(e, direction, ref, d) => {
-                    setConsoleHeight(consoleHeight + d.height)
-                  }}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 50 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`h-full ${
-                      isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                    } border-l flex flex-col`}
-                  >
-                    <Tabs defaultValue="output" className="w-full">
-                      <div className="flex justify-between items-center p-2 border-b border-gray-700">
-                        <TabsList>
-                          <TabsTrigger value="output">Output</TabsTrigger>
-                          <TabsTrigger value="console">Console</TabsTrigger>
-                        </TabsList>
-                        <Button variant="ghost" size="icon" onClick={() => setIsOutputPanelOpen(false)}>
-                          <ChevronRight className="h-5 w-5" />
-                        </Button>
-                      </div>
-                      <TabsContent value="output" className="p-4 font-mono text-sm h-full">
-                        <SyntaxHighlighter language="javascript" style={dracula} className="rounded-lg">
-                          {output || "Run your code to see output"}
-                        </SyntaxHighlighter>
-                      </TabsContent>
-                      <TabsContent value="console" className="p-4 font-mono text-sm h-full overflow-auto">
-                        <div className="flex justify-between mb-2">
-                          <span className="text-gray-400">Console</span>
-                          <Button variant="ghost" size="sm" onClick={clearConsole}>
-                            Clear
-                          </Button>
-                        </div>
-                        {consoleOutput.map((log, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className={`mb-1 ${
-                              log.type === "error"
-                                ? "text-red-400"
-                                : log.type === "info"
-                                  ? "text-blue-400"
-                                  : "text-green-400"
-                            }`}
-                          >
-                            {log.content}
-                          </motion.div>
-                        ))}
-                      </TabsContent>
-                    </Tabs>
-                  </motion.div>
-                </Resizable>
-              )}
-            </AnimatePresence>
-          </motion.div>
+  <ConsoleOutput
+    isOpen={isConsoleOpen}
+    onClose={() => setIsConsoleOpen(false)}
+    consoleOutput={consoleOutput}
+    onClear={clearConsole}
+    height={consoleHeight}
+    onHeightChange={setConsoleHeight}
+    isSidebarOpen={isSidebarOpen}
+  />
 
-          <motion.div className="w-80 border-l max-h-full border-gray-700" variants={itemVariants}>
-            <Chat roomId={roomId as string} username={username || ""} />
+  {!isConsoleOpen && (
+    <Button
+      className="fixed bottom-4 right-4 bg-gray-800"
+      onClick={() => setIsConsoleOpen(true)}
+    >
+      <Terminal className="w-4 h-4 mr-2" />
+      Show Console
+    </Button>
+  )}
+</motion.div>
+          <motion.div className="w-90 border-l max-h-full border-gray-700" variants={itemVariants}>
+            <Chat
+              roomId={roomId as string}
+              username={username || ""}
+              isOpen={isChatOpen}
+              onToggle={() => setIsChatOpen(!isChatOpen)}
+            />
           </motion.div>
+          <AiAssistant
+            isOpen={isAiPanelOpen}
+            onToggle={() => setIsAiPanelOpen(!isAiPanelOpen)}
+          />
         </motion.div>
       </motion.div>
 
@@ -579,9 +721,8 @@ export default function EditorPage() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className={`absolute right-4 top-16 w-80 p-6 rounded-lg shadow-lg ${
-              isDarkMode ? "bg-gray-800" : "bg-white"
-            }`}
+            className={`absolute right-4 top-16 w-80 p-6 rounded-lg shadow-lg ${isDarkMode ? "bg-gray-800" : "bg-white"
+              }`}
           >
             <h3 className="text-xl font-semibold mb-6">Settings</h3>
             <div className="space-y-6">
@@ -647,7 +788,7 @@ export default function EditorPage() {
       )}
 
       {/* Floating Action Buttons */}
-    
+
 
       {/* Share Dialog */}
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
@@ -657,8 +798,11 @@ export default function EditorPage() {
             <DialogDescription>Copy the link below to invite others to this room.</DialogDescription>
           </DialogHeader>
           <div className="flex items-center space-x-2">
-            <Input value={`${window.location.origin}/room/${roomId}`} readOnly />
-            <Button onClick={copyRoomId}>Copy</Button>
+            <Input className="italic" value={`${window.location.origin}/editor/${roomId}`} readOnly />
+            <Button onClick={copyRoomId}>Copy Room</Button>
+          </div>
+          <div className="text-sm text-gray-500 mt-2">
+            Room ID can be used to rejoin this session later.
           </div>
         </DialogContent>
       </Dialog>

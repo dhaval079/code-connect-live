@@ -19,7 +19,7 @@ const AnimatedBackground = () => {
       color: 0x06b6d4,
       wireframe: true,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.5,
     })
     const icosahedron = new THREE.Mesh(geometry, material)
     scene.add(icosahedron)

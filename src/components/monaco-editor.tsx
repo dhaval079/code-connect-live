@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import { useSocket } from '@/providers/socketProvider';
 import { ACTIONS } from '@/lib/actions';
+import type { editor } from 'monaco-editor';
 
 interface MonacoEditorProps {
   roomId: string;
@@ -12,9 +13,9 @@ interface MonacoEditorProps {
   onChange?: (value: string) => void;
 }
 
-// One Dark Pro theme definition
-const oneDarkProTheme = {
-  base: 'vs-dark' as const,
+// One Dark Pro theme definition with proper types
+const oneDarkPro: editor.IStandaloneThemeData = {
+  base: 'vs-dark',
   inherit: true,
   rules: [
     { token: '', foreground: 'abb2bf' },
@@ -35,41 +36,37 @@ const oneDarkProTheme = {
     { token: 'support.constant', foreground: 'd19a66' },
     { token: 'support.type', foreground: '56b6c2' },
     { token: 'support.class', foreground: 'e5c07b' },
-    { token: 'invalid', foreground: 'ffffff', background: 'e05252' },
-    { token: 'invalid.deprecated', foreground: 'ffffff', background: 'e05252' },
     { token: 'string', foreground: '98c379' },
-    { token: 'string.quoted', foreground: '98c379' },
-    { token: 'string.regexp', foreground: '98c379' },
-    { token: 'string.escape', foreground: '56b6c2' },
-    { token: 'string.template', foreground: '98c379' },
-    { token: 'punctuation.definition.template-expression', foreground: 'c678dd' },
-    { token: 'comment', foreground: '7f848e', fontStyle: 'italic' },
-    { token: 'comment.line', foreground: '7f848e', fontStyle: 'italic' },
-    { token: 'comment.block', foreground: '7f848e', fontStyle: 'italic' },
-    { token: 'tag', foreground: 'e06c75' },
-    { token: 'tag.entity', foreground: 'e06c75' },
-    { token: 'tag.attribute', foreground: 'd19a66' },
-    { token: 'attribute.name', foreground: 'd19a66' },
-    { token: 'attribute.value', foreground: '98c379' },
-    { token: 'entity.name.function', foreground: '61afef' },
+    { token: 'comment', foreground: '5c6370', fontStyle: 'italic' },
+    { token: 'function', foreground: '61afef' },
+    { token: 'function.declaration', foreground: '61afef' },
     { token: 'entity.name.type', foreground: 'e5c07b' },
-    { token: 'entity.name.tag', foreground: 'e06c75' },
-    { token: 'entity.other.attribute-name', foreground: 'd19a66' },
-    { token: 'entity.other.inherited-class', foreground: '61afef' },
+    { token: 'entity.name.class', foreground: 'e5c07b' },
+    { token: 'entity.name.function', foreground: '61afef' },
+    { token: 'punctuation.definition.string', foreground: '98c379' },
+    { token: 'punctuation.definition.variable', foreground: 'e06c75' },
+    { token: 'punctuation.definition.string.begin', foreground: '98c379' },
+    { token: 'punctuation.definition.string.end', foreground: '98c379' },
+    { token: 'punctuation.definition.parameters', foreground: 'abb2bf' },
+    { token: 'punctuation.definition.heading', foreground: '61afef' },
+    { token: 'punctuation.definition.identity', foreground: '61afef' },
+    { token: 'meta.brace', foreground: 'abb2bf' },
+    { token: 'meta.delimiter.period', foreground: 'abb2bf' },
+    { token: 'meta.selector', foreground: '98c379' },
+    { token: 'invalid', foreground: 'ffffff', background: 'e05252' }
   ],
   colors: {
     'editor.background': '#282c34',
     'editor.foreground': '#abb2bf',
     'editor.lineHighlightBackground': '#2c313c',
     'editor.selectionBackground': '#3e4451',
-    'editor.inactiveSelectionBackground': '#3e4451',
     'editor.findMatchBackground': '#42557b',
     'editor.findMatchHighlightBackground': '#314365',
-    'editor.lineHighlightBorder': '#2c313c',
     'editorCursor.foreground': '#528bff',
     'editorWhitespace.foreground': '#3b4048',
     'editorIndentGuide.background': '#3b4048',
-    'editorIndentGuide.activeBackground': '#c8c8c8',
+    'editorIndentGuide.activeBackground': '#c8c8c859',
+    'editor.selectionHighlightBorder': '#222218',
     'editorLineNumber.foreground': '#495162',
     'editorLineNumber.activeForeground': '#abb2bf',
     'editorBracketMatch.background': '#515a6b',
@@ -77,19 +74,18 @@ const oneDarkProTheme = {
     'tab.activeBackground': '#282c34',
     'tab.inactiveBackground': '#21252b',
     'tab.border': '#181a1f',
-    'tab.activeBorder': '#528bff',
+    'tab.activeBorder': '#528bff'
   }
 };
 
 const MonacoEditor = ({ 
   roomId, 
   language = 'javascript',
-  theme = 'onedarkpro',
   fontSize = 14,
   value,
   onChange 
 }: MonacoEditorProps) => {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const { socket } = useSocket();
   const searchParams = new URLSearchParams(window.location.search);
   const currentUsername = searchParams.get('username');
@@ -98,7 +94,7 @@ const MonacoEditor = ({
   useEffect(() => {
     const defineTheme = async () => {
       const monaco = await loader.init();
-      monaco.editor.defineTheme('onedarkpro', oneDarkProTheme);
+      monaco.editor.defineTheme('onedarkpro', oneDarkPro);
     };
     defineTheme();
   }, []);
@@ -121,30 +117,30 @@ const MonacoEditor = ({
     onChange?.(value);
   };
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
     editorRef.current = editor;
     monaco.editor.setTheme('onedarkpro');
   };
 
-  const options = {
+  const options: editor.IStandaloneEditorConstructionOptions = {
     fontSize,
     minimap: { enabled: true },
     scrollBeyondLastLine: false,
-    wordWrap: 'on' as const,
-    autoClosingBrackets: 'always' as const,
-    autoClosingQuotes: 'always' as const,
+    wordWrap: 'on',
+    autoClosingBrackets: 'always',
+    autoClosingQuotes: 'always',
     formatOnPaste: true,
     formatOnType: true,
     fontFamily: 'JetBrains Mono, monospace',
     fontLigatures: true,
-    cursorBlinking: 'smooth' as 'smooth',
+    cursorBlinking: 'smooth',
     smoothScrolling: true,
-    cursorSmoothCaretAnimation: true,
+    cursorSmoothCaretAnimation: 'on',
     renderLineHighlight: 'all',
     contextmenu: true,
     mouseWheelZoom: true,
-    lineNumbers: 'on' as const,
-    renderIndentGuides: true,
+    lineNumbers: 'on',
+    // renderIndentGuides: true,
     automaticLayout: true,
     padding: { top: 16, bottom: 16 }
   };

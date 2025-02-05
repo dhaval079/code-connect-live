@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useAnimation, useInView } from "framer-motion"
 import { createAvatar } from "@dicebear/core"
-import { lorelei } from "@dicebear/collection"
+import { bottts, lorelei, micah } from "@dicebear/collection"
 import { Sparkles, MessageSquare, Zap, Activity } from 'lucide-react'
 
 interface ClientProps {
@@ -83,7 +83,10 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
   const isInView = useInView(ref, { once: true })
 
   useEffect(() => {
-    const avatarSvg = createAvatar(lorelei, {
+    const styles = [bottts, lorelei, micah];
+    const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+    
+    const avatarSvg = createAvatar(randomStyle, {
       seed: user,
       backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
     }).toDataUri()
@@ -122,13 +125,13 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
   return (
     <motion.div
       ref={ref}
-      className="relative flex items-center space-x-4 p-6 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-700/50 hover:from-slate-700/50 hover:to-slate-600/50 transition-all duration-300 shadow-lg overflow-hidden"
+      className="relative flex items-center overflow-y-scroll space-x-4 p-6 rounded-xl bg-gradient-to-r from-slate-800/50 to-slate-700/50 hover:from-slate-700/50 hover:to-slate-600/50 transition-all duration-300 shadow-lg overflow-hidden"
       variants={cardVariants}
       initial="hidden"
       animate={controls}
       whileHover={{ scale: 1.03 }}
     >
-      <Particles mood={mood} />
+      {/* <Particles mood={mood} /> */}
       
       <motion.div className="relative z-10" variants={itemVariants}>
         <AnimatePresence>
@@ -158,7 +161,7 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
           <img src={avatar || "/placeholder.svg"} alt={user} className="w-16 h-16" />
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
           style={{ backgroundColor: moodColors[mood] }}
           initial={{ scale: 0, opacity: 0 }}
@@ -166,7 +169,7 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
           whileHover={{ scale: 1.2 }}
         >
           {moodEmojis[mood]}
-        </motion.div>
+        </motion.div> */}
       </motion.div>
 
       <div className="flex flex-col min-w-0 flex-1 z-10">
@@ -181,7 +184,7 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
           </motion.span>
           {isActive && (
             <motion.span
-              className="text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-1 rounded-full flex items-center space-x-1"
+              className="text-xs bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white px-2 py-1 rounded-full flex items-center space-x-1"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, type: "spring" }}
