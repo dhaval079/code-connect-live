@@ -32,7 +32,7 @@ const messageAnimations = {
   }
 };
 
-const CodeBlock = ({ code, language }) => {
+const CodeBlock = ({ code, language }: { code: string; language: string }) => {
   const [copied, setCopied] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -74,8 +74,14 @@ const CodeBlock = ({ code, language }) => {
   );
 };
 
-const formatMessage = (content) => {
-  const parts = [];
+interface MessagePart {
+  type: 'text' | 'code';
+  content: string;
+  language?: string;
+}
+
+const formatMessage = (content: string): MessagePart[] => {
+  const parts: MessagePart[] = [];
   let currentText = '';
   let inCodeBlock = false;
   let currentCode = '';
@@ -115,7 +121,7 @@ const formatMessage = (content) => {
   return parts;
 };
 
-export const MessageContent = ({ content }) => {
+export const MessageContent = ({ content }: { content: string }) => {
   const parts = formatMessage(content);
 
   return (
@@ -126,7 +132,7 @@ export const MessageContent = ({ content }) => {
             <CodeBlock
               key={index}
               code={part.content}
-              language={part.language}
+              language={part.language ?? 'text'}
             />
           );
         }
@@ -146,13 +152,15 @@ export const MessageContent = ({ content }) => {
   );
 };
 
-const MessageContainer = React.forwardRef(({ children }, ref) => (
-  <ScrollArea className="flex-1 p-4">
-    <div ref={ref} className="space-y-6">
-      {children}
-    </div>
-  </ScrollArea>
-));
+const MessageContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
+  ({ children }, ref) => (
+    <ScrollArea className="flex-1 p-4">
+      <div ref={ref} className="space-y-6">
+        {children}
+      </div>
+    </ScrollArea>
+  )
+);
 
 MessageContainer.displayName = 'MessageContainer';
 
@@ -166,11 +174,21 @@ const openai = new OpenAI({
   }
 });
 
-const AiAssistant = ({ isOpen, onToggle }) => {
-  const [messages, setMessages] = useState([]);
+interface AiAssistantProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
+  interface Message {
+    type: 'user' | 'assistant';
+    content: string;
+    timestamp: string;
+  }
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
@@ -179,7 +197,7 @@ const AiAssistant = ({ isOpen, onToggle }) => {
     }
   }, [messages]);
 
-  const askAI = async (question) => {
+  const askAI = async (question:any) => {
     try {
       setIsLoading(true);
 
@@ -211,11 +229,11 @@ const AiAssistant = ({ isOpen, onToggle }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       type: 'user',
       content: input,
       timestamp: new Date().toISOString()
@@ -226,7 +244,7 @@ const AiAssistant = ({ isOpen, onToggle }) => {
 
     try {
       const aiResponse = await askAI(input);
-      const aiMessage = {
+      const aiMessage: Message = {
         type: 'assistant',
         content: aiResponse,
         timestamp: new Date().toISOString()
@@ -234,7 +252,7 @@ const AiAssistant = ({ isOpen, onToggle }) => {
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
-      const errorMessage = {
+      const errorMessage: Message = {
         type: 'assistant',
         content: "I apologize, but I'm having trouble right now. Please try again in a moment.",
         timestamp: new Date().toISOString()
@@ -398,7 +416,7 @@ const AiAssistant = ({ isOpen, onToggle }) => {
                disabled={isLoading}
                 value={input}
                 icon={BotIcon}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e:any) => setInput(e.target.value)}
                 label=""
                 id="ai-input"
                 className="flex-1 mb-4 bg-gray-700/70 backdrop-blur-sm border-gray-600 text-white"

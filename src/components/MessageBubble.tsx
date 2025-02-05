@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 import { createAvatar } from '@dicebear/core';
 import { lorelei, bottts, pixelArt, adventurer } from '@dicebear/collection';
+import type { Style } from '@dicebear/core';
 
 interface Message {
   id: string
@@ -18,43 +19,60 @@ interface MessageBubbleProps {
   isOwnMessage: boolean
 }
 
+// Define specific types for our avatar configurations
+type AvatarStyle = Style<{
+  backgroundColor?: string[];
+  seed: string;
+}>;
+
+interface AvatarStyleConfig {
+  style: AvatarStyle;
+  config: {
+    backgroundColor: string[];
+  };
+}
+
 const getAvatarUrl = (seed: string) => {
-  // Randomly choose a style for variety
-  const styles = [
+  const styles: AvatarStyleConfig[] = [
     {
-      style: lorelei,
+      style: lorelei as unknown as AvatarStyle,
       config: {
         backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
       }
     },
     {
-      style: bottts,
+      style: bottts as unknown as AvatarStyle,
       config: {
         backgroundColor: ["b6e3f4", "c0aede", "d1d4f9"],
       }
     },
     {
-      style: pixelArt,
+      style: pixelArt as unknown as AvatarStyle,
       config: {
         backgroundColor: ["b6e3f4", "c0aede", "d1d4f9"],
       }
     },
     {
-      style: adventurer,
+      style: adventurer as unknown as AvatarStyle,
       config: {
         backgroundColor: ["b6e3f4", "c0aede", "d1d4f9"],
       }
     }
   ];
 
-  // Use the seed to consistently get the same style for each user
-  const styleIndex = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % styles.length;
+  // Get consistent style for user
+  const styleIndex = seed
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0) % styles.length;
   const { style, config } = styles[styleIndex];
 
-  return createAvatar(style, {
+  // Create avatar with specific configuration
+  const avatar = createAvatar(style, {
     seed,
-    ...config,
-  }).toDataUri();
+    backgroundColor: config.backgroundColor,
+  });
+
+  return avatar.toDataUri();
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMessage }) => {
@@ -62,18 +80,18 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMess
     initial: { opacity: 0, scale: 0.8, y: 20 },
     animate: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.8, y: -20 },
-  }
+  } as const;
 
   const attachmentVariants = {
     initial: { opacity: 0, scale: 0.9 },
     animate: { opacity: 1, scale: 1 },
-  }
+  } as const;
 
   const avatarVariants = {
     initial: { scale: 0.8, rotate: -10 },
     animate: { scale: 1, rotate: 0 },
     hover: { scale: 1.1, rotate: 10 },
-  }
+  } as const;
 
   return (
     <motion.div

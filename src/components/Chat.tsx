@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence, useAnimation } from "framer-motion"
-import { Send, Smile, Paperclip, Mic, Image, Video, SparkleIcon, MessageSquare, X } from 'lucide-react'
+import { motion, AnimatePresence } from "framer-motion"
+import { Send, Paperclip, X, MessageSquare, Video, Image } from 'lucide-react'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { ACTIONS } from "@/lib/actions"
@@ -21,61 +21,73 @@ interface Message {
 interface ChatProps {
   roomId: string
   username: string
+  isOpen: boolean
+  onToggle: () => void
 }
 
-export const Chat = ({ roomId, username, isOpen, onToggle }) => {
+export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [isTyping, setIsTyping] = useState(false)
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [showAttachmentModal, setShowAttachmentModal] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
   const { socket } = useSocket()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const hasInitialized = useRef(false)
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const controls = useAnimation()
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+
+  // Convert username to lowercase at component level
+  const normalizedUsername = username.toLowerCase()
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  };
+  }
 
   useEffect(() => {
-    const timeoutId = setTimeout(scrollToBottom, 100);
-    return () => clearTimeout(timeoutId);
-  }, [messages]);
+    const timeoutId = setTimeout(scrollToBottom, 100)
+    return () => clearTimeout(timeoutId)
+  }, [messages])
 
   useEffect(() => {
     if (!socket) return
 
     const handleSyncMessages = ({ messages: syncedMessages }: { messages: Message[] }) => {
       if (!hasInitialized.current) {
-        setMessages(syncedMessages)
+        // Normalize existing usernames
+        const normalizedMessages = syncedMessages.map(msg => ({
+          ...msg,
+          sender: msg.sender.toLowerCase()
+        }))
+        setMessages(normalizedMessages)
         hasInitialized.current = true
         setTimeout(scrollToBottom, 100)
       }
     }
 
     const handleReceiveMessage = (message: Message) => {
+      // Normalize incoming message username
+      const normalizedMessage = {
+        ...message,
+        sender: message.sender.toLowerCase()
+      }
+
       setMessages((prev) => {
-        if (prev.some((m) => m.id === message.id)) return prev
-        return [...prev, message].sort((a, b) => a.timestamp - b.timestamp)
+        if (prev.some((m) => m.id === normalizedMessage.id)) return prev
+        return [...prev, normalizedMessage].sort((a, b) => a.timestamp - b.timestamp)
       })
       setTimeout(scrollToBottom, 100)
     }
 
     const handleTypingStart = ({ username: typingUser }: { username: string }) => {
-      if (typingUser !== username) {
+      if (typingUser.toLowerCase() !== normalizedUsername) {
         setIsTyping(true)
       }
     }
 
     const handleTypingStop = ({ username: typingUser }: { username: string }) => {
-      if (typingUser !== username) {
+      if (typingUser.toLowerCase() !== normalizedUsername) {
         setIsTyping(false)
       }
     }
@@ -88,58 +100,28 @@ export const Chat = ({ roomId, username, isOpen, onToggle }) => {
       socket.off(ACTIONS.RECEIVE_MESSAGE)
       hasInitialized.current = false
     }
-  }, [socket, username])
+  }, [socket, normalizedUsername])
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newMessage.trim() && !isRecording) return
-
-    let content = newMessage.trim()
-    let attachments: { type: string; url: string }[] = []
-
-    if (isRecording) {
-      content = "Audio message"
-      attachments = []
-    }
+    if (!newMessage.trim()) return
 
     const message: Message = {
       id: `${Date.now()}-${Math.random()}`,
-      content,
-      sender: username,
+      content: newMessage.trim(),
+      sender: normalizedUsername,
       timestamp: Date.now(),
-      attachments,
     }
 
     socket?.emit(ACTIONS.SEND_MESSAGE, { roomId, message })
     setNewMessage("")
-    setIsRecording(false)
-    controls.start({ scale: [1, 1.2, 1], transition: { duration: 0.3 } })
-  }
-
-  // const handleTyping = () => {
-  //   if (!socket) return
-
-  //   socket.emit(ACTIONS.TYPING, { roomId, username })
-
-  //   if (typingTimeoutRef.current) {
-  //     clearTimeout(typingTimeoutRef.current)
-  //   }
-
-  //   typingTimeoutRef.current = setTimeout(() => {
-  //     socket.emit(ACTIONS.STOP_TYPING, { roomId, username })
-  //   }, 1000)
-  // }
-
-  const handleEmojiSelect = (emoji: string) => {
-    setNewMessage((prev) => prev + emoji)
-    inputRef.current?.focus()
   }
 
   const handleAttachment = (type: "image" | "video", url: string) => {
     const message: Message = {
       id: `${Date.now()}-${Math.random()}`,
       content: type === "image" ? "Image attachment" : "Video attachment",
-      sender: username,
+      sender: normalizedUsername,
       timestamp: Date.now(),
       attachments: [{ type, url }],
     }
@@ -150,147 +132,127 @@ export const Chat = ({ roomId, username, isOpen, onToggle }) => {
 
   return (
     <>
-    {/* Chat Toggle Button */}
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={onToggle}
-      className="fixed bottom-4 right-4 z-50  rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
-    >
-      {isOpen ? (
-        <X className="h-5 w-5 text-white" />
-      ) : (
-        <MessageSquare className="h-5 w-5 text-white" />
-      )}
-    </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onToggle}
+        className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
+      >
+        {isOpen ? (
+          <X className="h-5 w-5 text-white" />
+        ) : (
+          <MessageSquare className="h-5 w-5 text-white" />
+        )}
+      </Button>
 
-    {/* Chat Panel */}
-    <AnimatePresence mode="wait">
-      {isOpen && (
-        <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '100%', opacity: 0 }}
-          transition={{ type: 'spring', damping: 20 }}
-          className="fixed right-0 top-0 h-full w-80 border-l border-gray-700 bg-gray-800/95 backdrop-blur-sm"
-        >
- <TooltipProvider>
-      <div className="flex flex-col h-full bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-xl">
-        <motion.div className="flex-none flex items-center justify-center gap-4 py-5 border-b border-gray-700 bg-gray-800">
-          <h2 className="text-lg font-semibold text-gray-100">Chat</h2>
-          <div className="text-sm text-gray-400">
-            ({messages.length} message{messages.length !== 1 ? "s" : ""})
-          </div>
-        </motion.div>
-
-        <div className="flex-1 relative overflow-hidden">
-        {messages.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute inset-0 flex items-center justify-center text-gray-400"
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ type: 'spring', damping: 20 }}
+            className="fixed right-0 top-0 h-full w-80 border-l border-gray-700 bg-gray-800/95 backdrop-blur-sm"
           >
-            <div className="text-center">
-              <p className="text-xl mb-2">No messages yet</p>
-              <p className="text-sm">Start a conversation by sending a message</p>
-            </div>
-          </motion.div>
-        ) : ( 
-        <ScrollArea 
-            ref={scrollAreaRef}
-            className="h-[calc(100vh-13rem)] absolute inset-0"
-          >
-            <div className="flex flex-col space-y-4 p-4 min-h-full">
-              <AnimatePresence initial={false}>
-                {messages.map((message) => (
-                  <MessageBubble 
-                    key={message.id} 
-                    message={message} 
-                    isOwnMessage={message.sender === username}
-                  />
-                ))}
-              </AnimatePresence>
-              {isTyping && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="flex items-center text-gray-400 text-sm"
-                >
-                  <TypingIndicator />
-                  <span className="ml-2">Someone is typing...</span>
+            <TooltipProvider>
+              <div className="flex flex-col h-full bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-xl">
+                <motion.div className="flex-none flex items-center justify-center gap-4 py-5 border-b border-gray-700 bg-gray-800">
+                  <h2 className="text-lg font-semibold text-gray-100">Chat</h2>
+                  <div className="text-sm text-gray-400">
+                    ({messages.length} message{messages.length !== 1 ? "s" : ""})
+                  </div>
                 </motion.div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
-                  )}
-        </div>
 
-        <motion.div className="flex-none p-4 border-t border-gray-700 bg-gray-800">
-          <form onSubmit={sendMessage} className="flex gap-2">
-            <motion.input
-              ref={inputRef}
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              // onKeyPress={handleTyping}
-              placeholder="Type a message..."
-              className="flex-1 bg-gray-700 text-gray-100 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-              whileFocus={{ scale: 1.02 }}
-            />
-            <div className="flex gap-3">
-              <motion.div animate={controls}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="submit"
-                      size="icon"
-                      className="rounded-full bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-                      disabled={!newMessage.trim() && !isRecording}
+                <div className="flex-1 relative overflow-hidden">
+                  {messages.length === 0 ? (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute inset-0 flex items-center justify-center text-gray-400"
                     >
-                      <Send className="h-4 w-4 text-white" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Send message</TooltipContent>
-                </Tooltip>
-              </motion.div>
+                      <div className="text-center">
+                        <p className="text-xl mb-2">No messages yet</p>
+                        <p className="text-sm">Start a conversation by sending a message</p>
+                      </div>
+                    </motion.div>
+                  ) : ( 
+                    <ScrollArea 
+                      ref={scrollAreaRef}
+                      className="h-[calc(100vh-13rem)] absolute inset-0"
+                    >
+                      <div className="flex flex-col space-y-4 p-4 min-h-full">
+                        <AnimatePresence initial={false}>
+                          {messages.map((message) => (
+                            <MessageBubble 
+                              key={message.id} 
+                              message={message} 
+                              isOwnMessage={message.sender === normalizedUsername}
+                            />
+                          ))}
+                        </AnimatePresence>
+                        <div ref={messagesEndRef} />
+                      </div>
+                    </ScrollArea>
+                  )}
+                </div>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="ghost"
-                    className="rounded-full text-gray-300 hover:text-gray-100 hover:bg-gray-700"
-                    onClick={() => setShowAttachmentModal(true)}
-                  >
-                    <Paperclip className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Attach file</TooltipContent>
-              </Tooltip>
+                <motion.div className="flex-none p-4 border-t border-gray-700 bg-gray-800">
+                  <form onSubmit={sendMessage} className="flex gap-2">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      placeholder="Type a message..."
+                      className="flex-1 bg-gray-700 text-gray-100 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                    />
+                    <div className="flex gap-3">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="submit"
+                            size="icon"
+                            className="rounded-full bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+                            disabled={!newMessage.trim()}
+                          >
+                            <Send className="h-4 w-4 text-white" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Send message</TooltipContent>
+                      </Tooltip>
 
-            </div>
-          </form>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="rounded-full text-gray-300 hover:text-gray-100 hover:bg-gray-700"
+                            onClick={() => setShowAttachmentModal(true)}
+                          >
+                            <Paperclip className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Attach file</TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </form>
 
-          {showAttachmentModal && (
-            <AttachmentModal 
-              onClose={() => setShowAttachmentModal(false)} 
-              onAttach={handleAttachment} 
-            />
-          )}
-        </motion.div>
-      </div>
-    </TooltipProvider>        </motion.div>
-      )}
-    </AnimatePresence>
-  </>
-   
+                  {showAttachmentModal && (
+                    <AttachmentModal 
+                      onClose={() => setShowAttachmentModal(false)} 
+                      onAttach={handleAttachment} 
+                    />
+                  )}
+                </motion.div>
+              </div>
+            </TooltipProvider>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
-
-
 
 interface AttachmentModalProps {
   onClose: () => void

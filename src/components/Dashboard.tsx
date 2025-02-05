@@ -6,7 +6,14 @@ import { AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useAnimation } from "framer-motion"
 
-export const GlowingButton = ({ children, className, onClick, disabled, ...props }) => {
+import { HTMLMotionProps } from "framer-motion";
+
+export const GlowingButton: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+} & Omit<HTMLMotionProps<"button">, "children" | "className" | "onClick" | "disabled">> = ({ children, className, onClick, disabled, ...props }) => {
   const buttonRef = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
 
@@ -138,7 +145,7 @@ export const FloatingHexagon = ({ delay = 0 }) => (
   </motion.div>
 )
 
-export const StatsCard = ({ icon: Icon, title, value }) => {
+export const StatsCard = ({ icon: Icon, title, value }: { icon: LucideIcon; title: string; value: string | number }) => {
   const controls = useAnimation()
   const [isHovered, setIsHovered] = useState(false)
 
@@ -259,7 +266,13 @@ export const CodeBlock = () => {
     )
 }
 
-export const FeatureCard = ({ icon: Icon, title, description }) => {
+interface FeatureCardProps {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export const FeatureCard = ({ icon: Icon, title, description }: FeatureCardProps) => {
   const controls = useAnimation()
   const [isHovered, setIsHovered] = useState(false)
 
@@ -348,9 +361,8 @@ export const PulsingCircle = () => (
   </div>
 )
 
-export const RevealAnimation = ({ children }) => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+export const RevealAnimation = ({ children }: { children: React.ReactNode }) => {
+  const { ref, inView: isInView } = useInView({ triggerOnce: true, rootMargin: "-100px" })
 
   return (
     <motion.div
@@ -364,20 +376,20 @@ export const RevealAnimation = ({ children }) => {
   )
 }
 
-export const RoadmapItem = ({ icon: Icon, title, description }) => (
+interface RoadmapItemProps {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export const RoadmapItem: React.FC<RoadmapItemProps> = ({ icon: Icon, title, description }) => (
   <motion.div
     className="flex items-start space-x-4"
     initial={{ opacity: 0, x: -20 }}
     whileInView={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.5 }}
   >
-    <div className="bg-cyan-500/20 p-2 rounded-full">
-      <Icon className="w-6 h-6 text-cyan-400" />
-    </div>
-    <div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="text-slate-400">{description}</p>
-    </div>
+    <div className="bg-cyan-500/20 p-2 rounded-full"></div>
   </motion.div>
 )
 

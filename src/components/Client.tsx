@@ -3,8 +3,67 @@
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useAnimation, useInView } from "framer-motion"
 import { createAvatar } from "@dicebear/core"
-import { bottts, lorelei, micah } from "@dicebear/collection"
 import { Sparkles, MessageSquare, Zap, Activity } from 'lucide-react'
+import type { Style } from '@dicebear/core';
+import { 
+  lorelei, 
+  bottts, 
+  pixelArt, 
+  adventurer,
+  micah,
+  openPeeps,
+  avataaars,
+  bigSmile,
+  funEmoji,
+  notionists,
+  personas
+} from '@dicebear/collection';
+
+// Define avatar style type
+type AvatarStyle = Style<{
+  backgroundColor?: string[];
+  seed: string;
+}>;
+
+// Background colors that work well with all styles
+const commonBackgroundColors = [
+  "b6e3f4",  // Light Blue
+  "c0aede",  // Soft Purple
+  "d1d4f9",  // Periwinkle
+  "ffd5dc",  // Light Pink
+  "ffdfbf"   // Light Peach
+];
+
+// Organized avatar styles with balance between masculine, feminine, and neutral options
+const avatarStyles = [
+  // Feminine-leaning styles
+  lorelei as unknown as AvatarStyle,         // Artistic feminine
+  notionists as unknown as AvatarStyle,      // Professional feminine
+  personas as unknown as AvatarStyle,        // Modern feminine
+  
+  // Masculine-leaning styles
+  adventurer as unknown as AvatarStyle,      // Adventure game masculine
+  avataaars as unknown as AvatarStyle,       // Professional masculine
+  bigSmile as unknown as AvatarStyle,        // Friendly masculine
+
+  // Gender-neutral styles
+  bottts as unknown as AvatarStyle,          // Robot/neutral
+  pixelArt as unknown as AvatarStyle,        // Pixel art/neutral
+  micah as unknown as AvatarStyle,           // Abstract/neutral
+  openPeeps as unknown as AvatarStyle,       // Modern/neutral
+  funEmoji as unknown as AvatarStyle         // Emoji/neutral
+];
+
+// Configuration for avatar creation
+const avatarConfig = {
+  backgroundColor: commonBackgroundColors
+};
+
+export { 
+  avatarStyles, 
+  avatarConfig,
+  type AvatarStyle 
+};
 
 interface ClientProps {
   user: string
@@ -19,40 +78,21 @@ const moodColors = {
   happy: "#4ade80",
   neutral: "#60a5fa",
   busy: "#f87171"
-}
+} as const
 
 const moodEmojis = {
   happy: "😊",
   neutral: "😐",
   busy: "😓"
-}
+} as const
 
-const Particles = ({ mood }: { mood: "happy" | "neutral" | "busy" }) => {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full"
-          style={{ backgroundColor: moodColors[mood] }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0],
-            x: [0, Math.random() * 100 - 50],
-            y: [0, Math.random() * 100 - 50],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "loop",
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
+// const avatarStyles = [
+//   bottts as unknown as AvatarStyle,
+//   lorelei as unknown as AvatarStyle,
+//   micah as unknown as AvatarStyle,
+//   pixelArt as unknown as AvatarStyle,
+//   adventurer as unknown as AvatarStyle,
+// ];
 
 const TypingAnimation = () => {
   return (
@@ -76,20 +116,31 @@ const TypingAnimation = () => {
   )
 }
 
-export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastActive, messageCount, mood }) => {
+export const Client: React.FC<ClientProps> = ({ 
+  user, 
+  isActive, 
+  isTyping, 
+  lastActive, 
+  messageCount, 
+  mood 
+}) => {
   const [avatar, setAvatar] = useState("")
   const controls = useAnimation()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
 
   useEffect(() => {
-    const styles = [bottts, lorelei, micah];
-    const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+    // Get consistent avatar style for user
+    const styleIndex = user
+      .split('')
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0) % avatarStyles.length;
+    const style = avatarStyles[styleIndex];
     
-    const avatarSvg = createAvatar(randomStyle, {
+    const avatarSvg = createAvatar(style, {
       seed: user,
       backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
     }).toDataUri()
+    
     setAvatar(avatarSvg)
   }, [user])
 
@@ -111,7 +162,7 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
         staggerChildren: 0.1,
       },
     },
-  }
+  } as const
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -120,7 +171,7 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
       y: 0,
       transition: { duration: 0.6, ease: "easeOut" },
     },
-  }
+  } as const
 
   return (
     <motion.div
@@ -131,8 +182,6 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
       animate={controls}
       whileHover={{ scale: 1.03 }}
     >
-      {/* <Particles mood={mood} /> */}
-      
       <motion.div className="relative z-10" variants={itemVariants}>
         <AnimatePresence>
           {isActive && (
@@ -160,16 +209,6 @@ export const Client: React.FC<ClientProps> = ({ user, isActive, isTyping, lastAc
         >
           <img src={avatar || "/placeholder.svg"} alt={user} className="w-16 h-16" />
         </motion.div>
-
-        {/* <motion.div
-          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-          style={{ backgroundColor: moodColors[mood] }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          whileHover={{ scale: 1.2 }}
-        >
-          {moodEmojis[mood]}
-        </motion.div> */}
       </motion.div>
 
       <div className="flex flex-col min-w-0 flex-1 z-10">

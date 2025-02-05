@@ -575,7 +575,7 @@ export default function CodeConnect() {
               <CodeConnectSlider />
             </RevealAnimation>
 
-            <RevealAnimation>
+            {/* <RevealAnimation> */}
               <footer className="mt-32 mb-20 text-center text-sm text-slate-400">
                 <p>© 2023 CodeConnect. All rights reserved.</p>
                 <p className="mt-2">
@@ -589,7 +589,7 @@ export default function CodeConnect() {
                   </a>
                 </p>
               </footer>
-            </RevealAnimation>
+            {/* </RevealAnimation> */}
           </div>
         </div>
       </ParallaxScroll>

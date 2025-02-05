@@ -5,6 +5,16 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
+interface ConsoleOutputProps {
+  isOpen: boolean;
+  onClose: () => void;
+  consoleOutput: Array<{ type: string; content: string }>;
+  onClear: () => void;
+  isSidebarOpen: boolean;
+  height: number;
+  onHeightChange: (height: number) => void;
+}
+
 const ConsoleOutput = ({ 
   isOpen, 
   onClose, 
@@ -13,14 +23,14 @@ const ConsoleOutput = ({
   isSidebarOpen,
   height,
   onHeightChange
-}) => {
+}: ConsoleOutputProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const dragStartY = useRef(0);
   const dragStartHeight = useRef(height);
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e:any) => {
       if (!isDragging) return;
       
       const deltaY = dragStartY.current - e.clientY;
@@ -44,7 +54,7 @@ const ConsoleOutput = ({
     };
   }, [isDragging, onHeightChange]);
 
-  const handleDragStart = (e) => {
+  const handleDragStart = (e:any) => {
     dragStartY.current = e.clientY;
     dragStartHeight.current = height;
     setIsDragging(true);
@@ -121,7 +131,12 @@ const ConsoleOutput = ({
   );
 };
 
-const ConsoleEntry = ({ log }) => {
+interface ConsoleLog {
+  type: string;
+  content: string;
+}
+
+const ConsoleEntry = ({ log }: { log: ConsoleLog }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copyContent = async () => {
