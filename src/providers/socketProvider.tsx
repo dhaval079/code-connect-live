@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, Suspense, useContext, useEffect, useState } from 'react';
 import { io as ClientIO, Socket } from 'socket.io-client';
 
 type SocketContextType = {
@@ -20,12 +20,14 @@ export const useSocket = () => {
   return useContext(SocketContext);
 };
 
-  export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-    const [socket, setSocket] = useState<Socket | null>(null);
-    const [isConnected, setIsConnected] = useState(false);
-    const [lastError, setLastError] = useState<Error | null>(null);
-    const searchParams = useSearchParams();
-    const username = searchParams.get('username');
+// Separate component to handle search params
+const SocketProviderInner = ({ children }: { children: React.ReactNode }) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [lastError, setLastError] = useState<Error | null>(null);
+  const searchParams = useSearchParams();
+  const username = searchParams.get('username');
+
   useEffect(() => {
     const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL ?? 'http://localhost:8000', {
       forceNew: true,
@@ -44,6 +46,8 @@ export const useSocket = () => {
         socketInstance.disconnect();
       }
     };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     // Connection event handlers
     socketInstance.on('connect', () => {
@@ -68,7 +72,6 @@ export const useSocket = () => {
       setLastError(error);
     });
 
-    
     setSocket(socketInstance);
 
     return () => {
@@ -81,10 +84,18 @@ export const useSocket = () => {
     };
   }, [username]);
 
-
   return (
     <SocketContext.Provider value={{ socket, isConnected, lastError }}>
       {children}
     </SocketContext.Provider>
+  );
+};
+
+// Main provider component with Suspense boundary
+export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SocketProviderInner>{children}</SocketProviderInner>
+    </Suspense>
   );
 };

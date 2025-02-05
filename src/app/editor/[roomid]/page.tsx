@@ -1,5 +1,5 @@
 "use client"
-import { useState, useRef, useEffect, useMemo } from "react"
+import { useState, useRef, useEffect, useMemo, Suspense } from "react"
 import { motion, AnimatePresence, useAnimation } from "framer-motion"
 import { toast, Toaster } from "sonner"
 import { useParams, useSearchParams } from "next/navigation"
@@ -44,7 +44,7 @@ import WaveLoader from "@/components/Dashboard"
 
 const MonacoEditor = dynamic(() => import("@/components/monaco-editor"), { ssr: false })
 
-export default function EditorPage() {
+function EditorPageContent() {
   // Socket and Client State
   const socketRef = useRef<any>(null)
   const [clients, setClients] = useState<{ socketId: string; username: string }[]>([])
@@ -830,3 +830,10 @@ export default function EditorPage() {
   )
 }
 
+export default function EditorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditorPageContent />
+    </Suspense>
+  )
+}
