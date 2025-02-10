@@ -184,11 +184,11 @@ export const StatsCard = ({ icon: Icon, title, value }: { icon: LucideIcon; titl
 }
 
 export const ParticleField = ({ 
-  particleCount = 800,  // Increased from 450 to 800
+  particleCount = 1000,  // Increased from 450 to 800
   minDuration = 2,
   maxDuration = 5,
   maxDelay = 2,
-  particleSize = "1px",
+  particleSize = "2px",
   particleColor = "rgb(6 182 212 / 0.3)", // tailwind cyan-500/30
 }) => {
   return (

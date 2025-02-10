@@ -167,9 +167,9 @@ MessageContainer.displayName = 'MessageContainer';
 const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: "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",
+  apiKey: "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",
   defaultHeaders: {
-    "HTTP-Referer": window?.location?.origin || "http://localhost:3000",
+    "HTTP-Referer":  "",
     "X-Title": "CodeConnect"
   }
 });
@@ -202,9 +202,9 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
       setIsLoading(true);
 
       const completion = await openai.chat.completions.create({
-        model: "meta-llama/llama-3.2-1b-instruct:free",
-        max_tokens: 1000,
-        temperature: 0.7,
+        model: "google/gemini-flash-1.5-8b-exp",
+        // max_tokens: 1000,
+        // temperature: 0.7,
         messages: [
           {
             role: "user",

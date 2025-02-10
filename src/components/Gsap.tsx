@@ -1,244 +1,225 @@
-// import React, { useEffect, useRef } from 'react';
-// import gsap from 'gsap';
-// import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-// import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
 
-// if (typeof window !== 'undefined') {
-//   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-// }
+const AdvancedCursor = () => {
+  const cursorOuterRef = useRef(null);
+  const cursorInnerRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
 
-// export default function AdvancedSmoothScroll() {
-//   const smoothWrapperRef = useRef(null);
-//   const contentRef = useRef(null);
+  useEffect(() => {
+    const cursorOuter = cursorOuterRef.current;
+    const cursorInner = cursorInnerRef.current;
 
-//   useEffect(() => {
-//     if (typeof window === 'undefined') return;
+    // Create smooth movement animation
+    let xTo = gsap.quickTo(cursorOuter, "x", { duration: 0.6, ease: "power3.out" });
+    let yTo = gsap.quickTo(cursorOuter, "y", { duration: 0.6, ease: "power3.out" });
+    let xiTo = gsap.quickTo(cursorInner, "x", { duration: 0.2, ease: "power3.out" });
+    let yiTo = gsap.quickTo(cursorInner, "y", { duration: 0.2, ease: "power3.out" });
 
-//     // Enhanced scroll configuration
-//     ScrollTrigger.config({
-//       limitCallbacks: true,
-//       ignoreMobileResize: true,
-//       autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
-//     });
+    // Initialize rotation timeline
+    const rotateTl = gsap.timeline({ repeat: -1, defaults: { ease: "none" } });
+    rotateTl.to(cursorOuter, {
+      rotate: 360,
+      duration: 5,
+      ease: "none"
+    });
 
-//     // Initialize variables for velocity tracking
-//     let currentVelocity = 0;
-//     let lastScrollTop = window.pageYOffset;
-//     let scrollTimeout: NodeJS.Timeout;
-//     let rafId: number;
-//     let isScrolling = false;
+    // Mouse move handler with lerped movement
+    const handleMouseMove = (e) => {
+      const { clientX, clientY } = e;
+      xTo(clientX);
+      yTo(clientY);
+      xiTo(clientX);
+      yiTo(clientY);
 
-//     // Advanced smooth scroll with physics
-//     const smoothScroll = {
-//       current: window.pageYOffset,
-//       target: window.pageYOffset,
-//       ease: 0.05, // Adjust for smoothness
-//       friction: 0.92, // Adjust for momentum
-//       velocity: 0
-//     };
-
-//     // Perspective transformation setup
-//     const sections = gsap.utils.toArray('.scroll-section');
-//     sections.forEach((section: Element) => {
-//       gsap.set(section, { 
-//         transformPerspective: 1000,
-//         transformStyle: "preserve-3d"
-//       });
-//     });
-
-//     // Magnetic hover effect for interactive elements
-//     const magneticElements = document.querySelectorAll('.magnetic');
-//     magneticElements.forEach(elem => {
-//       elem.addEventListener('mousemove', (e: MouseEvent) => {
-//         const rect = (elem as HTMLElement).getBoundingClientRect();
-//         const x = e.clientX - rect.left - rect.width / 2;
-//         const y = e.clientY - rect.top - rect.height / 2;
-        
-//         gsap.to(elem, {
-//           duration: 0.3,
-//           x: x * 0.1,
-//           y: y * 0.1,
-//           rotation: x * 0.05,
-//           ease: "power2.out"
-//         });
-//       });
-
-//       elem.addEventListener('mouseleave', () => {
-//         gsap.to(elem, {
-//           duration: 0.3,
-//           x: 0,
-//           y: 0,
-//           rotation: 0,
-//           ease: "elastic.out(1, 0.3)"
-//         });
-//       });
-//     });
-
-//     // Parallax scroll effect with depth
-//     sections.forEach((section: Element, i) => {
-//       const bg = section.querySelector('.parallax-bg');
-//       const content = section.querySelector('.content');
-//       const depth = i % 2 === 0 ? 1 : -1;
-
-//       if (bg) {
-//         gsap.to(bg, {
-//           y: `${30 * depth}%`,
-//           ease: "none",
-//           scrollTrigger: {
-//             trigger: section,
-//             start: "top bottom",
-//             end: "bottom top",
-//             scrub: 1.5,
-//           }
-//         });
-//       }
-
-//       if (content) {
-//         gsap.from(content, {
-//           scrollTrigger: {
-//             trigger: content,
-//             start: "top 80%",
-//             end: "top 20%",
-//             scrub: 1
-//           },
-//           y: 50 * depth,
-//           opacity: 0,
-//           scale: 0.9,
-//           rotateX: 5 * depth,
-//           transformOrigin: "center center"
-//         });
-//       }
-//     });
-
-//     // Advanced physics-based smooth scrolling
-//     const updateScroll = () => {
-//       if (!isScrolling) return;
-
-//       // Update smooth scroll values with physics
-//       smoothScroll.velocity = smoothScroll.target - smoothScroll.current;
-//       smoothScroll.current += smoothScroll.velocity * smoothScroll.ease;
-//       smoothScroll.velocity *= smoothScroll.friction;
-
-//       // Apply transform
-//       gsap.set(contentRef.current, {
-//         y: -smoothScroll.current,
-//         force3D: true
-//       });
-
-//       rafId = requestAnimationFrame(updateScroll);
-//     };
-
-//     // Scroll velocity tracking
-//     const handleScroll = () => {
-//       const st = window.pageYOffset;
-//       currentVelocity = st - lastScrollTop;
-//       lastScrollTop = st;
-//       smoothScroll.target = st;
-
-//       if (!isScrolling) {
-//         isScrolling = true;
-//         rafId = requestAnimationFrame(updateScroll);
-//       }
-
-//       clearTimeout(scrollTimeout);
-//       scrollTimeout = setTimeout(() => {
-//         isScrolling = false;
-//       }, 100);
-//     };
-
-//     // Stagger reveal for elements
-//     gsap.utils.toArray('.stagger-reveal').forEach((elem: Element) => {
-//       gsap.from(elem, {
-//         scrollTrigger: {
-//           trigger: elem,
-//           start: "top 80%",
-//           end: "top 20%",
-//           toggleActions: "play none none reverse"
-//         },
-//         y: 100,
-//         opacity: 0,
-//         duration: 1,
-//         stagger: {
-//           amount: 0.5,
-//           from: "start"
-//         },
-//         ease: "power3.out"
-//       });
-//     });
-
-//     // Scale effect for hero section
-//     gsap.to('.hero-section', {
-//       scrollTrigger: {
-//         trigger: '.hero-section',
-//         start: "top top",
-//         end: "bottom top",
-//         scrub: 1
-//       },
-//       scale: 0.8,
-//       opacity: 0.5,
-//       ease: "none"
-//     });
-
-//     // Horizontal scroll sections
-//     const horizontalSections = gsap.utils.toArray('.horizontal-scroll');
-//     horizontalSections.forEach((section: Element) => {
-//       const items = gsap.utils.toArray('.horizontal-item', section);
+      // Optional: Add slight tilt based on velocity
+      const speed = Math.sqrt(e.movementX ** 2 + e.movementY ** 2);
+      const tiltX = gsap.utils.clamp(-20, 20, e.movementY * 2);
+      const tiltY = gsap.utils.clamp(-20, 20, -e.movementX * 2);
       
-//       gsap.to(items, {
-//         xPercent: -100 * (items.length - 1),
-//         ease: "none",
-//         scrollTrigger: {
-//           trigger: section,
-//           pin: true,
-//           start: "top top",
-//           end: () => `+=${section.scrollWidth}`,
-//           scrub: 1,
-//           snap: {
-//             snapTo: 1 / (items.length - 1),
-//             duration: { min: 0.1, max: 0.3 },
-//             ease: "power1.inOut"
-//           }
-//         }
-//       });
-//     });
+      gsap.to(cursorOuter, {
+        rotateX: tiltX,
+        rotateY: tiltY,
+        duration: 0.5,
+      });
+    };
 
-//     // Event listeners
-//     window.addEventListener('scroll', handleScroll, { passive: true });
-//     window.addEventListener('resize', ScrollTrigger.update);
+    // Interaction handlers
+    const handleMouseDown = () => {
+      setIsClicking(true);
+      gsap.to([cursorOuter, cursorInner], {
+        scale: 0.8,
+        duration: 0.2,
+      });
+    };
 
-//     // Initialize first scroll position
-//     handleScroll();
+    const handleMouseUp = () => {
+      setIsClicking(false);
+      gsap.to([cursorOuter, cursorInner], {
+        scale: 1,
+        duration: 0.2,
+      });
+    };
 
-//     // Cleanup
-//     return () => {
-//       window.removeEventListener('scroll', handleScroll);
-//       window.removeEventListener('resize', ScrollTrigger.update);
-//       cancelAnimationFrame(rafId);
-//       clearTimeout(scrollTimeout);
-//       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-//       gsap.killTweensOf('*');
-//     };
-//   }, []);
+    // Interactive elements handling
+    const handleElementsHover = () => {
+      const interactiveElements = document.querySelectorAll('button, a, input, [data-cursor-interact]');
+      
+      interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          setIsHovering(true);
+          gsap.to(cursorOuter, {
+            scale: 1.5,
+            background: 'rgba(6, 182, 212, 0.1)',
+            duration: 0.3,
+          });
+          gsap.to(cursorInner, {
+            scale: 0.5,
+            background: 'rgba(6, 182, 212, 1)',
+            duration: 0.3,
+          });
+        });
 
-//   return null;
-// }
+        element.addEventListener('mouseleave', () => {
+          setIsHovering(false);
+          gsap.to([cursorOuter, cursorInner], {
+            scale: 1,
+            background: 'rgba(6, 182, 212, 0.3)',
+            duration: 0.3,
+          });
+        });
+      });
+    };
 
-// // HOC for smooth scroll
-// export function withAdvancedScroll(WrappedComponent: React.ComponentType) {
-//   return function WithAdvancedScrollComponent(props: any) {
-//     const smoothWrapperRef = useRef(null);
-//     const contentRef = useRef(null);
+    // Initialize magnetic effect for buttons
+    const initMagneticButtons = () => {
+      const buttons = document.querySelectorAll('[data-magnetic]');
+      
+      buttons.forEach(button => {
+        button.addEventListener('mousemove', (e) => {
+          const rect = button.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const distance = Math.sqrt(
+            Math.pow(e.clientX - centerX, 2) + 
+            Math.pow(e.clientY - centerY, 2)
+          );
+          
+          if (distance < 100) {
+            const magneticPull = (100 - distance) / 100;
+            gsap.to(cursorOuter, {
+              x: centerX + (e.clientX - centerX) * 0.4,
+              y: centerY + (e.clientY - centerY) * 0.4,
+              duration: 0.3,
+            });
+          }
+        });
+      });
+    };
+
+    // Add event listeners
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
     
-//     return (
-//       <div className="relative min-h-screen overflow-hidden" ref={smoothWrapperRef}>
-//         <AdvancedSmoothScroll />
-//         <div 
-//           className="transform-gpu will-change-transform"
-//           ref={contentRef}
-//         >
-//           <WrappedComponent {...props} />
-//         </div>
-//       </div>
-//     );
-//   };
-// }
+    // Initialize interactions
+    handleElementsHover();
+    initMagneticButtons();
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      rotateTl.kill();
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Outer cursor */}
+      <div
+        ref={cursorOuterRef}
+        className="fixed pointer-events-none z-50 mix-blend-difference"
+        style={{
+          width: '40px',
+          height: '40px',
+          marginLeft: '-20px',
+          marginTop: '-20px',
+          transform: 'translate(0, 0)',
+          willChange: 'transform'
+        }}
+      >
+        {/* Animated border */}
+        <div className="absolute inset-0">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 rounded-full"
+              style={{
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                transform: `rotate(${i * 90}deg)`,
+                animation: `spin${i + 1} 4s linear infinite`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Inner cursor */}
+      <div
+        ref={cursorInnerRef}
+        className="fixed w-4 h-4 pointer-events-none z-50 rounded-full bg-cyan-400/30 backdrop-blur-sm"
+        style={{
+          marginLeft: '-8px',
+          marginTop: '-8px',
+          transform: 'translate(0, 0)',
+          willChange: 'transform',
+          mixBlendMode: 'difference'
+        }}
+      >
+        {/* Inner dot */}
+        <div 
+          className="absolute top-1/2 left-1/2 w-1 h-1 -ml-0.5 -mt-0.5 rounded-full bg-cyan-400"
+          style={{
+            transform: `scale(${isClicking ? 1.5 : 1})`,
+            transition: 'transform 0.2s ease'
+          }}
+        />
+      </div>
+
+      <style jsx global>{`
+        * {
+          cursor: none !important;
+        }
+
+        @keyframes spin1 {
+          0% { transform: rotate(0deg) scale(1); }
+          50% { transform: rotate(180deg) scale(1.2); }
+          100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes spin2 {
+          0% { transform: rotate(90deg) scale(1.1); }
+          50% { transform: rotate(270deg) scale(1); }
+          100% { transform: rotate(450deg) scale(1.1); }
+        }
+
+        @keyframes spin3 {
+          0% { transform: rotate(180deg) scale(1.2); }
+          50% { transform: rotate(360deg) scale(1); }
+          100% { transform: rotate(540deg) scale(1.2); }
+        }
+
+        @keyframes spin4 {
+          0% { transform: rotate(270deg) scale(1); }
+          50% { transform: rotate(450deg) scale(1.1); }
+          100% { transform: rotate(630deg) scale(1); }
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default AdvancedCursor;

@@ -85,7 +85,7 @@ function EditorPageContent() {
   const outputRef = useRef(null)
   const controls = useAnimation()
   const [code, setCode] = 
-  useState(`//Start Coding Here
+  useState(`//Start Coding Here...
   // Function to print a pyramid pattern
   function printPyramid(height) {
       let pattern = '';
@@ -832,7 +832,7 @@ function EditorPageContent() {
 
 export default function EditorPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <EditorPageContent />
     </Suspense>
   )

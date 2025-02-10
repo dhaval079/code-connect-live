@@ -94,7 +94,7 @@ const SocketProviderInner = ({ children }: { children: React.ReactNode }) => {
 // Main provider component with Suspense boundary
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <SocketProviderInner>{children}</SocketProviderInner>
     </Suspense>
   );

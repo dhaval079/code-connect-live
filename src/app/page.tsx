@@ -36,6 +36,7 @@ import { CodeConnectSlider } from "@/components/TechSlider"
 import FAQSection from "@/components/Faq-section"
 import ModernLoader from "@/components/LoadinAnimation"
 import LoadingScreen from "@/components/Loading"
+import SmoothCursor from "@/components/Gsap"
 
 export default function CodeConnect() {
   const [roomId, setRoomId] = useState("")
@@ -108,6 +109,7 @@ export default function CodeConnect() {
   return (
     <div>
       <LoadingScreen />
+      <SmoothCursor/>
       <ParallaxScroll
         speed={5.0}
         direction="up"
@@ -118,15 +120,14 @@ export default function CodeConnect() {
         }}
         easing={[0.1, 2, 0.2, 2]}
       >
-        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
-          <AnimatedBackground
-          />
+        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 text-white overflow-hidden">
+          <AnimatedBackground/>
           <ParticleField
             particleCount={1000}
             minDuration={2}
-            maxDuration={10}
-            maxDelay={2}
-            particleSize="6px"
+            maxDuration={4}
+            maxDelay={3}
+            particleSize="3px"
             particleColor="rgb(6 182 212 / 0.3)"
           />        <NeonGlow />
           <div className="absolute inset-0 overflow-hidden">
@@ -216,7 +217,7 @@ export default function CodeConnect() {
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                   <motion.h1
-                    className="text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+                    className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
                     variants={{
                       hidden: { opacity: 0, y: 50 },
                       visible: { opacity: 1, y: 0 },
@@ -225,7 +226,7 @@ export default function CodeConnect() {
                     animate="visible"
                     transition={{ duration: 0.8, delay: 0.3 }}
                   >
-                    Collaborate in Real-Time <br />
+                    Collaborate in Real-Time <br/>
                     with{" "}
                     <motion.span
                       className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"

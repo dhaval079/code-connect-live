@@ -47,7 +47,7 @@ function NotFoundContent() {
 
 export default function NotFound() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <NotFoundContent />
     </Suspense>
   )
