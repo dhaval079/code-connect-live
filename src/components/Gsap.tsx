@@ -26,7 +26,7 @@ const AdvancedCursor = () => {
     });
 
     // Mouse move handler with lerped movement
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e:any) => {
       const { clientX, clientY } = e;
       xTo(clientX);
       yTo(clientY);
@@ -97,20 +97,21 @@ const AdvancedCursor = () => {
       const buttons = document.querySelectorAll('[data-magnetic]');
       
       buttons.forEach(button => {
-        button.addEventListener('mousemove', (e) => {
+        button.addEventListener('mousemove', (e: Event) => {
+          const mouseEvent = e as MouseEvent;
           const rect = button.getBoundingClientRect();
           const centerX = rect.left + rect.width / 2;
           const centerY = rect.top + rect.height / 2;
           const distance = Math.sqrt(
-            Math.pow(e.clientX - centerX, 2) + 
-            Math.pow(e.clientY - centerY, 2)
+            Math.pow(mouseEvent.clientX - centerX, 2) + 
+            Math.pow(mouseEvent.clientY - centerY, 2)
           );
           
           if (distance < 100) {
             const magneticPull = (100 - distance) / 100;
             gsap.to(cursorOuter, {
-              x: centerX + (e.clientX - centerX) * 0.4,
-              y: centerY + (e.clientY - centerY) * 0.4,
+              x: centerX + (mouseEvent.clientX - centerX) * 0.4,
+              y: centerY + (mouseEvent.clientY - centerY) * 0.4,
               duration: 0.3,
             });
           }
