@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { AnimatedLogo } from './Dashboard';
+import { AnimatedLogo } from './Decorative';
 
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);

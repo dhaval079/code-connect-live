@@ -17,26 +17,30 @@ import {
   Boxes,
   CheckCircle2,
 } from "lucide-react"
-import AnimatedBackground from "@/components/AnimatedBackground"
+import AnimatedBackground from "@/components/Dashboard/AnimatedBackground"
 import {
-  GlowingButton,
-  FuturisticInput,
   FloatingHexagon,
-  StatsCard,
-  ParticleField,
   CodeBlock,
-  AnimatedLogo,
-  RevealAnimation,
-  NeonGlow,
-  ParallaxScroll,
-  HoverCard,
-} from "@/components/Dashboard"
-import { MobileNav } from "@/components/Header"
-import { CodeConnectSlider } from "@/components/TechSlider"
-import FAQSection from "@/components/Faq-section"
-import ModernLoader from "@/components/LoadinAnimation"
-import LoadingScreen from "@/components/Loading"
-import SmoothCursor from "@/components/Gsap"
+  AnimatedLogo
+} from "@/components/Dashboard/Decorative"
+import { MobileNav } from "@/components/Dashboard/Header"
+import { CodeConnectSlider } from "@/components/Dashboard/Slider"
+import FAQSection from "@/components/Dashboard/FaqSection"
+import ModernLoader from "@/components/Dashboard/LoadinAnimation"
+import LoadingScreen from "@/components/Dashboard/LoadingScreen"
+import SmoothCursor from "@/components/Dashboard/Cursor"
+import InteractiveDemo from "@/components/Code/CodeViz"
+import { HoverCard } from "@/components/Dashboard/cards/HoverCard"
+import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
+import { StatsCard } from "@/components/Dashboard/cards/StatsCard"
+import { NeonGlow } from "@/components/Dashboard/animations/NeonGlow"
+import { ParticleField } from "@/components/Dashboard/animations/ParticleField"
+import { ParallaxScroll } from "@/components/Dashboard/animations/ParallaxScroll"
+import { RevealAnimation } from "@/components/Dashboard/animations/RevealAnimation"
+import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
+import MoreUseCases from "@/components/Dashboard/cards/MoreUseCases"
+import WhyCodeConnect from "@/components/Dashboard/cards/WhyCodeConnect"
+// import AdvancedCodeFlow from "@/components/CodeViz"
 
 export default function CodeConnect() {
   const [roomId, setRoomId] = useState("")
@@ -81,55 +85,37 @@ export default function CodeConnect() {
     }
   }
 
-  // if (pageLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-  //       <AnimatedBackground />
-  //       <ParticleField
-  //         particleCount={1000}
-  //         minDuration={2}
-  //         maxDuration={10}
-  //         maxDelay={2}
-  //         particleSize="6px"
-  //         particleColor="rgb(6 182 212 / 0.3)"
-  //       />
-  //       <NeonGlow />
-  //       <div className="absolute inset-0 overflow-hidden">
-  //         {[...Array(30)].map((_, i) => (
-  //           <FloatingHexagon key={i} delay={i * 0.3} />
-  //         ))}
-  //       </div>
-  //       <div className="z-50">
-  //         <ModernLoader onComplete={() => setPageLoading(false)} />
-  //       </div>
-  //     </div>
-  //   )
-  // }
+
 
   return (
-    <div>
+    <div className="overflow-hidden relative">
       <LoadingScreen />
-      <SmoothCursor/>
+      <SmoothCursor />
       <ParallaxScroll
-        speed={5.0}
+        speed={0.2}
         direction="up"
         springConfig={{
-          stiffness: 400,
-          damping: 200,
-          mass: 15.0,
+          stiffness: 30,
+          damping: 60,
+          mass: 1,
         }}
         easing={[0.1, 2, 0.2, 2]}
       >
-        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 text-white overflow-hidden">
-          <AnimatedBackground/>
+
+        <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+          <div>
+            <AnimatedBackground />
+          </div>
+
           <ParticleField
             particleCount={1000}
             minDuration={2}
             maxDuration={4}
             maxDelay={3}
-            particleSize="3px"
+            particleSize="4px"
             particleColor="rgb(6 182 212 / 0.3)"
-          />        <NeonGlow />
+          />
+          <NeonGlow />
           <div className="absolute inset-0 overflow-hidden">
             {[...Array(30)].map((_, i) => (
               <FloatingHexagon key={i} delay={i * 0.3} />
@@ -137,263 +123,267 @@ export default function CodeConnect() {
           </div>
 
           <div className="z-10 relative">
-            <div className="container mx-auto px-4 py-8">
-              <motion.header
-                className="flex items-center justify-between mb-16"
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <motion.div
-                  className="flex items-center space-x-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <AnimatedLogo />
-                  <motion.span
-                    className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
-                    animate={{
-                      backgroundPosition: ["0%", "100%", "0%"],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Number.POSITIVE_INFINITY,
-                      repeatType: "reverse",
-                    }}
-                  >
-                    CodeConnect
-                  </motion.span>
-                </motion.div>
-
-                {/* Desktop Navigation */}
-                <motion.nav
-                  className="hidden lg:flex space-x-6"
-                  variants={{
-                    hidden: { opacity: 0, y: -20 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        staggerChildren: 0.1,
-                      },
-                    },
-                  }}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  {["Features", "How It Works", "FAQ"].map((item) => (
-                    <motion.a
-                      key={item}
-                      href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-slate-300 hover:text-white transition-colors relative"
-                      variants={{
-                        hidden: { opacity: 0, y: -20 },
-                        visible: { opacity: 1, y: 0 },
-                      }}
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {item}
-                      <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500"
-                        initial={{ scaleX: 0 }}
-                        whileHover={{ scaleX: 1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </motion.a>
-                  ))}
-                </motion.nav>
-
-                {/* Add the Mobile Navigation */}
-                <div className="lg:hidden">
-                  <MobileNav />
-                </div>
-              </motion.header>
-
-              <main className="z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
-                <motion.div
-                  className="lg:w-1/2"
-                  initial={{ opacity: 0, x: -100 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+            <RevealAnimation>
+              <div className="container mx-auto px-4 py-8">
+                <motion.header
+                  className="flex items-center justify-between mb-16"
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <motion.h1
-                    className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-                    variants={{
-                      hidden: { opacity: 0, y: 50 },
-                      visible: { opacity: 1, y: 0 },
-                    }}
-                    initial="hidden"
-                    animate="visible"
-                    transition={{ duration: 0.8, delay: 0.3 }}
+                  <motion.div
+                    className="flex items-center space-x-2"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    Collaborate in Real-Time <br/>
-                    with{" "}
+                    <AnimatedLogo />
                     <motion.span
-                      className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
+                      className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
                       animate={{
                         backgroundPosition: ["0%", "100%", "0%"],
                       }}
                       transition={{
-                        duration: 10,
+                        duration: 3,
                         repeat: Number.POSITIVE_INFINITY,
                         repeatType: "reverse",
                       }}
                     >
                       CodeConnect
                     </motion.span>
-                  </motion.h1>
-                  <motion.p
-                    className="text-xl text-slate-300 mb-8"
+                  </motion.div>
+
+                  {/* Desktop Navigation */}
+                  <motion.nav
+                    className="hidden lg:flex space-x-6"
                     variants={{
-                      hidden: { opacity: 0, y: 50 },
-                      visible: { opacity: 1, y: 0 },
+                      hidden: { opacity: 0, y: -20 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          staggerChildren: 0.1,
+                        },
+                      },
                     }}
                     initial="hidden"
                     animate="visible"
-                    transition={{ duration: 0.8, delay: 0.4 }}
                   >
-                    Join a room, share your code, and build amazing projects together. Experience seamless collaboration
-                    like never before.
-                  </motion.p>
-                  <div className="grid grid-cols-2 gap-4 mb-8">
-                    <StatsCard icon={Globe} title="Active Rooms" value="1,234" />
-                    <StatsCard icon={Users} title="Connected Devs" value="5,678" />
-                  </div>
-                  <CodeBlock />
-                </motion.div>
+                    {["Features", "How It Works", "FAQ"].map((item) => (
+                      <motion.a
+                        key={item}
+                        href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                        className="text-slate-300 hover:text-white transition-colors relative"
+                        variants={{
+                          hidden: { opacity: 0, y: -20 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        {item}
+                        <motion.div
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500"
+                          initial={{ scaleX: 0 }}
+                          whileHover={{ scaleX: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </motion.a>
+                    ))}
+                  </motion.nav>
 
-                <motion.div
-                  ref={formRef}
-                  className="lg:w-1/2 w-full max-w-md"
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={isInView ? {
-                    opacity: 1,
-                    x: 0,
-                  } : {}}
-                  transition={{
-                    duration: 1.2,
-                    delay: 0.4,
-                    ease: [0.22, 1, 0.36, 1]
-                  }}
-                >
-                  <motion.div
-                    className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl"
-                    whileHover={{
-                      boxShadow: "0 0 50px rgba(6, 182, 212, 0.3)",
-                      scale: 1.02,
-                      transition: {
-                        duration: 0.4,
-                        ease: "easeOut"
-                      }
-                    }}
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{
-                      duration: 0.8,
-                      delay: 0.6,
-                      ease: [0.34, 1.56, 0.64, 1]
-                    }}
-                  >
-                    <h2 className="text-2xl font-bold mb-6 text-center">Join a Room</h2>
-                    <div className="space-y-6">
-                      <FuturisticInput
-                        label="Room ID"
-                        id="room-id"
-                        icon={Terminal}
-                        value={roomId}
-                        onChange={(e: any) => setRoomId(e.target.value)}
-                        onKeyUp={handleInputKeyUp}
-                        placeholder="Enter room ID"
-                      />
-                      <FuturisticInput
-                        label="Username"
-                        id="username"
-                        icon={Users}
-                        value={username}
-                        onChange={(e: any) => setUsername(e.target.value)}
-                        onKeyUp={handleInputKeyUp}
-                        placeholder="Choose a username"
-                      />
-                      <GlowingButton
-                        className="w-full"
-                        onClick={async () => {
-                          setIsLoading(true); // Set loading state immediately
-                          await new Promise(resolve => setTimeout(resolve, 2000));
-                          handleJoin();
+                  {/* Add the Mobile Navigation */}
+                  <div className="lg:hidden">
+                    <MobileNav />
+                  </div>
+                </motion.header>
+
+                <RevealAnimation>
+                  <main className="z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+                    <motion.div
+                      className="lg:w-1/2"
+                      initial={{ opacity: 0, x: -100 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                      <motion.h1
+                        className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+                        variants={{
+                          hidden: { opacity: 0, y: 50 },
+                          visible: { opacity: 1, y: 0 },
                         }}
-                        disabled={isLoading}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ duration: 0.8, delay: 0.3 }}
                       >
-                        <AnimatePresence mode="wait">
-                          {isLoading ? (
-                            <motion.div
-                              key="loading"
-                              className="flex items-center justify-center"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{
-                                duration: 0.4,
-                                ease: "easeOut"
-                              }}
-                            >
-                              <motion.div
-                                animate={{
-                                  rotate: 360,
-                                }}
-                                transition={{
-                                  duration: 2,
-                                  repeat: Number.POSITIVE_INFINITY,
-                                  ease: "linear",
-                                }}
-                              >
-                                <Code className="w-5 h-5 mr-2" />
-                              </motion.div>
-                              Connecting...
-                            </motion.div>
-                          ) : (
-                            <motion.div
-                              key="join"
-                              className="flex items-center justify-center"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{
-                                duration: 0.4,
-                                ease: "easeOut"
-                              }}
-                            >
-                              <Sparkles className="w-5 h-5 mr-2" />
-                              Join Room
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </GlowingButton>
-                    </div>
-                    <p className="text-center text-sm text-slate-400 mt-6">
-                      Don&apos;t have an invite?{" "}
-                      <motion.button
-                        onClick={createNewRoom}
-                        className="text-cyan-400 hover:text-cyan-300 transition-colors relative group"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        Collaborate in Real-Time <br />
+                        with{" "}
+                        <motion.span
+                          className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
+                          animate={{
+                            backgroundPosition: ["0%", "100%", "0%"],
+                          }}
+                          transition={{
+                            duration: 10,
+                            repeat: Number.POSITIVE_INFINITY,
+                            repeatType: "reverse",
+                          }}
+                        >
+                          CodeConnect
+                        </motion.span>
+                      </motion.h1>
+                      <motion.p
+                        className="text-xl text-slate-300 mb-8"
+                        variants={{
+                          hidden: { opacity: 0, y: 50 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                      >
+                        Join a room, share your code, and build amazing projects together. Experience seamless collaboration
+                        like never before.
+                      </motion.p>
+                      <div className="grid grid-cols-2 gap-4 mb-8">
+                        <StatsCard icon={Globe} title="Active Rooms" value="1,234" />
+                        <StatsCard icon={Users} title="Connected Devs" value="5,678" />
+                      </div>
+                      <CodeBlock />
+                    </motion.div>
+
+                    <motion.div
+                      ref={formRef}
+                      className="lg:w-1/2 w-full max-w-md"
+                      initial={{ opacity: 0, x: 100 }}
+                      animate={isInView ? {
+                        opacity: 1,
+                        x: 0,
+                      } : {}}
+                      transition={{
+                        duration: 1.2,
+                        delay: 0.4,
+                        ease: [0.22, 1, 0.36, 1]
+                      }}
+                    >
+                      <motion.div
+                        className="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl "
+                        whileHover={{
+                          boxShadow: "0 0 50px rgba(6, 182, 212, 0.3)",
+                          scale: 1.02,
+                          transition: {
+                            duration: 0.4,
+                            ease: "easeOut"
+                          }
+                        }}
+                        initial={{ scale: 0.95, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
                         transition={{
-                          duration: 0.2,
-                          ease: "easeOut"
+                          duration: 0.8,
+                          delay: 0.6,
+                          ease: [0.34, 1.56, 0.64, 1]
                         }}
                       >
-                        Create New Room
-                        <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-300 transition-all duration-500 ease-out group-hover:w-full" />
-                      </motion.button>
-                    </p>
-                  </motion.div>
-                </motion.div>
-              </main>
-            </div>
+                        <h2 className="text-2xl font-bold mb-6 text-center">Join a Room</h2>
+                        <div className="space-y-6">
+                          <FuturisticInput
+                            label="Room ID"
+                            id="room-id"
+                            icon={Terminal}
+                            value={roomId}
+                            onChange={(e: any) => setRoomId(e.target.value)}
+                            onKeyUp={handleInputKeyUp}
+                            placeholder="Enter room ID"
+                          />
+                          <FuturisticInput
+                            label="Username"
+                            id="username"
+                            icon={Users}
+                            value={username}
+                            onChange={(e: any) => setUsername(e.target.value)}
+                            onKeyUp={handleInputKeyUp}
+                            placeholder="Choose a username"
+                          />
+                          <GlowingButton
+                            className="w-full"
+                            onClick={async () => {
+                              setIsLoading(true); // Set loading state immediately
+                              await new Promise(resolve => setTimeout(resolve, 2000));
+                              handleJoin();
+                            }}
+                            disabled={isLoading}
+                          >
+                            <AnimatePresence mode="wait">
+                              {isLoading ? (
+                                <motion.div
+                                  key="loading"
+                                  className="flex items-center justify-center"
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{
+                                    duration: 0.4,
+                                    ease: "easeOut"
+                                  }}
+                                >
+                                  <motion.div
+                                    animate={{
+                                      rotate: 360,
+                                    }}
+                                    transition={{
+                                      duration: 2,
+                                      repeat: Number.POSITIVE_INFINITY,
+                                      ease: "linear",
+                                    }}
+                                  >
+                                    <Code className="w-5 h-5 mr-2" />
+                                  </motion.div>
+                                  Connecting...
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="join"
+                                  className="flex items-center justify-center"
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{
+                                    duration: 0.4,
+                                    ease: "easeOut"
+                                  }}
+                                >
+                                  <Sparkles className="w-5 h-5 mr-2" />
+                                  Join Room
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </GlowingButton>
+                        </div>
+                        <p className="text-center text-sm text-slate-400 mt-6">
+                          Don&apos;t have an invite?{" "}
+                          <motion.button
+                            onClick={createNewRoom}
+                            className="text-cyan-400 hover:text-cyan-300 transition-colors relative group"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                              duration: 0.2,
+                              ease: "easeOut"
+                            }}
+                          >
+                            Create New Room
+                            <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-300 transition-all duration-500 ease-out group-hover:w-full" />
+                          </motion.button>
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  </main>
+                </RevealAnimation>
+              </div>
+            </RevealAnimation>
 
             <RevealAnimation>
-              <motion.section id="features" className="mt-32">
+              <motion.section id="features" className="mt-32 px-6 justify-center  items-center mx-auto">
                 <h2 className="text-4xl font-bold text-center mb-16">Key Features</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
                   <HoverCard
                     icon={Laptop}
                     title="Real-time Collaboration"
@@ -433,11 +423,11 @@ export default function CodeConnect() {
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full opacity-20"
                           animate={{
-                            scale: [1, 1.2, 1],
-                            opacity: [0.2, 0.3, 0.2],
+                            scale: [1, 1.3, 0.8],
+                            opacity: [0.2, 0.1, 0.1],
                           }}
                           transition={{
-                            duration: 3,
+                            duration: 2,
                             repeat: Number.POSITIVE_INFINITY,
                             repeatType: "reverse",
                           }}
@@ -455,120 +445,18 @@ export default function CodeConnect() {
             </RevealAnimation>
 
             <RevealAnimation>
-              <motion.section id="why-codeconnect" className="mt-32">
-                <h2 className="text-4xl font-bold text-center mb-16">Why CodeConnect?</h2>
-                <div className="max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl shadow-cyan-500/10">
-                  <p className="text-lg text-slate-300 mb-6">
-                    CodeConnect is built for developers, by developers. Whether you're working remotely, teaching, or
-                    conducting interviews, our platform enables smoother, faster, and more interactive coding sessions. We
-                    remove the friction from pair programming by ensuring low latency, secure connections, and real-time
-                    updates, making remote collaboration as effective as in-person coding.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <HoverCard
-                      icon={Zap}
-                      title="Zero Latency"
-                      description="Built with WebRTC for ultra-fast peer-to-peer connections."
-                    />
-                    <HoverCard
-                      icon={Users}
-                      title="Seamless Collaboration"
-                      description="Join a room instantly and start coding together."
-                    />
-                    <HoverCard
-                      icon={CheckCircle2}
-                      title="Secure & Private"
-                      description="All rooms are encrypted to ensure data privacy."
-                    />
-                    <HoverCard
-                      icon={Code}
-                      title="Developer-Friendly"
-                      description="Powered by modern web technologies like React, WebRTC, and CodeMirror."
-                    />
-                  </div>
-                </div>
-              </motion.section>
+              <WhyCodeConnect />
             </RevealAnimation>
 
             <RevealAnimation>
-              <motion.section id="use-cases" className="mt-32">
-                <h2 className="text-4xl font-bold text-center mb-16">More Use Cases</h2>
-                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {[
-                    {
-                      title: "Remote Pair Programming",
-                      description: "Work with your teammates on live coding projects in real-time.",
-                    },
-                    {
-                      title: "Live Coding Interviews",
-                      description:
-                        "Assess candidates with actual coding tasks, track their thought process, and communicate via chat.",
-                    },
-                    {
-                      title: "Coding Bootcamps & Education",
-                      description:
-                        "Engage students by coding together, explaining concepts visually, and sharing snippets instantly.",
-                    },
-                    {
-                      title: "Hackathons & Team Challenges",
-                      description: "Organize competitive coding sessions where teams can collaborate dynamically.",
-                    },
-                    {
-                      title: "Freelancers & Consultants",
-                      description:
-                        "Work with clients on live projects, debug issues, and showcase solutions interactively.",
-                    },
-                  ].map((useCase, index) => (
-                    <motion.div
-                      key={useCase.title}
-                      className="bg-slate-800/50 backdrop-blur-xl rounded-xl p-6"
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: index * 0.1 }}
-                    >
-                      <h3 className="text-2xl font-semibold mb-2">{useCase.title}</h3>
-                      <p className="text-slate-300">{useCase.description}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.section>
+              <MoreUseCases />
             </RevealAnimation>
 
             <RevealAnimation>
-              {/* <motion.section id="faq" className="mt-32 mb-28">
-              <h2 className="text-4xl font-bold text-center mb-16">Frequently Asked Questions</h2>
-              <div className="max-w-3xl mx-auto">
-                {[
-                  {
-                    question: "Do I need to install anything?",
-                    answer: "No, CodeConnect runs entirely on your browser. No installation required!",
-                  },
-                  {
-                    question: "Is my code private?",
-                    answer: "Yes, we use end-to-end encryption to ensure that your sessions are secure.",
-                  },
-                  {
-                    question: "What languages does CodeConnect support?",
-                    answer: "We support JavaScript, Python, C++, Java, HTML/CSS, and more.",
-                  },
-                  {
-                    question: "Can I integrate it with GitHub?",
-                    answer: "Coming soon! We are working on direct GitHub integration for syncing repositories.",
-                  },
-                ].map((faq, index) => (
-                  <motion.div
-                    key={index}
-                    className="mb-8"
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.1 }}
-                  >
-                    <h3 className="text-2xl font-semibold mb-2">{faq.question}</h3>
-                    <p className="text-slate-300">{faq.answer}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section> */}
+              <InteractiveDemo />
+            </RevealAnimation>
+
+            <RevealAnimation>
               <FAQSection />
             </RevealAnimation>
 
@@ -577,19 +465,19 @@ export default function CodeConnect() {
             </RevealAnimation>
 
             {/* <RevealAnimation> */}
-              <footer className="mt-32 mb-20 text-center text-sm text-slate-400">
-                <p>© 2023 CodeConnect. All rights reserved.</p>
-                <p className="mt-2">
-                  Built with love by{" "}
-                  <a
-                    href={"http://github.com/dhaval079"}
-                    className="text-cyan-400 hover:text-cyan-300 transition-colors relative group inline-block"
-                  >
-                    @Dhaval Rupapara
-                    <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-300 transition-all duration-300 ease-out group-hover:w-full" />
-                  </a>
-                </p>
-              </footer>
+            <footer className="mt-32 mb-20 text-center text-sm text-slate-400">
+              <p>© 2023 CodeConnect. All rights reserved.</p>
+              <p className="mt-2">
+                Built with love by{" "}
+                <a
+                  href={"http://github.com/dhaval079"}
+                  className="text-cyan-400 hover:text-cyan-300 transition-colors relative group inline-block"
+                >
+                  @Dhaval Rupapara
+                  <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-300 transition-all duration-300 ease-out group-hover:w-full" />
+                </a>
+              </p>
+            </footer>
             {/* </RevealAnimation> */}
           </div>
         </div>

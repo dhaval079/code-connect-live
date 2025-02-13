@@ -183,7 +183,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                       <div className="flex flex-col space-y-4 p-4 min-h-full">
                         <AnimatePresence initial={false}>
                           {messages.map((message) => (
-                            <MessageBubble 
+                            <MessageBubble
                               key={message.id} 
                               message={message} 
                               isOwnMessage={message.sender === normalizedUsername}

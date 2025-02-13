@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import OpenAI from 'openai';
-import { FuturisticInput } from './Dashboard';
+import { FuturisticInput } from '../Dashboard/buttons/FuturisticInput';
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const messageAnimations = {
   initial: { 
@@ -174,6 +175,9 @@ const openai = new OpenAI({
   }
 });
 
+// client = genai.Client(api_key="AIzaSyCF6mKRofVaWa-4RC6hjYQtijNqxOZSt58")
+
+
 interface AiAssistantProps {
   isOpen: boolean;
   onToggle: () => void;
@@ -201,21 +205,35 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     try {
       setIsLoading(true);
 
-      const completion = await openai.chat.completions.create({
-        model: "google/gemini-flash-1.5-8b-exp",
-        // max_tokens: 1000,
-        // temperature: 0.7,
-        messages: [
-          {
-            role: "user",
-            content: question
-          }
-        ]
-      });
+      // const completion = await openai.chat.completions.create({
+      //   model: "google/gemini-flash-1.5-8b-exp",
+      //   // max_tokens: 1000,
+      //   // temperature: 0.7,
+      //   messages: [
+      //     {
+      //       role: "user",
+      //       content: question
+      //     }
+      //   ]
+      // });
 
-      console.log('OpenRouter response:', completion);
+      const genAI = new GoogleGenerativeAI("AIzaSyCF6mKRofVaWa-4RC6hjYQtijNqxOZSt58");
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-      const responseContent = completion?.choices?.[0]?.message?.content;
+      const prompt = question;
+
+      const result = await model.generateContent(prompt);
+      console.log(result.response.text());
+
+      // console.log('OpenRouter response:', completion);
+
+      // const responseContent = completion?.choices?.[0]?.message?.content;
+      // if (responseContent) {
+      //   return responseContent;
+      // }
+
+      const responseContent = result.response.text();
+      console.log("ResponseContent is : ", responseContent);
       if (responseContent) {
         return responseContent;
       }
@@ -440,3 +458,4 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
 };
 
 export default AiAssistant;
+

@@ -1,7 +1,6 @@
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { Hexagon } from "lucide-react"
 import { useRef, useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
 import { AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { useAnimation } from "framer-motion"
@@ -361,20 +360,68 @@ export const PulsingCircle = () => (
   </div>
 )
 
-export const RevealAnimation = ({ children }: { children: React.ReactNode }) => {
-  const { ref, inView: isInView } = useInView({ triggerOnce: true, rootMargin: "-100px" })
+import React from "react"
+
+interface RevealAnimationProps {
+  children: React.ReactNode
+  offsetY?: number
+  duration?: number
+  delay?: number
+  threshold?: number | number[]
+  rootMargin?: string
+  /** If false, animations re-trigger whenever it re-enters view */
+  triggerOnce?: boolean
+}
+
+export const RevealAnimation: React.FC<RevealAnimationProps> = ({
+  children,
+  offsetY = 50,
+  duration = 0.8,
+  delay = 0,
+  threshold = 0.2,
+  rootMargin = "-100px",
+  triggerOnce = true,
+}) => {
+  // Check user’s “prefers-reduced-motion” setting
+  const prefersReducedMotion = useReducedMotion()
+
+  const { ref, inView } = useInView({
+    triggerOnce,
+    threshold,
+    rootMargin,
+  })
+
+  // Variants for motion
+  const variants = {
+    hidden: {
+      opacity: 0,
+      y: prefersReducedMotion ? 0 : offsetY,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: prefersReducedMotion ? 0.01 : duration,
+        ease: "easeOut",
+        delay,
+      },
+    },
+  }
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      // Initial and animate states driven by intersection observer
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      variants={variants}
+      style={{ willChange: "opacity, transform" }} // Hint for performance
     >
       {children}
     </motion.div>
   )
 }
+
 
 interface RoadmapItemProps {
   icon: LucideIcon;
@@ -436,6 +483,7 @@ export const NeonGlow = () => {
 import { useScroll, useTransform, useSpring } from "framer-motion"
 import { type ReactNode } from "react"
 import { Ease } from "gsap"
+import { cn } from "@/lib/utils"
 
 interface ParallaxScrollProps {
     children: ReactNode;
@@ -450,77 +498,78 @@ interface ParallaxScrollProps {
     threshold?: number[];      
 }
 
-export const ParallaxScroll = ({
-    children,
-    speed = 1,
-    direction = "up",
-    easing = "easeInOut",
-    springConfig = {
-        stiffness: 100,
-        damping: 30,
-        mass: 1
-    },
-    threshold = [0.2]
-}: ParallaxScrollProps) => {
-    const elementRef = useRef<HTMLDivElement>(null)
-    const [elementTop, setElementTop] = useState(0)
-    const [clientHeight, setClientHeight] = useState(0)
-    const { ref: inViewRef, inView } = useInView({ threshold })
-    
-    const mergedRef = (node: HTMLDivElement) => {
-        elementRef.current = node;
-        inViewRef(node);
-    };
+export function ParallaxScroll({
+  children,
+  speed = 0.5, // make it small for slower effect
+  direction = "up",
+}: ParallaxScrollProps) {
+  const elementRef = useRef<HTMLDivElement>(null)
+  const [elementTop, setElementTop] = useState(0)
+  const [clientHeight, setClientHeight] = useState(0)
 
-    const { scrollY } = useScroll()
+  // Intersection observer to see if in viewport
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.2 })
 
-    useEffect(() => {
-        const element = elementRef.current
-        if (!element) return
+  // Merge refs so we can both track size and observe intersection
+  const mergedRef = (node: HTMLDivElement) => {
+    elementRef.current = node
+    inViewRef(node)
+  }
 
-        const onResize = () => {
-            setElementTop(element.offsetTop)
-            setClientHeight(window.innerHeight)
-        }
+  // Track window scroll
+  const { scrollY } = useScroll()
 
-        onResize()
-        window.addEventListener("resize", onResize)
-        return () => window.removeEventListener("resize", onResize)
-    }, [elementRef])
+  // On mount or resize, recalc positions
+  useEffect(() => {
+    const element = elementRef.current
+    if (!element) return
 
-    const scrollRange = [
-        Math.max(elementTop - clientHeight, 0),
-        elementTop + (elementRef.current?.offsetHeight || 0)
-    ]
+    const onResize = () => {
+      setElementTop(element.offsetTop)
+      setClientHeight(window.innerHeight)
+    }
+    onResize()
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [])
 
-    const transformRange = direction === "up" 
-        ? [0, -(scrollRange[1] - scrollRange[0]) * speed]
-        : [0, (scrollRange[1] - scrollRange[0]) * speed]
+  // Calculate how far the parallax should move
+  const scrollRange = [
+    Math.max(elementTop - clientHeight, 0),
+    elementTop + (elementRef.current?.offsetHeight ?? 0)
+  ]
+  const totalDistance = (scrollRange[1] - scrollRange[0]) * speed
+  
+  const transformRange = 
+    direction === "up" ? [0, -totalDistance] : [0, totalDistance]
 
-    const y = useSpring(
-        useTransform(
-            scrollY, 
-            scrollRange, 
-            transformRange,
-        ), 
-        {
-            ...springConfig,
-            velocity: scrollY.getVelocity()
-        }
-    )
+  // 1) Option A: Direct transform with ease
+  // const y = useTransform(scrollY, scrollRange, transformRange, {
+  //   ease: "easeOut",
+  // })
 
-    return (
-        <motion.div
-            ref={elementRef}
-            style={{
-                y: inView ? y : 0,
-                willChange: "transform",
-            }}
-            className="will-change-transform"
-        >
-            {children}
-        </motion.div>
-    )
+  // 2) Option B: Spring-based, but slower config + no velocity
+  const rawY = useTransform(scrollY, scrollRange, transformRange)
+  const y = useSpring(rawY, {
+    stiffness: 60,
+    damping: 30,
+    mass: 1,
+    // velocity: 0 // or skip it
+  })
+
+  return (
+    <motion.div
+      ref={mergedRef}
+      style={{
+        y: inView ? y : 0,
+        willChange: "transform",
+        transform: "translateZ(0)", // GPU hint
+      }}
+      className="will-change-transform"
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 export default function WaveLoader() {

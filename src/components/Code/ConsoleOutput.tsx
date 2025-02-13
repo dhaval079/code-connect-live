@@ -98,7 +98,7 @@ const ConsoleOutput = ({
                   variant="ghost"
                   size="sm"
                   onClick={onClear}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-black"
                 >
                   <Trash className="h-4 w-4" />
                 </Button>
@@ -106,7 +106,7 @@ const ConsoleOutput = ({
                   variant="ghost"
                   size="sm"
                   onClick={onClose}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-black"
                 >
                   <X className="h-4 w-4" />
                 </Button>

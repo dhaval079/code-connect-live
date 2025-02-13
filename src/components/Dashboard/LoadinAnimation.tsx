@@ -54,7 +54,7 @@ const ORBITING_DOTS = 12;
 // ======================
 const ModernLoader: React.FC<ModernLoaderProps> = ({
   onComplete,
-  duration = 3000, // Default: 3 seconds
+  duration = 2000, // Default: 3 seconds
 }) => {
   // 1. Progress Logic
   const progress = useProgress(duration, onComplete);

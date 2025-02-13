@@ -9,9 +9,9 @@ import {
   Play,
   ChevronRight,
   ChevronLeft,
-  Maximize2,
-  Minimize2,
-  Sun,
+  Maximize,
+  Minimize,
+  SunMoon,
   Moon,
   Settings,
   Save,
@@ -35,14 +35,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import dynamic from "next/dynamic"
-import { Client } from "@/components/Client"
-import { Chat } from "@/components/Chat"
+import { Client } from "@/components/Code/Client"
+import { Chat } from "@/components/Code/Chat"
 import { Skeleton } from "@/components/ui/skeleton"
-import ConsoleOutput from "@/components/ConsoleOutput"
-import AiAssistant from "@/components/AiAssistant"
-import WaveLoader from "@/components/Dashboard"
+import ConsoleOutput from "@/components/Code/ConsoleOutput"
+import AiAssistant from "@/components/Code/AiAssistant"
+import WaveLoader from "@/components/Dashboard/animations/WaveLoader"
 
-const MonacoEditor = dynamic(() => import("@/components/monaco-editor"), { ssr: false })
+const MonacoEditor = dynamic(() => import("@/components/Code/monaco-editor"), { ssr: false })
 
 function EditorPageContent() {
   // Socket and Client State
@@ -623,12 +623,11 @@ function EditorPageContent() {
           </div>
           <div className="flex items-center space-x-2">
             {[
-              {
-                icon: isFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />,
+              {                icon: isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />,
                 onClick: toggleFullscreen
               },
               {
-                icon: isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />,
+                icon: isDarkMode ? <SunMoon className="h-5 w-5" /> : <Moon className="h-5 w-5" />,
                 onClick: toggleDarkMode
               },
               {
@@ -638,7 +637,7 @@ function EditorPageContent() {
             ].map((button, index) => (
               <motion.div
                 key={index}
-                whileHover={{ rotate: 1, scale: 1.1 }}
+                whileHover={{ rotate: 0, scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
                 <Button variant="ghost" size="icon" onClick={button.onClick}>
@@ -717,9 +716,9 @@ function EditorPageContent() {
       <AnimatePresence>
         {isSettingsOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 20, scale: 1 }}
+            animate={{ opacity: 1, y: 1, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className={`absolute right-4 top-16 w-80 p-6 rounded-lg shadow-lg ${isDarkMode ? "bg-gray-800" : "bg-white"
               }`}
@@ -765,7 +764,7 @@ function EditorPageContent() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="vs-dark">Dark</SelectItem>
-                    <SelectItem value="vs-light">Light</SelectItem>
+                    {/* <SelectItem value="vs-light">Light</SelectItem> */}
                   </SelectContent>
                 </Select>
               </div>
