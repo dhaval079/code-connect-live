@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { AnimatedLogo } from './Decorative';
+import UserProfile from './UserProfile';
 
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,20 +147,20 @@ const Header = () => {
       <div className="flex items-center">
         {/* Desktop Navigation */}
         <motion.nav
-          className="hidden lg:flex space-x-6"
-          variants={{
-            hidden: { opacity: 0, y: -20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                staggerChildren: 0.1,
-              },
+        className="hidden lg:flex items-center space-x-6"
+        variants={{
+          hidden: { opacity: 0, y: -20 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+              staggerChildren: 0.1,
             },
-          }}
-          initial="hidden"
-          animate="visible"
-        >
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+      >
           {["Features", "How It Works", "FAQ"].map((item) => (
             <motion.a
               key={item}
@@ -180,11 +181,17 @@ const Header = () => {
               />
             </motion.a>
           ))}
+
+        <div className="ml-4">
+          <UserProfile />
+        </div>
         </motion.nav>
         
         {/* Mobile Navigation */}
+        <div className="lg:hidden flex items-center gap-4">
+        <UserProfile />
         <MobileNav />
-      </div>
+      </div>      </div>
     </motion.header>
   );
 };

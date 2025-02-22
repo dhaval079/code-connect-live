@@ -13,7 +13,7 @@ import { HoverCard } from "./HoverCard"
 
 export default function WhyCodeConnect() { 
     return (
-        <motion.section id="why-codeconnect" className="mt-32">
+        <motion.section id="why-codeconnect" className="mt-32 p-4">
         <h2 className="text-4xl font-bold text-center mb-16">Why CodeConnect?</h2>
         <div className="max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl shadow-cyan-500/10">
           <p className="text-lg text-slate-300 mb-6">

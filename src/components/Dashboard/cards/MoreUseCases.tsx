@@ -60,7 +60,7 @@ export default function MoreUseCases() {
     return (
         <motion.section 
             id="use-cases" 
-            className="mt-32 relative overflow-hidden"
+            className="mt-32 relative overflow-hidden p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}

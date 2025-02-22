@@ -12,6 +12,8 @@ body {
 }
 
 
+
+
 @layer utilities {
   .scroll-section {
     @apply relative min-h-screen w-full;
@@ -79,9 +81,7 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  
   body {
     @apply bg-background text-foreground;
   }

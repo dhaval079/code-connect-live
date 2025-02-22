@@ -20,8 +20,8 @@ export const HoverCard = ({ icon: Icon, title, description }: HoverCardProps) =>
   return (
     <motion.div
       className="bg-slate-800/50 backdrop-blur-xl rounded-xl p-6 shadow-lg"
-      whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(6, 182, 212, 0.3)" }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(6, 182, 212, 0.3)" }}
+      transition={{ duration: 0.5 }}
     >
       <div className="flex items-center mb-4">
         {Icon && <Icon className="w-8 h-8 text-cyan-400 mr-3" />}

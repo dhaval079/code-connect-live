@@ -88,4 +88,3 @@ const config: Config = {
 }
 
 export default withTV(config)
-

@@ -1,87 +1,146 @@
-import { useScroll, useTransform, useSpring } from "framer-motion"
-import { type ReactNode } from "react"
-import { Ease } from "gsap"
-import { motion, useReducedMotion } from "framer-motion"
-import { Hexagon, LucideIcon } from "lucide-react"
-import { useRef, useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { AnimatePresence } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import { useAnimation } from "framer-motion"
-import { HTMLMotionProps } from "framer-motion";
+"use client"
 
+import type React from "react"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 interface FuturisticInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label: string;
-    icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  }
-  
-  export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: Icon, ...props }) => {
-    const [isFocused, setIsFocused] = useState(false);
-  
-    return (
-      <div className="space-y-2 relative w-full">
-        <label className="text-sm font-medium text-cyan-300" htmlFor={props.id}>
-          {label}
-        </label>
-  
-        <div className="relative group">
-          {/* Text Input */}
-          <input
-            {...props}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            className={`
-              w-full bg-slate-800/50 
-              border-2 border-cyan-500/20 
-              text-white placeholder:text-slate-500 
-              rounded-lg px-4 py-2 pl-10 
-              outline-none transition-all duration-300 
-              hover:border-cyan-600
-              focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/30
-            `}
-          />
-  
-          {/* Input Icon */}
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400 w-5 h-5 pointer-events-none" />
-  
-          {/* AnimatePresence for Focus Glow */}
-          <AnimatePresence>
-            {isFocused && (
+  label: string
+  icon: React.FC<React.SVGProps<SVGSVGElement>>
+}
+
+export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: Icon, className, ...props }) => {
+  const [isFocused, setIsFocused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
+  return (
+    <div className="space-y-2 relative w-full">
+      <label className="text-sm font-medium text-cyan-300" htmlFor={props.id}>
+        {label}
+      </label>
+
+      <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        {/* Text Input */}
+        <input
+          {...props}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className={cn(
+            `
+            w-full bg-slate-900/80 
+            border-3 border-cyan-500/30 
+            text-cyan-50 placeholder:text-slate-500 
+            rounded-lg px-2 py-2 pl-12
+            outline-none transition-all duration-300 
+            hover:border-cyan-400/50
+            focus:border-cyan-400 focus:ring-3 focus:ring-cyan-400/30
+          `,
+            className,
+          )}
+        />
+
+        {/* Input Icon */}
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400 w-6 h-6 pointer-events-none" />
+
+        {/* Animated border */}
+        <AnimatePresence>
+          {(isHovered || isFocused) && (
+            <motion.div
+              className="absolute inset-0 rounded-lg pointer-events-none"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+            >
               <motion.div
-                key="focusGlow"
-                className="absolute inset-0 rounded-lg pointer-events-none"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-              >
-                {/* Pulsing border glow */}
+                className="absolute inset-0 rounded-lg border-2 border-cyan-400"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                style={{
+                  strokeDasharray: "0 1",
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Focus and hover effects */}
+        <AnimatePresence>
+          {isFocused && (
+            <motion.div
+              className="absolute inset-0 rounded-lg pointer-events-none"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+            >
+              {/* Pulsing glow */}
+              <motion.div
+                className="absolute inset-0 rounded-lg"
+                initial={{ boxShadow: "0 0 0 0 rgba(6,182,212,0.6)" }}
+                animate={{
+                  boxShadow: [
+                    "0 0 0 0 rgba(6,182,212,0.6)",
+                    "0 0 25px 4px rgba(6,182,212,0.8)",
+                    "0 0 0 0 rgba(6,182,212,0.6)",
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatType: "loop" }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Neon-like glow on hover (behind input) */}
+        <motion.div
+          className="absolute inset-0 rounded-lg pointer-events-none z-[-1]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{
+            boxShadow: "0 0 30px 5px rgba(6,182,212,0.4), inset 0 0 20px 2px rgba(6,182,212,0.3)",
+          }}
+        />
+
+        {/* Futuristic particles */}
+        <AnimatePresence>
+          {isFocused && (
+            <motion.div
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {[...Array(10)].map((_, index) => (
                 <motion.div
-                  className="absolute inset-0 rounded-lg"
-                  initial={{ boxShadow: '0 0 0 0 rgba(6,182,212,0.6)' }}
-                  animate={{
-                    boxShadow: [
-                      '0 0 0 0 rgba(6,182,212,0.6)',
-                      '0 0 15px 2px rgba(6,182,212,0.8)',
-                      '0 0 0 0 rgba(6,182,212,0.6)',
-                    ],
+                  key={index}
+                  className="absolute w-1 h-1 bg-cyan-400 rounded-full"
+                  initial={{
+                    x: Math.random() * 100 - 50,
+                    y: Math.random() * 100 - 50,
+                    scale: 0,
                   }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatType: 'loop' }}
+                  animate={{
+                    x: Math.random() * 100 - 50,
+                    y: Math.random() * 100 - 50,
+                    scale: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    ease: "easeInOut",
+                    delay: Math.random() * 2,
+                  }}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-  
-          {/* Neon-like glow on hover (behind input) */}
-          <motion.div
-            className="absolute inset-0 rounded-lg pointer-events-none z-[-1]"
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1, boxShadow: '0 0 25px 5px rgba(6,182,212,0.4)' }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
-          />
-        </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    );
-  };
-  
+    </div>
+  )
+}
+

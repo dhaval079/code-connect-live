@@ -35,14 +35,17 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import dynamic from "next/dynamic"
-import { Client } from "@/components/Code/Client"
-import { Chat } from "@/components/Code/Chat"
+import { Client } from "@/components/Editor/Client"
+import { Chat } from "@/components/Editor/Chat"
 import { Skeleton } from "@/components/ui/skeleton"
-import ConsoleOutput from "@/components/Code/ConsoleOutput"
-import AiAssistant from "@/components/Code/AiAssistant"
+import ConsoleOutput from "@/components/Editor/ConsoleOutput"
+import AiAssistant from "@/components/Editor/AiAssistant"
 import WaveLoader from "@/components/Dashboard/animations/WaveLoader"
 
-const MonacoEditor = dynamic(() => import("@/components/Code/monaco-editor"), { ssr: false })
+const MonacoEditor = dynamic(() => import("@/components/Editor/monaco-editor"), {
+  ssr: false,
+  loading: () => <div>Loadin...</div>
+});
 
 function EditorPageContent() {
   // Socket and Client State
@@ -81,11 +84,11 @@ function EditorPageContent() {
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
 
   // Refs
-  const editorRef = useRef(null)
+  const editorRef = useRef<any>(null)
   const outputRef = useRef(null)
   const controls = useAnimation()
-  const [code, setCode] = 
-  useState(`//Start Coding Here...
+  const [code, setCode] =
+    useState(`//Start Coding Here...
   // Function to print a pyramid pattern
   function printPyramid(height) {
       let pattern = '';
@@ -106,7 +109,7 @@ function EditorPageContent() {
   }
   console.log(printPyramid(5));`);
 
-    const [typingUsers, setTypingUsers] = useState(new Set())
+  const [typingUsers, setTypingUsers] = useState(new Set())
   const [output, setOutput] = useState("")
   const [consoleOutput, setConsoleOutput] = useState<Array<{ type: "log" | "error" | "info"; content: string }>>([])
   const lastTypingEventRef = useRef<number>(0)
@@ -364,9 +367,19 @@ function EditorPageContent() {
   }
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-    setTheme(isDarkMode ? "vs-light" : "vs-dark")
-  }
+    setIsDarkMode(!isDarkMode);
+    setTheme(isDarkMode ? "vs-light" : "vs-dark");
+
+    // Update monaco editor theme
+    if (editorRef.current) {
+      editorRef.current.updateOptions({
+        theme: isDarkMode ? "vs-light" : "vs-dark"
+      });
+    }
+
+    // Update document theme class for Tailwind
+    document.documentElement.classList.toggle("dark");
+  };
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen)
@@ -468,7 +481,8 @@ function EditorPageContent() {
 
   return (
     <motion.div
-      className={`h-screen w-full overflow-hidden flex ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
+      className={`h-screen w-full overflow-hidden flex ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100  text-black"
+        }`}
       initial="hidden"
       animate={isPageLoaded ? "visible" : "hidden"}
       variants={pageVariants}
@@ -481,12 +495,19 @@ function EditorPageContent() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="w-80 bg-gradient-to-b from-gray-800 to-gray-900 border-gray-700 border-r flex flex-col"
+            className={`w-80 
+              bg-gradient-to-b from-gray-800 to-gray-900 border-gray-700 text-black
+              border-r flex flex-col`}
           >
             {/* Connected Users */}
             <ScrollArea className="flex-1 p-4">
-              <motion.h2 variants={itemVariants} className="text-sm  justify-center items-center text-center mx-auto font-semibold uppercase mb-4">
-                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-gray-400 lowercase">({clients.length} users)</span>
+              <motion.h2
+                variants={itemVariants}
+                className={`text-sm justify-center items-center text-center mx-auto font-semibold uppercase mb-4 ${isDarkMode
+                  ? "text-gray-400"
+                  : "text-gray-600"
+                  }`}
+              >                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-gray-400 lowercase">({clients.length} users)</span>
               </motion.h2>
               <motion.div className="max-h-[calc(100vh-200px)] overflow-y-auto space-y-3" variants={itemVariants}>
                 {clients.map((client) => (
@@ -497,7 +518,7 @@ function EditorPageContent() {
                       isTyping={typingUsers.has(client.username)}
                       lastActive={new Date().toISOString()}
                       messageCount={0}
-                      mood="busy"
+                      mood={null}
                     />
                   </motion.div>
                 ))}
@@ -506,11 +527,11 @@ function EditorPageContent() {
 
             {/* Room Controls */}
             <motion.div variants={itemVariants} className="p-4 border-t border-gray-700 space-y-3">
-              <Button data-color="white" effect="gooeyLeft" variant="secondary" className="w-full" onClick={() => setIsShareDialogOpen(true)}>
+              <Button data-color="white" effect="gooeyRight" variant="secondary" className="bg-white text-black w-full" onClick={() => setIsShareDialogOpen(true)}>
                 <Share className="h-5 w-5 mr-2" />
                 Share Room
               </Button>
-              <Button data-color="red" effect="gooeyLeft" variant="destructive" className="w-full" onClick={leaveRoom}>
+              <Button data-color="red"  variant="destructive" className="bg-red-500 hover:bg-red-600 w-full" onClick={leaveRoom}>
                 <LogOut className="h-5 w-5 mr-2" />
                 Leave Room
               </Button>
@@ -531,7 +552,9 @@ function EditorPageContent() {
             damping: 15,
             duration: 0.5
           }}
-          className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          className={`${isDarkMode
+            ? "bg-gray-800 border-gray-700"
+            : "bg-white border-gray-200"
             } border-b p-4 flex items-center justify-between`}
         >
           <div className="flex items-center space-x-4">
@@ -623,11 +646,12 @@ function EditorPageContent() {
           </div>
           <div className="flex items-center space-x-2">
             {[
-              {                icon: isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />,
+              {
+                icon: isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />,
                 onClick: toggleFullscreen
               },
               {
-                icon: isDarkMode ? <SunMoon className="h-5 w-5" /> : <Moon className="h-5 w-5" />,
+                icon: isDarkMode ? <Moon className="h-5 w-5" /> : <SunMoon className="h-5 w-5" />,
                 onClick: toggleDarkMode
               },
               {
@@ -650,53 +674,54 @@ function EditorPageContent() {
         {/* Editor and Output */}
         <motion.div className="flex-1 flex" variants={itemVariants}>
           {/* Code Editor */}
-          {/* Code Editor */}
-<motion.div 
-  className="flex-1 flex flex-col overflow-hidden" 
-  variants={itemVariants}
->
-  <motion.div 
-    className="flex-1" 
-    ref={editorRef}
-    style={{ 
-      height: isConsoleOpen ? `calc(100vh - ${consoleHeight + 120}px)` : 'calc(100vh - 120px)',
-      transition: 'height 0.3s ease'
-    }}
-  >
-    {isLoading ? (
-      renderSkeleton()
-    ) : (
-      <MonacoEditor
-        roomId={roomId as string}
-        language={language}
-        fontSize={fontSize}
-        value={code}
-        onChange={handleCodeChange}
-        theme={theme}
-      />
-    )}
-  </motion.div>
+          <motion.div
+            className="flex-1 flex flex-col overflow-hidden"
+            variants={itemVariants}
+          >
+            <motion.div
+              className="flex-1"
+              ref={editorRef}
+              style={{
+                height: isConsoleOpen ? `calc(100vh - ${consoleHeight + 120}px)` : 'calc(100vh - 120px)',
+                transition: 'height 0.3s ease'
+              }}
+            >
+              {isLoading ? (
+                renderSkeleton()
+              ) : (
+                <MonacoEditor
+                  roomId={roomId as string}
+                  language={language}
+                  fontSize={fontSize}
+                  value={code}
+                  onChange={handleCodeChange}
+                  theme={theme}
+                />
+              )}
+            </motion.div>
 
-  <ConsoleOutput
-    isOpen={isConsoleOpen}
-    onClose={() => setIsConsoleOpen(false)}
-    consoleOutput={consoleOutput}
-    onClear={clearConsole}
-    height={consoleHeight}
-    onHeightChange={setConsoleHeight}
-    isSidebarOpen={isSidebarOpen}
-  />
+            <ConsoleOutput
+              isOpen={isConsoleOpen}
+              onClose={() => setIsConsoleOpen(false)}
+              consoleOutput={consoleOutput}
+              onClear={clearConsole}
+              height={consoleHeight}
+              onHeightChange={setConsoleHeight}
+              isSidebarOpen={isSidebarOpen}
+              isDarkMode={isDarkMode}
+            />
+            {!isConsoleOpen && (
+              <Button
+                className="fixed bottom-4 right-4 bg-gray-800"
+                onClick={() => setIsConsoleOpen(true)}
+              >
+                <Terminal className="w-4 h-4 mr-2" />
+                Show Console
+              </Button>
+            )}
+          </motion.div>
 
-  {!isConsoleOpen && (
-    <Button
-      className="fixed bottom-4 right-4 bg-gray-800"
-      onClick={() => setIsConsoleOpen(true)}
-    >
-      <Terminal className="w-4 h-4 mr-2" />
-      Show Console
-    </Button>
-  )}
-</motion.div>
+
           <motion.div className="w-90 border-l max-h-full border-gray-700" variants={itemVariants}>
             <Chat
               roomId={roomId as string}
@@ -791,14 +816,15 @@ function EditorPageContent() {
 
       {/* Share Dialog */}
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent
+          className={`sm:max-w-[425px] bg-white border-gray-200 text-black`}>
+            <DialogHeader>
             <DialogTitle>Share Room</DialogTitle>
             <DialogDescription>Copy the link below to invite others to this room.</DialogDescription>
           </DialogHeader>
           <div className="flex items-center space-x-2">
-            <Input className="italic" value={`${window.location.origin}/editor/${roomId}`} readOnly />
-            <Button onClick={copyRoomId}>Copy Room</Button>
+            <Input className="italic text-black bg-white" value={`${window.location.origin}/editor/${roomId}`} readOnly />
+            <Button className="bg-black text-white hover:bg-gray-800" onClick={copyRoomId}>Copy Room</Button>
           </div>
           <div className="text-sm text-gray-500 mt-2">
             Room ID can be used to rejoin this session later.
@@ -808,16 +834,17 @@ function EditorPageContent() {
 
       {/* Leave Room Dialog */}
       <Dialog open={isLeaveDialogOpen} onOpenChange={setIsLeaveDialogOpen}>
-        <DialogContent>
+        <DialogContent 
+        className={`sm:max-w-[425px] bg-white border-gray-200 text-black`}        >
           <DialogHeader>
             <DialogTitle>Leave Room</DialogTitle>
             <DialogDescription>Are you sure you want to leave this room?</DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsLeaveDialogOpen(false)}>
+            <Button variant="outline" className="bg-black text-white" onClick={() => setIsLeaveDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmLeaveRoom}>
+            <Button variant="destructive" className="bg-red-500 hover:bg-red-600 text-white" onClick={confirmLeaveRoom}>
               Leave
             </Button>
           </div>

@@ -71,7 +71,7 @@ interface ClientProps {
   isTyping: boolean
   lastActive: string
   messageCount: number
-  mood: "happy" | "neutral" | "busy"
+  mood: "happy" | "neutral" | "busy" | null
 }
 
 const moodColors = {
@@ -277,13 +277,16 @@ export const Client: React.FC<ClientProps> = ({
       </motion.div>
 
       <motion.div
-        className="absolute bottom-2 right-2"
+        className="absolute bottom-2 right-2 flex items-center space-x-2"
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8, type: "spring" }}
         variants={itemVariants}
       >
-        <Activity size={16} className="text-gray-400" />
+        <Activity size={16} style={{ color: mood ? moodColors[mood] : '#9ca3af' }} />
+        <span className="text-sm" style={{ color: mood ? moodColors[mood] : '#9ca3af' }}>
+          {mood ? moodEmojis[mood] : ''}
+        </span>
       </motion.div>
     </motion.div>
   )

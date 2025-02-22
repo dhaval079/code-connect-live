@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react"
 import * as THREE from "three"
 
-const AnimatedBackground = () => {
+export const AnimatedBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const AnimatedBackground = () => {
       color: 0x06b6d4,
       wireframe: true,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.4,
     })
     const icosahedron = new THREE.Mesh(geometry, material)
     scene.add(icosahedron)
@@ -49,8 +49,6 @@ const AnimatedBackground = () => {
     }
   }, [])
 
-  return <div ref={containerRef} className="fixed inset-0 pointer-events-none" />
+  return <div ref={containerRef} className="absolute inset-0 pointer-events-none z-10" />
 }
-
-export default AnimatedBackground
 

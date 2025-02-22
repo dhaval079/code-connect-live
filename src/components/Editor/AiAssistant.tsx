@@ -437,7 +437,7 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
                 onChange={(e:any) => setInput(e.target.value)}
                 label=""
                 id="ai-input"
-                className="flex-1 mb-4 bg-gray-700/70 backdrop-blur-sm border-gray-600 text-white"
+                className="flex-1 bg-gray-700/70 backdrop-blur-sm border-gray-600 text-white"
               />
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
