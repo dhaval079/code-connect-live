@@ -67,7 +67,7 @@ export default function MoreUseCases() {
             ref={ref}
         >
             <motion.div 
-                className="absolute inset-0 bg-[url('/subtle-pattern.png')] opacity-10"
+                className="absolute inset-0"
                 style={{ y }}
             />
             <motion.h2 
@@ -88,12 +88,12 @@ export default function MoreUseCases() {
                 {useCases.map((useCase, index) => (
                     <motion.div
                         key={useCase.title}
-                        className="bg-slate-800/50 backdrop-blur-xl rounded-xl p-6"
+                        className="bg-slate-800/60 backdrop-blur-xl rounded-xl p-6"
                         variants={staggerVariants}
                         initial="hidden"
                         animate={controls}
                         custom={index}
-                        whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                        whileHover={{ scale: 1.02, transition: { duration: 0.5 } }}
                         whileTap={{ scale: 0.98 }}
                     >
                         <h3 className="text-2xl font-semibold mb-2">{useCase.title}</h3>
@@ -101,15 +101,6 @@ export default function MoreUseCases() {
                     </motion.div>
                 ))}
             </div>
-            <motion.button
-                className="fixed bottom-8 right-8 bg-slate-800/50 backdrop-blur-xl rounded-full p-3 text-white"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2 }}
-                whileHover={{ scale: 1.1 }}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-            </motion.button>
         </motion.section>
     )
 }

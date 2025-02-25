@@ -29,7 +29,7 @@ export const StatsCard = ({
   return (
     <motion.div
       className="bg-slate-800/50 opacity-85 rounded-xl p-4 flex items-center space-x-4 cursor-pointer"
-      whileHover={{ boxShadow: "5px 5px 40px 5px rgba(6, 182, 212, 0.4)" }}
+      whileHover={{ boxShadow: "0px 0px 30px 0px rgba(6, 182, 212, 0.4)" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >

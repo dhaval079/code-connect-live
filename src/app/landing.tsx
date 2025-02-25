@@ -156,7 +156,7 @@ export default function CodeConnect() {
 
   return (
     <div className="overflow-hidden relative">
-      {/* <LoadingScreen /> */}
+      <LoadingScreen />
       <EnhancedCursor />
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
    
@@ -251,7 +251,7 @@ export default function CodeConnect() {
                       <motion.div
                         className="bg-slate-900/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl "
                         whileHover={{
-                          boxShadow: "0 0 50px rgba(6, 182, 212, 0.3)",
+                          boxShadow: "0 0 50px 0 rgba(6, 182, 212, 0.3)",
                           scale: 1.02,
                           transition: {
                             duration: 0.4,
