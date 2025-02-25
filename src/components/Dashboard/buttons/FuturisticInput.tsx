@@ -128,7 +128,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
                     scale: [0, 1, 0],
                   }}
                   transition={{
-                    duration: 1,
+                    duration: 5,
                     repeat: Number.POSITIVE_INFINITY,
                     repeatType: "loop",
                     ease: "easeInOut",
