@@ -11,7 +11,9 @@ body {
   transform: translateZ(0);
 }
 
-
+.debug-layout * {
+  outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+}
 
 
 @layer utilities {

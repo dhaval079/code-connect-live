@@ -104,41 +104,6 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
           }}
         />
 
-        {/* Futuristic particles */}
-        <AnimatePresence>
-          {isFocused && (
-            <motion.div
-              className="absolute inset-0 overflow-hidden pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {[...Array(10)].map((_, index) => (
-                <motion.div
-                  key={index}
-                  className="absolute w-1 h-1 bg-cyan-400 rounded-full"
-                  initial={{
-                    x: Math.random() * 100 - 50,
-                    y: Math.random() * 100 - 50,
-                    scale: 0,
-                  }}
-                  animate={{
-                    x: Math.random() * 100 - 50,
-                    y: Math.random() * 100 - 50,
-                    scale: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    ease: "easeInOut",
-                    delay: Math.random() * 2,
-                  }}
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   )

@@ -156,7 +156,7 @@ export default function CodeConnect() {
 
   return (
     <div className="overflow-hidden relative">
-      <LoadingScreen />
+      {/* <LoadingScreen /> */}
       <EnhancedCursor />
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
    
