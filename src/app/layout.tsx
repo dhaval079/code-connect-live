@@ -3,7 +3,6 @@ import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { SocketProvider } from "@/providers/socketProvider"
-import ScrollToTop from '@/components/Dashboard/ScrollToTop'
 import { ClerkProvider } from '@clerk/nextjs'
 
 const inter = Inter({

@@ -23,28 +23,84 @@ import {
   Sparkles,
   MessageSquare,
 } from "lucide-react"
-import { Resizable } from "re-resizable"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-// import { onedarkpro } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import { useSocket } from "@/providers/socketProvider"
-import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import dynamic from "next/dynamic"
-import { Client } from "@/components/Editor/Client"
-import { Chat } from "@/components/Editor/Chat"
-import { Skeleton } from "@/components/ui/skeleton"
-import ConsoleOutput from "@/components/Editor/ConsoleOutput"
-import AiAssistant from "@/components/Editor/AiAssistant"
-import WaveLoader from "@/components/Dashboard/animations/WaveLoader"
-
+const Button = dynamic(
+  () => import("@/components/ui/button").then((mod) => mod.Button)
+);
+const Slider = dynamic(
+  () => import("@/components/ui/slider").then((mod) => mod.Slider)
+);
+const Select = dynamic(
+  () => import("@/components/ui/select").then((mod) => mod.Select)
+);
+const SelectTrigger = dynamic(
+  () => import("@/components/ui/select").then((mod) => mod.SelectTrigger)
+);
+const SelectValue = dynamic(
+  () => import("@/components/ui/select").then((mod) => mod.SelectValue)
+);
+const SelectContent = dynamic(
+  () => import("@/components/ui/select").then((mod) => mod.SelectContent)
+);
+const SelectItem = dynamic(
+  () => import("@/components/ui/select").then((mod) => mod.SelectItem)
+);
+const ScrollArea = dynamic(
+  () =>
+    import("@/components/ui/scroll-area").then((mod) => mod.ScrollArea)
+);
+const Dialog = dynamic(
+  () => import("@/components/ui/dialog").then((mod) => mod.Dialog)
+);
+const DialogContent = dynamic(
+  () =>
+    import("@/components/ui/dialog").then((mod) => mod.DialogContent)
+);
+const DialogHeader = dynamic(
+  () =>
+    import("@/components/ui/dialog").then((mod) => mod.DialogHeader)
+);
+const DialogTitle = dynamic(
+  () =>
+    import("@/components/ui/dialog").then((mod) => mod.DialogTitle)
+);
+const DialogDescription = dynamic(
+  () =>
+    import("@/components/ui/dialog").then((mod) => mod.DialogDescription)
+);
+const Input = dynamic(
+  () => import("@/components/ui/input").then((mod) => mod.Input)
+);
+const Client = dynamic(
+  () => import("@/components/Editor/Client").then((mod) => mod.Client),
+  { ssr: false }
+);
+const Chat = dynamic(
+  () => import("@/components/Editor/Chat").then((mod) => mod.Chat),
+  { ssr: false }
+);
+const Skeleton = dynamic(
+  () => import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
+);
+const ConsoleOutput = dynamic(
+  () =>
+    import("@/components/Editor/ConsoleOutput").then((mod) => mod.default),
+  { ssr: false }
+);
+const AiAssistant = dynamic(
+  () =>
+    import("@/components/Editor/AiAssistant").then((mod) => mod.default),
+  { ssr: false }
+);
+const WaveLoader = dynamic(
+  () =>
+    import("@/components/Dashboard/animations/WaveLoader").then((mod) => mod.default),
+  { ssr: false }
+);
 const MonacoEditor = dynamic(() => import("@/components/Editor/monaco-editor"), {
   ssr: false,
-  loading: () => <div>Loadin...</div>
+  loading: () => <div>Loading...</div>
 });
 
 function EditorPageContent() {
@@ -811,9 +867,6 @@ function EditorPageContent() {
         </motion.button>
       )}
 
-      {/* Floating Action Buttons */}
-
-
       {/* Share Dialog */}
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
         <DialogContent
@@ -850,7 +903,6 @@ function EditorPageContent() {
           </div>
         </DialogContent>
       </Dialog>
-
       <Toaster />
     </motion.div>
   )

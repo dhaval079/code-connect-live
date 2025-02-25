@@ -84,7 +84,7 @@ const ProgressGradient = memo(() => (
 
 // Main optimized component
 export const ModernLoader: React.FC<ModernLoaderProps> = memo(
-  ({ onComplete, duration = 2500, entranceDelay = 1000 }) => {
+  ({ onComplete, duration = 3000, entranceDelay = 1000 }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [startProgress, setStartProgress] = useState(false);
 

@@ -18,6 +18,7 @@ import {
   notionists,
   personas
 } from '@dicebear/collection';
+import Image from "next/image"
 
 // Define avatar style type
 type AvatarStyle = Style<{
@@ -207,7 +208,7 @@ export const Client: React.FC<ClientProps> = ({
           whileHover={{ scale: 1.1, rotate: 360 }}
           transition={{ type: "spring", stiffness: 300, damping: 10 }}
         >
-          <img src={avatar || "/placeholder.svg"} alt={user} className="w-16 h-16" />
+          <Image width={16} height={16} src={avatar || "/placeholder.svg"} alt={user} className="w-16 h-16" />
         </motion.div>
       </motion.div>
 

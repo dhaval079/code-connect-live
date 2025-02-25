@@ -1,99 +1,167 @@
-import { useScroll, useTransform, useSpring } from "framer-motion"
-import { type ReactNode } from "react"
-import { Ease } from "gsap"
-import { motion, useReducedMotion } from "framer-motion"
-import { Hexagon } from "lucide-react"
-import { useRef, useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { AnimatePresence } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import { useAnimation } from "framer-motion"
-import { HTMLMotionProps } from "framer-motion";
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
-interface ParallaxScrollProps {
-    children: ReactNode;
-    speed?: number;           
-    direction?: "up" | "down"; 
-    easing?: "linear" | "easeIn" | "easeOut" | "easeInOut" | number[];  // Modified to accept array
-    springConfig?: {          
-        stiffness?: number;
-        damping?: number;
-        mass?: number;
-    };
-    threshold?: number[];      
+interface PremiumParallaxProps {
+  children: React.ReactNode;
+  speed?: number;
+  friction?: number;
+  ease?: number;
 }
 
-export function ParallaxScroll({
+export const PremiumParallax: React.FC<PremiumParallaxProps> = ({
   children,
-  speed = 0.5, // make it small for slower effect
-  direction = "up",
-}: ParallaxScrollProps) {
-  const elementRef = useRef<HTMLDivElement>(null)
-  const [elementTop, setElementTop] = useState(0)
-  const [clientHeight, setClientHeight] = useState(0)
+  speed = 0.2,
+  friction = 0.8,
+  ease = 0.15
+}) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const smoothScrollRef = useRef({
+    current: 0,
+    target: 0,
+    limit: 0
+  });
 
-  // Intersection observer to see if in viewport
-  const { ref: inViewRef, inView } = useInView({ threshold: 0.2 })
-
-  // Merge refs so we can both track size and observe intersection
-  const mergedRef = (node: HTMLDivElement) => {
-    elementRef.current = node
-    inViewRef(node)
-  }
-
-  // Track window scroll
-  const { scrollY } = useScroll()
-
-  // On mount or resize, recalc positions
+  // Smooth scroll animation
   useEffect(() => {
-    const element = elementRef.current
-    if (!element) return
+    const wrapper = wrapperRef.current;
+    const content = contentRef.current;
+    if (!wrapper || !content) return;
 
-    const onResize = () => {
-      setElementTop(element.offsetTop)
-      setClientHeight(window.innerHeight)
-    }
-    onResize()
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  }, [])
+    // Calculate scroll limits
+    const calculateDimensions = () => {
+      smoothScrollRef.current.limit = 
+        content.getBoundingClientRect().height - window.innerHeight;
+    };
 
-  // Calculate how far the parallax should move
-  const scrollRange = [
-    Math.max(elementTop - clientHeight, 0),
-    elementTop + (elementRef.current?.offsetHeight ?? 0)
-  ]
-  const totalDistance = (scrollRange[1] - scrollRange[0]) * speed
-  
-  const transformRange = 
-    direction === "up" ? [0, -totalDistance] : [0, totalDistance]
+    calculateDimensions();
+    window.addEventListener('resize', calculateDimensions);
 
-  // 1) Option A: Direct transform with ease
-  // const y = useTransform(scrollY, scrollRange, transformRange, {
-  //   ease: "easeOut",
-  // })
+    // Initialize GSAP smooth scroll
+    const smoothScroll = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true
+      }
+    });
 
-  // 2) Option B: Spring-based, but slower config + no velocity
-  const rawY = useTransform(scrollY, scrollRange, transformRange)
-  const y = useSpring(rawY, {
-    stiffness: 60,
+    // Add parallax effect to elements with data-speed attribute
+    gsap.utils.toArray<HTMLElement>('[data-speed]').forEach(element => {
+      const speedAttr = element.getAttribute('data-speed') || speed;
+      const parallaxDistance = element.offsetHeight * Number(speedAttr);
+
+      smoothScroll.to(element, {
+        y: -parallaxDistance,
+        ease: 'none'
+      }, 0);
+    });
+
+    // Handle smooth scrolling
+    let animationFrame: number;
+    const updateScroll = () => {
+      smoothScrollRef.current.current = gsap.utils.interpolate(
+        smoothScrollRef.current.current,
+        smoothScrollRef.current.target,
+        ease
+      );
+
+      const scrollProgress = smoothScrollRef.current.current;
+      
+      gsap.set(content, {
+        y: -scrollProgress,
+        force3D: true
+      });
+
+      animationFrame = requestAnimationFrame(updateScroll);
+    };
+
+    // Start animation loop
+    animationFrame = requestAnimationFrame(updateScroll);
+
+    // Handle wheel events for custom scroll speed
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      const scrollTarget = smoothScrollRef.current.target + e.deltaY * friction;
+      smoothScrollRef.current.target = gsap.utils.clamp(
+        0,
+        smoothScrollRef.current.limit,
+        scrollTarget
+      );
+    };
+
+    wrapper.addEventListener('wheel', handleWheel, { passive: false });
+
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      window.removeEventListener('resize', calculateDimensions);
+      wrapper.removeEventListener('wheel', handleWheel);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [speed, friction, ease]);
+
+  // Get scroll progress for additional effects
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ['start start', 'end end']
+  });
+
+  // Create smooth scroll progress
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
     damping: 30,
-    mass: 1,
-    // velocity: 0 // or skip it
-  })
+    mass: 1
+  });
+
+  // Create transform values based on scroll progress
+  const scale = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.05, 1]);
+  const opacity = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
   return (
-    <motion.div
-      ref={mergedRef}
+    <div
+      ref={wrapperRef}
+      className="relative w-full overflow-hidden"
       style={{
-        y: inView ? y : 0,
-        willChange: "transform",
-        transform: "translateZ(0)", // GPU hint
+        perspective: '1000px',
+        transformStyle: 'preserve-3d'
       }}
-      className="will-change-transform"
+    >
+      <motion.div
+        ref={contentRef}
+        style={{
+          scale,
+          opacity
+        }}
+        className="relative w-full transform-gpu will-change-transform"
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+};
+
+// Helper component for parallax sections
+export const ParallaxSection: React.FC<{
+  children: React.ReactNode;
+  speed?: number;
+  className?: string;
+}> = ({ children, speed = 0.5, className = '' }) => {
+  return (
+    <div
+      data-speed={speed}
+      className={`relative ${className}`}
     >
       {children}
-    </motion.div>
-  )
-}
+    </div>
+  );
+};
+
+export default PremiumParallax;

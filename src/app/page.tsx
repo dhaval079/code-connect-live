@@ -10,7 +10,6 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
-    // Show auth modal if user is not signed in
     if (isLoaded && !isSignedIn) {
       setShowAuthModal(true);
     }
@@ -22,7 +21,6 @@ export default function Home() {
       <AuthModal
         isOpen={showAuthModal} 
         onClose={() => {
-          // Only allow closing if signed in
           if (isSignedIn) {
             setShowAuthModal(false);
           }

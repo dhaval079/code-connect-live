@@ -87,6 +87,69 @@ body {
   }
 }
 
+/* Add to your globals.css */
+
+/* Smooth scroll container */
+.smooth-scroll {
+  @apply fixed inset-0 w-full;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Enable hardware acceleration */
+.parallax-content {
+  @apply relative w-full;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Parallax sections */
+.parallax-section {
+  @apply relative overflow-hidden;
+  transform-style: preserve-3d;
+}
+
+/* Different parallax speeds */
+.parallax-slow {
+  --parallax-speed: 0.3;
+}
+
+.parallax-medium {
+  --parallax-speed: 0.5;
+}
+
+.parallax-fast {
+  --parallax-speed: 0.7;
+}
+
+/* Depth layers */
+.parallax-deep {
+  transform: translateZ(-100px) scale(2);
+}
+
+.parallax-shallow {
+  transform: translateZ(-50px) scale(1.5);
+}
+
+.parallax-surface {
+  transform: translateZ(0) scale(1);
+}
+
+/* Premium visual effects */
+.premium-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.premium-shadow {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Smooth transition */
+.smooth-transition {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+}
 
 :root {
   /* Font size scale */
@@ -114,4 +177,15 @@ body {
   --letter-spacing-tight: -0.025em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.025em;
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

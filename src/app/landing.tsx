@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import { useState, useRef, useEffect, lazy } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import { v4 as uuidV4 } from "uuid"
@@ -15,30 +14,38 @@ import {
   Server,
   GitBranch,
   Boxes,
-  CheckCircle2,
 } from "lucide-react"
 import {
   FloatingHexagon,
   CodeBlock,
-  AnimatedLogo
 } from "@/components/Dashboard/Decorative"
-import Header, { MobileNav } from "@/components/Dashboard/Header"
-// import FAQSection from "@/components/Dashboard/FaqSection"
-import LoadingScreen from "@/components/Dashboard/LoadingScreen"
-import SmoothCursor from "@/components/Dashboard/Cursor"
-// import InteractiveDemo from "@/components/Dashboard/CodeViz"
+import Header from "@/components/Dashboard/Header"
 import { HoverCard } from "@/components/Dashboard/cards/HoverCard"
 import { StatsCard } from "@/components/Dashboard/cards/StatsCard"
-import { ParallaxScroll } from "@/components/Dashboard/animations/ParallaxScroll"
-import { RevealAnimation } from "@/components/Dashboard/animations/RevealAnimation"
 import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
-// import MoreUseCases from "@/components/Dashboard/cards/MoreUseCases"
-// import WhyCodeConnect from "@/components/Dashboard/cards/WhyCodeConnect"
-import EnhancedCursor from "@/components/Dashboard/Cursor"
-import AuthDialog from "@/components/Auth/AuthDialog"
 import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import dynamic from "next/dynamic"
 import { Skeleton } from "@/components/ui/skeleton"
+import DotBackgroundDemo from "./dotgrid/page";
+
+const PremiumParallax = dynamic(
+  () => import('@/components/Dashboard/animations/ParallaxScroll').then((mod) => mod.default),
+);
+
+const RevealAnimation = dynamic(
+  () => import('@/components/Dashboard/animations/RevealAnimation').then((mod) => mod.RevealAnimation),
+);
+
+const LoadingScreen = dynamic(() => import('@/components/Dashboard/LoadingScreen'), {
+  ssr: false,
+  loading: () => <div></div>,
+});
+
+const EnhancedCursor = dynamic(
+  () => import('@/components/Dashboard/Cursor').then((mod) => mod.default),
+  { ssr: false }
+);
+
 
 const WhyCodeConnect = dynamic(
   () => import('@/components/Dashboard/cards/WhyCodeConnect'),
@@ -75,13 +82,7 @@ const AnimatedBackground = dynamic(
   }
 );
 
-// const ParticleField = dynamic(
-//   () => import('@/components/Dashboard/animations/ParticleField').then(mod => mod.ParticleField),
-//   {
-//     ssr: false,
-//     loading: () => <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800" />
-//   }
-// );
+
 
 const NeonGlow = dynamic(
   () => import('@/components/Dashboard/animations/NeonGlow').then(mod => mod.NeonGlow),
@@ -111,6 +112,11 @@ export default function CodeConnect() {
   const formRef = useRef(null)
   const isInView = useInView(formRef, { once: true })
 
+  useEffect(() => {
+    console.log("Mounted");
+    return () => console.log("Unmounted");
+  }, []);
+  
 
   const handleJoin = async () => {
     if (!roomId || !username) {
@@ -152,22 +158,13 @@ export default function CodeConnect() {
     <div className="overflow-hidden relative">
       <LoadingScreen />
       <EnhancedCursor />
-      <ParallaxScroll
-        speed={0.1}
-        direction="up"
-        springConfig={{
-          stiffness: 30,
-          damping: 300,
-          mass: 0.5,
-        }}
-        easing={[0.1, 2, 0.2, 2]}
-      >
+      <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
+   
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
           <div className="items-center justify-center text-center">
-          <AnimatedBackground />
-
+            <AnimatedBackground />
           </div>
-        <NeonGlow />
+          <NeonGlow />
           <div className="absolute inset-0 overflow-hidden">
             {[...Array(30)].map((_, i) => (
               <FloatingHexagon key={i} delay={i * 0.3} />
@@ -175,83 +172,16 @@ export default function CodeConnect() {
           </div>
 
           <div className="z-10 relative">
-            
+
             <RevealAnimation>
               <div className="container mx-auto px-4 py-8">
-                {/* <motion.header
-                  className="flex items-center justify-between mb-16"
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                  <motion.div
-                    className="flex items-center space-x-2"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <AnimatedLogo />
-                    <motion.span
-                      className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
-                      animate={{
-                        backgroundPosition: ["0%", "100%", "0%"],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Number.POSITIVE_INFINITY,
-                        repeatType: "reverse",
-                      }}
-                    >
-                      CodeConnect
-                    </motion.span>
-                  </motion.div>
-
-                  <motion.nav
-                    className="hidden lg:flex space-x-6"
-                    variants={{
-                      hidden: { opacity: 0, y: -20 },
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        transition: {
-                          staggerChildren: 0.1,
-                        },
-                      },
-                    }}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    {["Features", "How It Works", "FAQ"].map((item) => (
-                      <motion.a
-                        key={item}
-                        href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                        className="text-slate-300 hover:text-white transition-colors relative"
-                        variants={{
-                          hidden: { opacity: 0, y: -20 },
-                          visible: { opacity: 1, y: 0 },
-                        }}
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        {item}
-                        <motion.div
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500"
-                          initial={{ scaleX: 0 }}
-                          whileHover={{ scaleX: 1 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </motion.a>
-                    ))}
-                  </motion.nav>
-
-                  <div className="lg:hidden">
-                    <MobileNav />
-                  </div>
-                </motion.header> */}
+              
                 <Header />
                 <RevealAnimation
                   effect={["fade", "slide", "blur"]}
                   duration={0.8}
                   delay={0.2}
-                  >
+                >
                   <main className="z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
                     <motion.div
                       className="lg:w-1/2"
@@ -299,14 +229,11 @@ export default function CodeConnect() {
                         like never before.
                       </motion.p>
                       <div className="grid grid-cols-2 gap-4 mb-8">
-                        {/* <StatsCard icon={Globe} title="Active Rooms" value="1,234" />
-                        <StatsCard icon={Users} title="Connected Devs" value="5,678" /> */}
                         <StatsCard icon={Globe} title="Active Rooms" value="1,234" capacity="2k" />
                         <StatsCard icon={Users} title="Connected Devs" value="567" capacity="10k" />
                       </div>
                       <CodeBlock />
                     </motion.div>
-
                     <motion.div
                       ref={formRef}
                       className="lg:w-1/2 w-full max-w-md"
@@ -438,9 +365,13 @@ export default function CodeConnect() {
             </RevealAnimation>
 
             <RevealAnimation
-              
-               >
-         
+
+            >
+              <motion.div>
+
+ 
+
+              </motion.div>
               <motion.section id="features" className="mt-32 px-6 justify-center  items-center mx-auto">
                 <h2 className="text-4xl font-bold text-center mb-16">Key Features</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
@@ -541,7 +472,7 @@ export default function CodeConnect() {
             {/* </RevealAnimation> */}
           </div>
         </div>
-      </ParallaxScroll>
+      </PremiumParallax>
     </div>
   )
 }
