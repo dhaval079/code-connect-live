@@ -3,7 +3,7 @@ import type { DefaultEventsMap } from '@socket.io/component-emitter';
 import { io } from "socket.io-client";
 
 export const initSocket = async (): Promise<Socket<DefaultEventsMap, DefaultEventsMap>> => {
-  const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:8000';
+  const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'https://code-connect-server-production.up.railway.app';
   
   const options = {
     forceNew: true,

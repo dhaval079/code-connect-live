@@ -29,7 +29,7 @@ const SocketProviderInner = ({ children }: { children: React.ReactNode }) => {
   const username = searchParams.get('username');
 
   useEffect(() => {
-    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL ?? 'http://localhost:8000', {
+    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL ?? 'https://code-connect-server-production.up.railway.app', {
       forceNew: true,
       reconnectionAttempts: 5,
       timeout: 10000,
