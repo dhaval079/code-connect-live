@@ -205,7 +205,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                   <form onSubmit={sendMessage} className="relative">
                     <div className="relative flex items-center group">
                       {/* Animated border effect */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-90 blur-sm group-focus-within:opacity-100 transition-all duration-300 animate-gradient-x"></div>
+                      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-90 blur-sm group-focus-within:opacity-100 transition-all duration-300 animate-gradient-x"></div>
 
                       {/* Main input field with rounder edges */}
                       <input
@@ -214,7 +214,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="w-full bg-gray-700 text-white rounded-3xl px-5 py-4 pr-12 focus:outline-none border border-gray-700/50 placeholder:text-gray-500 relative z-10 text-sm shadow-inner"
+                        className="w-full bg-slate-700 text-white rounded-3xl px-5 py-4 pr-12 focus:outline-none border border-gray-600/50 placeholder:text-gray-500 relative z-10 text-sm shadow-inner"
                         autoComplete="off"
                       />
 
