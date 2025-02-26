@@ -94,7 +94,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
 
     socket.on(ACTIONS.SYNC_MESSAGES, handleSyncMessages)
     socket.on(ACTIONS.RECEIVE_MESSAGE, handleReceiveMessage)
-    
+
     return () => {
       socket.off(ACTIONS.SYNC_MESSAGES)
       socket.off(ACTIONS.RECEIVE_MESSAGE)
@@ -132,18 +132,18 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
 
   return (
     <>
-      <Button
+      <AnimatePresence>
+        {!isOpen && (
+          <Button
         variant="ghost"
         size="icon"
         onClick={onToggle}
         className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
-      >
-        {isOpen ? (
-          <X className="h-5 w-5 text-white" />
-        ) : (
-          <MessageSquare className="h-5 w-5 text-white" />
+          >
+        <MessageSquare className="h-5 w-5 text-white" />
+          </Button>
         )}
-      </Button>
+      </AnimatePresence>
 
       <AnimatePresence mode="wait">
         {isOpen && (
@@ -165,7 +165,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
 
                 <div className="flex-1 relative overflow-hidden">
                   {messages.length === 0 ? (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="absolute inset-0 flex items-center justify-center text-gray-400"
@@ -175,8 +175,8 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                         <p className="text-sm">Start a conversation by sending a message</p>
                       </div>
                     </motion.div>
-                  ) : ( 
-                    <ScrollArea 
+                  ) : (
+                    <ScrollArea
                       ref={scrollAreaRef}
                       className="h-[calc(100vh-13rem)] absolute inset-0"
                     >
@@ -184,8 +184,8 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                         <AnimatePresence initial={false}>
                           {messages.map((message) => (
                             <MessageBubble
-                              key={message.id} 
-                              message={message} 
+                              key={message.id}
+                              message={message}
                               isOwnMessage={message.sender === normalizedUsername}
                             />
                           ))}
@@ -196,55 +196,89 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                   )}
                 </div>
 
-                <motion.div className="flex-none p-4 border-t border-gray-700 bg-gray-800">
-                  <form onSubmit={sendMessage} className="flex gap-2">
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Type a message..."
-                      className="flex-1 bg-gray-700 text-gray-100 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                    />
-                    <div className="flex gap-3">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            type="submit"
-                            size="icon"
-                            className="rounded-full bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-                            disabled={!newMessage.trim()}
-                          >
-                            <Send className="h-4 w-4 text-white" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Send message</TooltipContent>
-                      </Tooltip>
+                <motion.div
+                  className="flex-none border-t p-3 text-black border-gray-800/50 bg-gray-900/95 backdrop-blur-sm"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <form onSubmit={sendMessage} className="relative">
+                    <div className="relative flex items-center group">
+                      {/* Animated border effect */}
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-90 blur-sm group-focus-within:opacity-100 transition-all duration-300 animate-gradient-x"></div>
 
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="ghost"
-                            className="rounded-full text-gray-300 hover:text-gray-100 hover:bg-gray-700"
-                            onClick={() => setShowAttachmentModal(true)}
-                          >
-                            <Paperclip className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Attach file</TooltipContent>
-                      </Tooltip>
+                      {/* Main input field with rounder edges */}
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Type a message..."
+                        className="w-full bg-gray-700 text-white rounded-3xl px-5 py-4 pr-12 focus:outline-none border border-gray-700/50 placeholder:text-gray-500 relative z-10 text-sm shadow-inner"
+                        autoComplete="off"
+                      />
+
+                      {/* Animated send button */}
+                      <motion.button
+                        type="submit"
+                        disabled={!newMessage.trim()}
+                        className={`absolute right-2.5 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full transition-colors duration-200 z-10 ${newMessage.trim()
+                            ? 'text-white bg-blue-600 hover:bg-blue-500 shadow-2xl'
+                            : 'text-gray-500 bg-gray-500/70'
+                          }`}
+                        // whileHover={{ scale: newMessage.trim() ? 1.1 : 1 }}
+                        // whileTap={{ scale: newMessage.trim() ? 0.95 : 1 }}
+                        aria-label="Send message"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M22 2L11 13"></path>
+                          <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                        </svg>
+                      </motion.button>
                     </div>
+
+                    {/* Character counter with animated transition */}
+                    <motion.div
+                      className="text-xs text-gray-500 mt-1 ml-1"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: newMessage.length > 0 ? 0.7 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {newMessage.length > 0 && `${newMessage.length}/1000`}
+                    </motion.div>
                   </form>
 
                   {showAttachmentModal && (
-                    <AttachmentModal 
-                      onClose={() => setShowAttachmentModal(false)} 
-                      onAttach={handleAttachment} 
+                    <AttachmentModal
+                      onClose={() => setShowAttachmentModal(false)}
+                      onAttach={handleAttachment}
                     />
                   )}
+
+                  {/* Add the keyframe animation for the gradient */}
+                  <style jsx global>{`
+    @keyframes gradient-x {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animate-gradient-x {
+      background-size: 200% 200%;
+      animation: gradient-x 3s linear infinite;
+    }
+  `}</style>
                 </motion.div>
+
               </div>
             </TooltipProvider>
           </motion.div>

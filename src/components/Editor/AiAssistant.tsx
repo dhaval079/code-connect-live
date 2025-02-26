@@ -7,16 +7,17 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import OpenAI from 'openai';
 import { FuturisticInput } from '../Dashboard/buttons/FuturisticInput';
+import { PlaceholdersAndVanishInput } from '../ui/placeholders-and-vanish-input';
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const messageAnimations = {
-  initial: { 
-    opacity: 0, 
+  initial: {
+    opacity: 0,
     y: 20,
     scale: 0.95
   },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     y: 0,
     scale: 1,
     transition: {
@@ -24,7 +25,7 @@ const messageAnimations = {
       ease: "easeOut"
     }
   },
-  exit: { 
+  exit: {
     opacity: 0,
     scale: 0.95,
     transition: {
@@ -126,27 +127,49 @@ export const MessageContent = ({ content }: { content: string }) => {
   const parts = formatMessage(content);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {parts.map((part, index) => {
         if (part.type === 'code') {
           return (
-            <CodeBlock
+            <motion.div
               key={index}
-              code={part.content}
-              language={part.language ?? 'text'}
-            />
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: index * 0.1,
+                ease: "easeOut"
+              }}
+            >
+              <CodeBlock
+                code={part.content}
+                language={part.language ?? 'text'}
+              />
+            </motion.div>
           );
         }
+
+        // Process regular text with improved styling and animations
+        const paragraphs = part.content.split('\n\n');
+
         return (
-          <motion.p
-            key={index}
-            className="text-sm leading-relaxed whitespace-pre-wrap break-words"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            {part.content}
-          </motion.p>
+          <React.Fragment key={index}>
+            {paragraphs.map((paragraph, pIndex) => (
+              <motion.p
+                key={`${index}-${pIndex}`}
+                className="text-sm leading-relaxed whitespace-pre-wrap break-words"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: (index * 0.1) + (pIndex * 0.05),
+                  ease: "easeOut"
+                }}
+              >
+                {paragraph}
+              </motion.p>
+            ))}
+          </React.Fragment>
         );
       })}
     </div>
@@ -170,7 +193,7 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: "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",
   defaultHeaders: {
-    "HTTP-Referer":  "",
+    "HTTP-Referer": "",
     "X-Title": "CodeConnect"
   }
 });
@@ -201,7 +224,7 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     }
   }, [messages]);
 
-  const askAI = async (question:any) => {
+  const askAI = async (question: any) => {
     try {
       setIsLoading(true);
 
@@ -247,21 +270,31 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     }
   };
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
+  // Replace your handleSubmit function in the AiAssistant component with this version:
+
+  const handleSubmit = async (e: any) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!input.trim() || isLoading) return;
 
+    const currentInput = input;
+    setInput('');
+
     const userMessage: Message = {
-      type: 'user',
-      content: input,
+      type: 'user' as const,
+      content: currentInput,
       timestamp: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
 
     try {
-      const aiResponse = await askAI(input);
+      setIsLoading(true);
+      const aiResponse = await askAI(currentInput);
+
       const aiMessage: Message = {
         type: 'assistant',
         content: aiResponse,
@@ -270,14 +303,203 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
+      console.error('Error in AI response:', error);
+
       const errorMessage: Message = {
         type: 'assistant',
         content: "I apologize, but I'm having trouble right now. Please try again in a moment.",
         timestamp: new Date().toISOString()
       };
+
       setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const placeholders = [
+    "What's the first rule of Fight Club?",
+    "Who is Tyler Durden?",
+    "Where is Andrew Laeddis Hiding?",
+    "Write a Javascript method to reverse a string",
+    "How to assemble your own PC?",
+  ];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+  };
+
+  const EmptyState = () => {
+    return (
+      <motion.div
+        className="flex flex-col items-center justify-center align-middle h-full py-10 px-4 text-center"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+      <motion.div
+        className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/90 via-pink-500/80 to-orange-500/70 flex items-center justify-center mb-5 relative overflow-hidden shadow-lg"
+        animate={{
+          scale: [1, 1.08, 1],
+          rotate: [0, 5, 0, -5, 0],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "easeInOut"
+        }}
+      >
+        {/* Flowing gradient overlay */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gradient-to-r from-teal-300/30 via-indigo-400/40 to-purple-300/30"
+          style={{
+            backgroundSize: "300% 100%"
+          }}
+          animate={{
+            backgroundPosition: ["0% center", "100% center", "0% center"]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+
+        {/* Diagonal flowing gradient */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gradient-to-tr from-yellow-400/20 via-pink-500/30 to-cyan-500/20"
+          style={{
+            backgroundSize: "200% 200%",
+            mixBlendMode: "overlay"
+          }}
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatType: "reverse"
+          }}
+        />
+
+        {/* Multiple pulse rings */}
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          animate={{
+            boxShadow: [
+              "0 0 0 0 rgba(236, 72, 153, 0)",
+              "0 0 0 10px rgba(236, 72, 153, 0.1)",
+              "0 0 0 20px rgba(236, 72, 153, 0.05)",
+              "0 0 0 30px rgba(236, 72, 153, 0.02)",
+              "0 0 0 0 rgba(236, 72, 153, 0)"
+            ]
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+        />
+
+        {/* Inner rotating glow */}
+        <motion.div
+          className="absolute w-full h-full rounded-full bg-gradient-to-r from-white/20 via-transparent to-white/20"
+          animate={{
+            rotate: [0, 360]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+
+        {/* Floating particles */}
+        <div className="relative w-full h-full">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full bg-white/70"
+              style={{
+                left: `${30 + Math.random() * 40}%`,
+                top: `${30 + Math.random() * 40}%`,
+              }}
+              animate={{
+                y: [Math.random() * -10, Math.random() * 10, Math.random() * -10],
+                x: [Math.random() * -10, Math.random() * 10, Math.random() * -10],
+                opacity: [0.3, 0.8, 0.3],
+                scale: [0.8, 1.2, 0.8]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 3,
+                repeat: Infinity,
+                delay: Math.random() * 2
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Center glow */}
+        <motion.div
+          className="relative z-10 w-12 h-12 rounded-full bg-gradient-to-br from-white/30 to-transparent"
+          animate={{
+            opacity: [0.5, 0.8, 0.5],
+            scale: [0.8, 1, 0.8]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity
+          }}
+        />
+      </motion.div>
+      <h3 className="text-xl  text-white mb-3 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
+          {/* I can help with coding questions, explain concepts, assist in bugs and errors. */}
+        </p>
+
+        <motion.div
+          className="grid grid-cols-2 gap-2 mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          {/* <SuggestionChip text="How to use React hooks?" />
+          <SuggestionChip text="Explain async/await" />
+          <SuggestionChip text="Best coding practices" />
+          <SuggestionChip text="CSS Grid vs Flexbox" /> */}
+        </motion.div>
+      </motion.div>
+    );
+  };
+
+  // Add this SuggestionChip component right after the EmptyState component
+
+  const SuggestionChip = ({ text }: { text: string }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+      <motion.div
+        className="bg-gray-700/50 backdrop-blur-sm rounded-full px-3 py-2 text-xs text-gray-300 cursor-pointer border border-gray-700"
+        whileHover={{
+          scale: 1.03,
+          backgroundColor: "rgba(59, 130, 246, 0.15)",
+          borderColor: "rgba(59, 130, 246, 0.3)"
+        }}
+        whileTap={{ scale: 0.97 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+      >
+        <motion.span
+          animate={{ color: isHovered ? "rgb(147, 197, 253)" : "rgb(209, 213, 219)" }}
+          transition={{ duration: 0.2 }}
+        >
+          {text}
+        </motion.span>
+      </motion.div>
+    );
+  };
+
 
   return (
     <AnimatePresence>
@@ -326,42 +548,46 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
             </Button>
           </motion.div>
 
-          {/* <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-            <div className="space-y-6">
-              <AnimatePresence>
-                {messages.map((message, index) => (
-                  <motion.div
-                    key={index}
-                    variants={messageAnimations}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    className={`flex ${
-                      message.type === 'user' ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
+
+          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+            {messages.length > 0 ? (
+              <div className="space-y-6">
+                <AnimatePresence>
+                  {messages.map((message, index) => (
                     <motion.div
-                      className={`max-w-[90%] rounded-lg p-4 ${
-                        message.type === 'user'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
-                      }`}
-                      whileHover={{ scale: 1.01 }}
+                      key={index}
+                      variants={messageAnimations}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <MessageContent content={message.content} />
-                      <motion.span 
-                        className="text-xs opacity-50 mt-2 block"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.5 }}
-                        transition={{ delay: 0.5 }}
+                      <motion.div
+                        className={`max-w-[90%] rounded-lg p-4 ${message.type === 'user'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
+                          }`}
+                        whileHover={{ scale: 1.01 }}
+                        layout
                       >
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </motion.span>
+                        <MessageContent content={message.content} />
+                        <motion.span
+                          className="text-xs opacity-50 mt-2 block"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 0.5 }}
+                          transition={{ delay: 0.5 }}
+                        >
+                          {new Date(message.timestamp).toLocaleTimeString()}
+                        </motion.span>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <EmptyState />
+            )}
+
             {isLoading && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -375,7 +601,8 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
                 </div>
               </motion.div>
             )}
-          </ScrollArea> */}
+          </ScrollArea>
+
           <MessageContainer ref={scrollRef}>
             <AnimatePresence>
               {messages.map((message, index) => (
@@ -390,8 +617,8 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
                 >
                   <motion.div
                     className={`max-w-[90%] rounded-lg p-4 ${message.type === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
                       }`}
                     whileHover={{ scale: 1.01 }}
                   >
@@ -422,35 +649,19 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
               </motion.div>
             )}
           </MessageContainer>
-          <motion.form
-            onSubmit={handleSubmit}
+
+          <motion.div
             className="p-4 border-t border-gray-700"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="flex space-x-2">
-              <FuturisticInput
-               disabled={isLoading}
-                value={input}
-                icon={BotIcon}
-                onChange={(e:any) => setInput(e.target.value)}
-                label=""
-                id="ai-input"
-                className="flex-1 bg-gray-700/70 backdrop-blur-sm border-gray-600 text-white"
-              />
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={isLoading || !input.trim()}
-                  className="bg-blue-600 hover:bg-blue-700 mt-2"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            </div>
-          </motion.form>
+            <PlaceholdersAndVanishInput
+              placeholders={placeholders}
+              onChange={(e) => setInput(e.target.value)}
+              onSubmit={handleSubmit}
+            />
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

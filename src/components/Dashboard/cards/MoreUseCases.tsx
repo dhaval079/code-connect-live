@@ -88,7 +88,7 @@ export default function MoreUseCases() {
                 {useCases.map((useCase, index) => (
                     <motion.div
                         key={useCase.title}
-                        className="bg-slate-800/60 backdrop-blur-xl rounded-xl p-6"
+                        className="bg-slate-800/50 backdrop-blur-xl rounded-xl p-6"
                         variants={staggerVariants}
                         initial="hidden"
                         animate={controls}

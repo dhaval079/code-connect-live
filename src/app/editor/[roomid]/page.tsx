@@ -635,11 +635,11 @@ function EditorPageContent() {
                 backgroundColor: isSidebarOpen ? "rgba(22, 163, 74, 0.2)" : "transparent"
               }}
               transition={{ duration: 0.3 }}
-              className="rounded-md"
+              className="rounded-md text-white"
             >
               <Button
                 variant="default"
-                className="bg-green-600 hover:bg-green-700 transition-colors duration-300"
+                className="bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
                 onClick={handleRunCode}
               >
                 <Play className="h-5 w-5 mr-2" />
