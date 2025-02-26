@@ -185,75 +185,75 @@ export function PlaceholdersAndVanishInput({
       {/* Animated border - positioned behind the form */}
       {/* Replace these two motion.div elements for enhanced pulsing */}
 
-{/* Animated border - positioned behind the form */}
-<motion.div 
-  className="absolute inset-0 rounded-full overflow-hidden"
-  initial={{ opacity: 0 }}
-  animate={{ 
-    opacity: isActive ? 1 : isHovered ? 0.7 : 0,
-  }}
-  transition={{ duration: 0.2 }}
->
-  <motion.div 
-    className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400"
-    animate={{ 
-      backgroundPosition: isActive ? ["0% center", "100% center"] : "0% center" 
-    }}
-    transition={{ 
-      duration: 2,
-      repeat: Infinity,
-      repeatType: "reverse"
-    }}
-    style={{ backgroundSize: "200% 100%" }}
-  />
-</motion.div>
+      {/* Animated border - positioned behind the form */}
+      <motion.div
+        className="absolute inset-0 rounded-full overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: isActive ? 1 : isHovered ? 0.7 : 0,
+        }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400"
+          animate={{
+            backgroundPosition: isActive ? ["0% center", "100% center"] : "0% center"
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+          style={{ backgroundSize: "200% 100%" }}
+        />
+      </motion.div>
 
-{/* Enhanced pulsing glow effect */}
-<motion.div
-  className="absolute inset-[-4px] rounded-full pointer-events-none"
-  animate={{ 
-    scale: isActive ? [1, 1.02, 1] : 1,
-    opacity: isActive ? [0.7, 0.9, 0.7] : 0.4,
-  }}
-  transition={{ 
-    duration: 1.5,
-    repeat: Infinity,
-    repeatType: "reverse",
-  }}
-  style={{ 
-    background: "linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa)",
-    backgroundSize: "400% 100%",
-    filter: "blur(8px)",
-    zIndex: -1
-  }}
-/>
+      {/* Enhanced pulsing glow effect */}
+      <motion.div
+        className="absolute inset-[-6px] rounded-full pointer-events-none"
+        animate={{
+          scale: isActive ? [1, 1.02, 1] : 1,
+          opacity: isActive ? [0.7, 0.9, 0.7] : 0.4,
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        style={{
+          background: "linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa)",
+          backgroundSize: "400% 100%",
+          filter: "blur(8px)",
+          zIndex: -1
+        }}
+      />
 
-{/* Add this new element for extra brightness */}
-<motion.div
-  className="absolute inset-[-2px] rounded-full pointer-events-none"
-  animate={{ 
-    opacity: isActive ? [0.4, 0.8, 0.4] : 0,
-    backgroundPosition: ["0% center", "100% center"],
-  }}
-  transition={{ 
-    opacity: {
-      duration: 1,
-      repeat: Infinity,
-      repeatType: "reverse",
-    },
-    backgroundPosition: {
-      duration: 3,
-      repeat: Infinity,
-      repeatType: "reverse",
-    }
-  }}
-  style={{ 
-    background: "linear-gradient(90deg, #3b82f680, #8b5cf680, #ec489980, #3b82f680)",
-    backgroundSize: "200% 100%",
-    filter: "blur(3px)",
-    zIndex: -1
-  }}
-/>
+      {/* Add this new element for extra brightness */}
+      <motion.div
+        className="absolute inset-[-2px] rounded-full pointer-events-none"
+        animate={{
+          opacity: isActive ? [0.4, 0.8, 0.4] : 0,
+          backgroundPosition: ["0% center", "100% center"],
+        }}
+        transition={{
+          opacity: {
+            duration: 1,
+            repeat: Infinity,
+            repeatType: "reverse",
+          },
+          backgroundPosition: {
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }
+        }}
+        style={{
+          background: "linear-gradient(90deg, #3b82f680, #8b5cf680, #ec489980, #3b82f680)",
+          backgroundSize: "200% 100%",
+          filter: "blur(3px)",
+          zIndex: -1
+        }}
+      />
 
       <form
         className={cn(

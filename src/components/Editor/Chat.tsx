@@ -197,7 +197,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                 </div>
 
                 <motion.div
-                  className="flex-none border-t p-3 text-black border-gray-800/50 bg-gray-900/95 backdrop-blur-sm"
+                  className="flex-none border-t p-3 text-black border-gray-800/50 bg-gray-900/95 backdrop-blur-lg"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
@@ -205,18 +205,18 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                   <form onSubmit={sendMessage} className="relative">
                     <div className="relative flex items-center group">
                       {/* Animated border effect */}
-                      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-90 blur-sm group-focus-within:opacity-100 transition-all duration-300 animate-gradient-x"></div>
+                      <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-90 blur-sm group-focus-within:opacity-100 transition-all duration-300 animate-gradient-x"></div>
 
                       {/* Main input field with rounder edges */}
-                      <input
+                        <input
                         ref={inputRef}
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="w-full bg-slate-700 text-white rounded-3xl px-5 py-4 pr-12 focus:outline-none border border-gray-600/50 placeholder:text-gray-500 relative z-10 text-sm shadow-inner"
+                        className="w-full bg-slate-700 text-white rounded-3xl px-5 py-4 pr-12 focus:outline-none border border-gray-600/50 placeholder:text-gray-300/50 relative z-10 text-md shadow-inner"
                         autoComplete="off"
-                      />
+                        />
 
                       {/* Animated send button */}
                       <motion.button
@@ -249,7 +249,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
 
                     {/* Character counter with animated transition */}
                     <motion.div
-                      className="text-xs text-gray-500 mt-1 ml-1"
+                      className="text-xs text-gray-500 mt-2 ml-1"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: newMessage.length > 0 ? 0.7 : 0 }}
                       transition={{ duration: 0.2 }}

@@ -89,16 +89,39 @@ const formatMessage = (content: string): MessagePart[] => {
   let currentCode = '';
   let language = '';
 
-  const lines = content.split('\n');
+  // Handle null or undefined content
+  if (!content) {
+    return [{ type: 'text', content: '' }];
+  }
+
+  // Fix malformed markdown bullet points and asterisks
+  let fixedContent = content;
+
+  // Fix incomplete or malformed markdown patterns
+  // Handle asterisks that might be used for bold/italic but aren't properly paired
+  const asteriskRegex = /\*\*(?!\s*\*\*)(.*?)(?<!\s*\*\*)\*\*/g;
+  fixedContent = fixedContent.replace(asteriskRegex, '<strong>$1</strong>');
+
+  // Handle single asterisks for italic
+  const italicRegex = /\*(?!\s*\*)(.*?)(?<!\s*\*)\*/g;
+  fixedContent = fixedContent.replace(italicRegex, '<em>$1</em>');
+
+  // Fix bullet points that might be malformed
+  fixedContent = fixedContent.replace(/^\s*\*\s+/gm, '• ');
+
+  const lines = fixedContent.split('\n');
 
   for (const line of lines) {
-    if (line.startsWith('```')) {
+    // Check for code block markers
+    if (line.trim().startsWith('```')) {
       if (inCodeBlock) {
+        // End of code block
         parts.push({ type: 'code', content: currentCode.trim(), language });
         currentCode = '';
         language = '';
         inCodeBlock = false;
       } else {
+        // Start of code block
         if (currentText) {
           parts.push({ type: 'text', content: currentText.trim() });
           currentText = '';
@@ -116,6 +139,12 @@ const formatMessage = (content: string): MessagePart[] => {
     }
   }
 
+  // Handle unclosed code blocks
+  if (inCodeBlock && currentCode) {
+    parts.push({ type: 'code', content: currentCode.trim(), language });
+  }
+
+  // Add remaining text
   if (currentText) {
     parts.push({ type: 'text', content: currentText.trim() });
   }
@@ -165,9 +194,21 @@ export const MessageContent = ({ content }: { content: string }) => {
                   delay: (index * 0.1) + (pIndex * 0.05),
                   ease: "easeOut"
                 }}
-              >
-                {paragraph}
-              </motion.p>
+                dangerouslySetInnerHTML={{
+                  __html: paragraph
+                    // Replace asterisk bullet points with proper bullet points
+                    .replace(/^\s*\*\s+/gm, '• ')
+                    // Ensure any remaining HTML tags are properly escaped
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    // Then un-escape our specifically added HTML tags
+                    .replace(/&lt;strong&gt;/g, '<strong>')
+                    .replace(/&lt;\/strong&gt;/g, '</strong>')
+                    .replace(/&lt;em&gt;/g, '<em>')
+                    .replace(/&lt;\/em&gt;/g, '</em>')
+                }}
+              />
             ))}
           </React.Fragment>
         );
@@ -179,7 +220,7 @@ export const MessageContent = ({ content }: { content: string }) => {
 const MessageContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
   ({ children }, ref) => (
     <ScrollArea className="flex-1 p-4">
-      <div ref={ref} className="space-y-6">
+      <div className="space-y-6" ref={ref}>
         {children}
       </div>
     </ScrollArea>
@@ -216,6 +257,8 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [userHasScrolled, setUserHasScrolled] = useState(false);
+  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
@@ -272,6 +315,29 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
 
   // Replace your handleSubmit function in the AiAssistant component with this version:
 
+  const scrollToBottom = () => {
+    try {
+      // Try finding the ScrollArea viewport directly
+      const scrollAreaViewport = document.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollAreaViewport) {
+        scrollAreaViewport.scrollTop = scrollAreaViewport.scrollHeight;
+        return;
+      }
+
+      // Fallback: try using the ref directly
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    } catch (error) {
+      console.error("Error scrolling to bottom:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Delay to ensure rendering is complete
+    setTimeout(scrollToBottom, 100);
+  }, [messages, isLoading]);
+
   const handleSubmit = async (e: any) => {
     if (e && typeof e.preventDefault === 'function') {
       e.preventDefault();
@@ -315,6 +381,7 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     } finally {
       setIsLoading(false);
     }
+    setTimeout(scrollToBottom, 100);
   };
 
   const placeholders = [
@@ -332,129 +399,173 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
   const EmptyState = () => {
     return (
       <motion.div
-        className="flex flex-col items-center justify-center align-middle h-full py-10 px-4 text-center"
+        className="flex flex-col items-center justify-center  h-full py-48 px-4 text-center"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-      <motion.div
-        className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/90 via-pink-500/80 to-orange-500/70 flex items-center justify-center mb-5 relative overflow-hidden shadow-lg"
-        animate={{
-          scale: [1, 1.08, 1],
-          rotate: [0, 5, 0, -5, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "loop",
-          ease: "easeInOut"
-        }}
-      >
-        {/* Flowing gradient overlay */}
         <motion.div
-          className="absolute inset-0 rounded-full bg-gradient-to-r from-teal-300/30 via-indigo-400/40 to-purple-300/30"
-          style={{
-            backgroundSize: "300% 100%"
-          }}
+          className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 flex items-center justify-center relative overflow-hidden shadow-xl"
           animate={{
-            backgroundPosition: ["0% center", "100% center", "0% center"]
+            scale: [1, 1.05, 0.98, 1.05, 1],
+            rotate: [0, 2, 0, -2, 0],
           }}
           transition={{
-            duration: 6,
+            duration: 10,
             repeat: Infinity,
+            repeatType: "loop",
             ease: "easeInOut"
           }}
-        />
+        >
+          {/* Main background shimmer effect */}
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600/40 via-blue-300/30 to-sky-400/40"
+            style={{
+              backgroundSize: "400% 100%"
+            }}
+            animate={{
+              backgroundPosition: ["0% center", "100% center", "0% center"]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
 
-        {/* Diagonal flowing gradient */}
-        <motion.div
-          className="absolute inset-0 rounded-full bg-gradient-to-tr from-yellow-400/20 via-pink-500/30 to-cyan-500/20"
-          style={{
-            backgroundSize: "200% 200%",
-            mixBlendMode: "overlay"
-          }}
-          animate={{
-            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            repeatType: "reverse"
-          }}
-        />
+          {/* Diagonal flowing gradient with multiple blues */}
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-800/30 via-cyan-400/25 to-blue-500/30"
+            style={{
+              backgroundSize: "200% 200%",
+              mixBlendMode: "soft-light"
+            }}
+            animate={{
+              backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              repeatType: "reverse"
+            }}
+          />
 
-        {/* Multiple pulse rings */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          animate={{
-            boxShadow: [
-              "0 0 0 0 rgba(236, 72, 153, 0)",
-              "0 0 0 10px rgba(236, 72, 153, 0.1)",
-              "0 0 0 20px rgba(236, 72, 153, 0.05)",
-              "0 0 0 30px rgba(236, 72, 153, 0.02)",
-              "0 0 0 0 rgba(236, 72, 153, 0)"
-            ]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "loop"
-          }}
-        />
+          {/* Enhanced pulse rings with blue tones */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{
+              boxShadow: [
+                "0 0 0 0 rgba(59, 130, 246, 0)",
+                "0 0 0 10px rgba(59, 130, 246, 0.15)",
+                "0 0 0 20px rgba(59, 130, 246, 0.1)",
+                "0 0 0 30px rgba(59, 130, 246, 0.05)",
+                "0 0 0 0 rgba(59, 130, 246, 0)"
+              ]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          />
 
-        {/* Inner rotating glow */}
-        <motion.div
-          className="absolute w-full h-full rounded-full bg-gradient-to-r from-white/20 via-transparent to-white/20"
-          animate={{
-            rotate: [0, 360]
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
+          {/* Inner rotating glow with blue accent */}
+          <motion.div
+            className="absolute w-full h-full rounded-full bg-gradient-to-r from-blue-200/30 via-transparent to-blue-200/30"
+            animate={{
+              rotate: [0, 360]
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
 
-        {/* Floating particles */}
-        <div className="relative w-full h-full">
-          {[...Array(6)].map((_, i) => (
+          {/* Blue-tinted particles */}
+          <div className="relative w-full h-full">
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full bg-blue-100"
+                style={{
+                  width: `${1 + Math.random() * 2}px`,
+                  height: `${1 + Math.random() * 2}px`,
+                  left: `${20 + Math.random() * 60}%`,
+                  top: `${20 + Math.random() * 60}%`,
+                  filter: "blur(0.5px)"
+                }}
+                animate={{
+                  y: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+                  x: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+                  opacity: [0.5, 0.9, 0.5],
+                  scale: [0.8, 1.6, 0.8]
+                }}
+                transition={{
+                  duration: 4 + Math.random() * 4,
+                  repeat: Infinity,
+                  delay: Math.random() * 2
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Center orb with blue-white gradient */}
+          <motion.div
+            className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-white/60 via-blue-200/40 to-blue-300/20"
+            animate={{
+              opacity: [0.6, 0.8, 0.6],
+              scale: [0.9, 1.1, 0.9]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity
+            }}
+          />
+
+          {/* Inner light source with blue tint */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "radial-gradient(circle at 50% 50%, rgba(219, 234, 254, 0.4) 0%, transparent 70%)"
+            }}
+            animate={{
+              opacity: [0.5, 0.7, 0.5]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "mirror"
+            }}
+          />
+
+          {/* Deep blue accent beams */}
+          {[...Array(3)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 rounded-full bg-white/70"
+              className="absolute w-32 h-2 bg-blue-300/30"
               style={{
-                left: `${30 + Math.random() * 40}%`,
-                top: `${30 + Math.random() * 40}%`,
+                borderRadius: "2px",
+                filter: "blur(2px)",
+                transformOrigin: "center",
+                rotate: `${i * 60}deg`
               }}
               animate={{
-                y: [Math.random() * -10, Math.random() * 10, Math.random() * -10],
-                x: [Math.random() * -10, Math.random() * 10, Math.random() * -10],
-                opacity: [0.3, 0.8, 0.3],
-                scale: [0.8, 1.2, 0.8]
+                rotate: [`${i * 60}deg`, `${i * 60 + 180}deg`, `${i * 60 + 360}deg`],
+                opacity: [0, 0.3, 0]
               }}
               transition={{
-                duration: 3 + Math.random() * 3,
+                duration: 8,
                 repeat: Infinity,
-                delay: Math.random() * 2
+                delay: i * 1.5,
+                ease: "easeInOut"
               }}
             />
           ))}
-        </div>
+        </motion.div>
 
-        {/* Center glow */}
-        <motion.div
-          className="relative z-10 w-12 h-12 rounded-full bg-gradient-to-br from-white/30 to-transparent"
-          animate={{
-            opacity: [0.5, 0.8, 0.5],
-            scale: [0.8, 1, 0.8]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity
-          }}
-        />
-      </motion.div>
-      <h3 className="text-xl  text-white mb-3 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
+        <h3 className="text-xl  text-white mt-2 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
           {/* I can help with coding questions, explain concepts, assist in bugs and errors. */}
         </p>
 
@@ -500,6 +611,45 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     );
   };
 
+
+  useEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading]);
+
+  // Add this effect to detect manual scrolling
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (scrollRef.current) {
+  //       const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]') || scrollRef.current;
+  //       const isScrolledToBottom =
+  //         Math.abs(scrollElement.scrollHeight - scrollElement.clientHeight - scrollElement.scrollTop) < 50;
+
+  //       setUserHasScrolled(!isScrolledToBottom);
+  //     }
+  //   };
+
+  //   const scrollElement = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]') || scrollRef.current;
+  //   if (scrollElement) {
+  //     scrollElement.addEventListener('scroll', handleScroll);
+  //     return () => scrollElement.removeEventListener('scroll', handleScroll);
+  //   }
+  // }, []);
+
+  // // Modify your scroll effect to respect user scrolling
+  // useEffect(() => {
+  //   if (scrollRef.current && (!userHasScrolled || messages[messages.length - 1]?.type === 'user')) {
+  //     // Only auto-scroll if user hasn't scrolled up OR if the latest message is from the user
+  //     setTimeout(() => {
+  //       const scrollContainer = scrollRef.current;
+  //       if (scrollContainer) {
+  //         const scrollElement = scrollContainer.querySelector('[data-radix-scroll-area-viewport]') || scrollContainer;
+  //         scrollElement.scrollTop = scrollElement.scrollHeight;
+  //       }
+  //     }, 100);
+  //   }
+  // }, [messages, isLoading, userHasScrolled]);
 
   return (
     <AnimatePresence>
@@ -548,11 +698,10 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
             </Button>
           </motion.div>
 
-
-          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-            {messages.length > 0 ? (
-              <div className="space-y-6">
-                <AnimatePresence>
+          <MessageContainer>
+            <AnimatePresence>
+              {messages.length > 0 ? (
+                <>
                   {messages.map((message, index) => (
                     <motion.div
                       key={index}
@@ -563,12 +712,11 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
                       className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <motion.div
-                        className={`max-w-[90%] rounded-lg p-4 ${message.type === 'user'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
+                        className={`max-w-[90%] rounded-2xl p-4 ${message.type === 'user'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
                           }`}
                         whileHover={{ scale: 1.01 }}
-                        layout
                       >
                         <MessageContent content={message.content} />
                         <motion.span
@@ -582,58 +730,12 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
                       </motion.div>
                     </motion.div>
                   ))}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <EmptyState />
-            )}
-
-            {isLoading && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="flex justify-start mt-4"
-              >
-                <div className="bg-gray-700/70 backdrop-blur-sm rounded-lg p-3 flex items-center space-x-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                  <span className="text-sm text-gray-300">AI is thinking...</span>
-                </div>
-              </motion.div>
-            )}
-          </ScrollArea>
-
-          <MessageContainer ref={scrollRef}>
-            <AnimatePresence>
-              {messages.map((message, index) => (
-                <motion.div
-                  key={index}
-                  variants={messageAnimations}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'
-                    }`}
-                >
-                  <motion.div
-                    className={`max-w-[90%] rounded-lg p-4 ${message.type === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-700/70 backdrop-blur-sm text-gray-100'
-                      }`}
-                    whileHover={{ scale: 1.01 }}
-                  >
-                    <MessageContent content={message.content} />
-                    <motion.span
-                      className="text-xs opacity-50 mt-2 block"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.5 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </motion.span>
-                  </motion.div>
-                </motion.div>
-              ))}
+                  {/* Add this div for scrolling to the bottom */}
+                  <div ref={endOfMessagesRef} />
+                </>
+              ) : (
+                <EmptyState />
+              )}
             </AnimatePresence>
             {isLoading && (
               <motion.div
