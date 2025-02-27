@@ -249,7 +249,7 @@ const EmptyState = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div
+      {/* <motion.div
         className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 flex items-center justify-center relative overflow-hidden shadow-xl"
         animate={{
           scale: [1, 1.05, 0.98, 1.05, 1],
@@ -262,7 +262,6 @@ const EmptyState = () => {
           ease: "easeInOut"
         }}
       >
-        {/* Main background shimmer effect */}
         <motion.div
           className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600/40 via-blue-300/30 to-sky-400/40"
           style={{
@@ -278,7 +277,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Diagonal flowing gradient with multiple blues */}
         <motion.div
           className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-800/30 via-cyan-400/25 to-blue-500/30"
           style={{
@@ -296,7 +294,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Enhanced pulse rings with blue tones */}
         <motion.div
           className="absolute inset-0 rounded-full"
           animate={{
@@ -315,7 +312,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Inner rotating glow with blue accent */}
         <motion.div
           className="absolute w-full h-full rounded-full bg-gradient-to-r from-blue-200/30 via-transparent to-blue-200/30"
           animate={{
@@ -328,7 +324,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Blue-tinted particles */}
         <div className="relative w-full h-full">
           {[...Array(12)].map((_, i) => (
             <motion.div
@@ -356,7 +351,6 @@ const EmptyState = () => {
           ))}
         </div>
 
-        {/* Center orb with blue-white gradient */}
         <motion.div
           className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-white/60 via-blue-200/40 to-blue-300/20"
           animate={{
@@ -369,7 +363,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Inner light source with blue tint */}
         <motion.div
           className="absolute inset-0 rounded-full"
           style={{
@@ -385,7 +378,6 @@ const EmptyState = () => {
           }}
         />
 
-        {/* Deep blue accent beams */}
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
@@ -408,8 +400,163 @@ const EmptyState = () => {
             }}
           />
         ))}
-      </motion.div>
+      </motion.div> */}
 
+<motion.div
+  className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 via-blue-400 to-cyan-500 flex items-center justify-center relative overflow-hidden shadow-xl"
+  animate={{
+    scale: [1, 1.05, 0.98, 1.05, 1],
+    rotate: [0, 2, 0, -2, 0],
+  }}
+  transition={{
+    duration: 10,
+    repeat: Infinity,
+    repeatType: "loop",
+    ease: "easeInOut"
+  }}
+>
+  {/* Main background shimmer effect */}
+  <motion.div
+    className="absolute inset-0 rounded-full bg-gradient-to-r from-white/30 via-blue-200/20 to-white/30"
+    style={{
+      backgroundSize: "400% 100%"
+    }}
+    animate={{
+      backgroundPosition: ["0% center", "100% center", "0% center"]
+    }}
+    transition={{
+      duration: 8,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+  />
+  
+  {/* Diagonal flowing gradient */}
+  <motion.div
+    className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-100/20 via-white/25 to-blue-100/20"
+    style={{
+      backgroundSize: "200% 200%",
+      mixBlendMode: "soft-light"
+    }}
+    animate={{
+      backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+    }}
+    transition={{
+      duration: 7,
+      repeat: Infinity,
+      ease: "easeInOut",
+      repeatType: "reverse"
+    }}
+  />
+  
+  {/* Enhanced pulse rings */}
+  <motion.div
+    className="absolute inset-0 rounded-full"
+    animate={{
+      boxShadow: [
+        "0 0 0 0 rgba(255, 255, 255, 0)",
+        "0 0 0 10px rgba(255, 255, 255, 0.1)",
+        "0 0 0 20px rgba(255, 255, 255, 0.05)",
+        "0 0 0 30px rgba(255, 255, 255, 0.02)",
+        "0 0 0 0 rgba(255, 255, 255, 0)"
+      ]
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      repeatType: "loop"
+    }}
+  />
+  
+  {/* Inner rotating glow */}
+  <motion.div
+    className="absolute w-full h-full rounded-full bg-gradient-to-r from-white/40 via-transparent to-white/40"
+    animate={{
+      rotate: [0, 360]
+    }}
+    transition={{
+      duration: 15,
+      repeat: Infinity,
+      ease: "linear"
+    }}
+  />
+  
+  {/* Snowflake-like particles */}
+  <div className="relative w-full h-full">
+    {[...Array(12)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-white"
+        style={{
+          width: `${1 + Math.random() * 2}px`,
+          height: `${1 + Math.random() * 2}px`,
+          left: `${20 + Math.random() * 60}%`,
+          top: `${20 + Math.random() * 60}%`,
+          filter: "blur(0.5px)"
+        }}
+        animate={{
+          y: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+          x: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+          opacity: [0.5, 0.9, 0.5],
+          scale: [0.8, 1.6, 0.8]
+        }}
+        transition={{
+          duration: 4 + Math.random() * 4,
+          repeat: Infinity,
+          delay: Math.random() * 2
+        }}
+      />
+    ))}
+  </div>
+  
+  {/* Center orb with subtle pulsing */}
+  <motion.div
+    className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-white/60 via-white/40 to-white/10"
+    animate={{
+      opacity: [0.6, 0.8, 0.6],
+      scale: [0.9, 1.1, 0.9]
+    }}
+    transition={{
+      duration: 3,
+      repeat: Infinity
+    }}
+  />
+  
+  {/* Inner light source */}
+  <motion.div
+    className="absolute inset-0 rounded-full"
+    style={{
+      background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 70%)"
+    }}
+    animate={{
+      opacity: [0.5, 0.7, 0.5]
+    }}
+    transition={{
+      duration: 2,
+      repeat: Infinity,
+      repeatType: "mirror"
+    }}
+  />
+  
+  {/* Extra lightbeam effect */}
+  <motion.div
+    className="absolute w-32 h-4 bg-white/20"
+    style={{ 
+      borderRadius: "2px",
+      filter: "blur(2px)",
+      transformOrigin: "center" 
+    }}
+    animate={{
+      rotate: [0, 180, 360],
+      opacity: [0, 0.3, 0]
+    }}
+    transition={{
+      duration: 6,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+  />
+</motion.div>
       <h3 className="text-xl  text-white mt-2 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
         {/* I can help with coding questions, explain concepts, assist in bugs and errors. */}
       </p>
