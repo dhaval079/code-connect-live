@@ -582,16 +582,87 @@ function EditorPageContent() {
             </ScrollArea>
 
             {/* Room Controls */}
-            <motion.div variants={itemVariants} className="p-4 border-t border-gray-700 space-y-3">
-              <Button data-color="white" effect="gooeyRight" variant="secondary" className="bg-white text-black w-full" onClick={() => setIsShareDialogOpen(true)}>
-                <Share className="h-5 w-5 mr-2" />
-                Share Room
-              </Button>
-              <Button data-color="red"  variant="destructive" className="bg-red-500 hover:bg-red-600 w-full" onClick={leaveRoom}>
-                <LogOut className="h-5 w-5 mr-2" />
-                Leave Room
-              </Button>
-            </motion.div>
+            
+<motion.div 
+  className="p-4 border-t border-gray-700 space-y-3"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.4 }}
+>
+  <motion.div
+    className="rounded-lg bg-gradient-to-br from-gray-100 to-gray-300 p-0.5 shadow-lg"
+    whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+    transition={{ duration: 0.2 }}
+  >
+    <Button 
+      data-color="white" 
+      variant="secondary" 
+      className="bg-gradient-to-br from-white to-gray-100 text-black w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
+      onClick={() => setIsShareDialogOpen(true)}
+    >
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-blue-50 via-white to-blue-50 opacity-0"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+      
+      <motion.div 
+        className="flex items-center justify-center relative z-10"
+        initial={{ gap: "0.5rem" }}
+        whileHover={{ gap: "0.75rem" }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          whileHover={{ rotate: 180 }}
+          transition={{ duration: 0.6, ease: "circOut" }}
+        >
+          <Share className="h-5 w-5" />
+        </motion.div>
+        <span className="font-medium">Share Room</span>
+      </motion.div>
+    </Button>
+  </motion.div>
+
+  <motion.div
+    className="rounded-lg bg-gradient-to-br from-red-500 to-red-600 p-0.5 shadow-lg"
+    whileHover={{ 
+      boxShadow: "0 10px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -5px rgba(239, 68, 68, 0.1)",
+    }}
+    transition={{ duration: 0.2 }}
+  >
+    <Button 
+      data-color="red" 
+      variant="destructive" 
+      className="bg-gradient-to-br from-red-500 to-red-600 w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
+      onClick={leaveRoom}
+    >
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500"
+        animate={{ 
+          x: ["-100%", "100%"],
+        }}
+        transition={{ 
+          repeat: Infinity, 
+          repeatType: "mirror", 
+          duration: 2,
+          ease: "linear"
+        }}
+        style={{ opacity: 0.2 }}
+      />
+      
+      <motion.div className="flex items-center justify-center relative z-10">
+        <motion.div
+          whileHover={{ x: 5 }}
+          transition={{ repeat: Infinity, repeatType: "mirror", duration: 0.5 }}
+        >
+          <LogOut className="h-5 w-5 mr-2" />
+        </motion.div>
+        <span className="font-medium">Leave Room</span>
+      </motion.div>
+    </Button>
+  </motion.div>
+</motion.div>
           </motion.div>
         )}
       </AnimatePresence>

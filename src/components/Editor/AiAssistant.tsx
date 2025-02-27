@@ -241,6 +241,193 @@ const openai = new OpenAI({
 
 // client = genai.Client(api_key="AIzaSyCF6mKRofVaWa-4RC6hjYQtijNqxOZSt58")
 
+const EmptyState = () => {
+  return (
+    <motion.div
+      className="flex flex-col items-center justify-center  h-full py-48 px-4 text-center"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 flex items-center justify-center relative overflow-hidden shadow-xl"
+        animate={{
+          scale: [1, 1.05, 0.98, 1.05, 1],
+          rotate: [0, 2, 0, -2, 0],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "easeInOut"
+        }}
+      >
+        {/* Main background shimmer effect */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600/40 via-blue-300/30 to-sky-400/40"
+          style={{
+            backgroundSize: "400% 100%"
+          }}
+          animate={{
+            backgroundPosition: ["0% center", "100% center", "0% center"]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+
+        {/* Diagonal flowing gradient with multiple blues */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-800/30 via-cyan-400/25 to-blue-500/30"
+          style={{
+            backgroundSize: "200% 200%",
+            mixBlendMode: "soft-light"
+          }}
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatType: "reverse"
+          }}
+        />
+
+        {/* Enhanced pulse rings with blue tones */}
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          animate={{
+            boxShadow: [
+              "0 0 0 0 rgba(59, 130, 246, 0)",
+              "0 0 0 10px rgba(59, 130, 246, 0.15)",
+              "0 0 0 20px rgba(59, 130, 246, 0.1)",
+              "0 0 0 30px rgba(59, 130, 246, 0.05)",
+              "0 0 0 0 rgba(59, 130, 246, 0)"
+            ]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+        />
+
+        {/* Inner rotating glow with blue accent */}
+        <motion.div
+          className="absolute w-full h-full rounded-full bg-gradient-to-r from-blue-200/30 via-transparent to-blue-200/30"
+          animate={{
+            rotate: [0, 360]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+
+        {/* Blue-tinted particles */}
+        <div className="relative w-full h-full">
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-blue-100"
+              style={{
+                width: `${1 + Math.random() * 2}px`,
+                height: `${1 + Math.random() * 2}px`,
+                left: `${20 + Math.random() * 60}%`,
+                top: `${20 + Math.random() * 60}%`,
+                filter: "blur(0.5px)"
+              }}
+              animate={{
+                y: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+                x: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
+                opacity: [0.5, 0.9, 0.5],
+                scale: [0.8, 1.6, 0.8]
+              }}
+              transition={{
+                duration: 4 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 2
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Center orb with blue-white gradient */}
+        <motion.div
+          className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-white/60 via-blue-200/40 to-blue-300/20"
+          animate={{
+            opacity: [0.6, 0.8, 0.6],
+            scale: [0.9, 1.1, 0.9]
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity
+          }}
+        />
+
+        {/* Inner light source with blue tint */}
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: "radial-gradient(circle at 50% 50%, rgba(219, 234, 254, 0.4) 0%, transparent 70%)"
+          }}
+          animate={{
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "mirror"
+          }}
+        />
+
+        {/* Deep blue accent beams */}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-32 h-2 bg-blue-300/30"
+            style={{
+              borderRadius: "2px",
+              filter: "blur(2px)",
+              transformOrigin: "center",
+              rotate: `${i * 60}deg`
+            }}
+            animate={{
+              rotate: [`${i * 60}deg`, `${i * 60 + 180}deg`, `${i * 60 + 360}deg`],
+              opacity: [0, 0.3, 0]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              delay: i * 1.5,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </motion.div>
+
+      <h3 className="text-xl  text-white mt-2 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
+        {/* I can help with coding questions, explain concepts, assist in bugs and errors. */}
+      </p>
+
+      <motion.div
+        className="grid grid-cols-2 gap-2 mt-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+        {/* <SuggestionChip text="How to use React hooks?" />
+        <SuggestionChip text="Explain async/await" />
+        <SuggestionChip text="Best coding practices" />
+        <SuggestionChip text="CSS Grid vs Flexbox" /> */}
+      </motion.div>
+    </motion.div>
+  );
+};
 
 interface AiAssistantProps {
   isOpen: boolean;
@@ -396,193 +583,7 @@ const AiAssistant = ({ isOpen, onToggle }: AiAssistantProps) => {
     console.log(e.target.value);
   };
 
-  const EmptyState = () => {
-    return (
-      <motion.div
-        className="flex flex-col items-center justify-center  h-full py-48 px-4 text-center"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div
-          className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-700 via-blue-500 to-blue-400 flex items-center justify-center relative overflow-hidden shadow-xl"
-          animate={{
-            scale: [1, 1.05, 0.98, 1.05, 1],
-            rotate: [0, 2, 0, -2, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut"
-          }}
-        >
-          {/* Main background shimmer effect */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-600/40 via-blue-300/30 to-sky-400/40"
-            style={{
-              backgroundSize: "400% 100%"
-            }}
-            animate={{
-              backgroundPosition: ["0% center", "100% center", "0% center"]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
 
-          {/* Diagonal flowing gradient with multiple blues */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-800/30 via-cyan-400/25 to-blue-500/30"
-            style={{
-              backgroundSize: "200% 200%",
-              mixBlendMode: "soft-light"
-            }}
-            animate={{
-              backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"]
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-              repeatType: "reverse"
-            }}
-          />
-
-          {/* Enhanced pulse rings with blue tones */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              boxShadow: [
-                "0 0 0 0 rgba(59, 130, 246, 0)",
-                "0 0 0 10px rgba(59, 130, 246, 0.15)",
-                "0 0 0 20px rgba(59, 130, 246, 0.1)",
-                "0 0 0 30px rgba(59, 130, 246, 0.05)",
-                "0 0 0 0 rgba(59, 130, 246, 0)"
-              ]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              repeatType: "loop"
-            }}
-          />
-
-          {/* Inner rotating glow with blue accent */}
-          <motion.div
-            className="absolute w-full h-full rounded-full bg-gradient-to-r from-blue-200/30 via-transparent to-blue-200/30"
-            animate={{
-              rotate: [0, 360]
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-
-          {/* Blue-tinted particles */}
-          <div className="relative w-full h-full">
-            {[...Array(12)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full bg-blue-100"
-                style={{
-                  width: `${1 + Math.random() * 2}px`,
-                  height: `${1 + Math.random() * 2}px`,
-                  left: `${20 + Math.random() * 60}%`,
-                  top: `${20 + Math.random() * 60}%`,
-                  filter: "blur(0.5px)"
-                }}
-                animate={{
-                  y: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
-                  x: [Math.random() * -18, Math.random() * 18, Math.random() * -18],
-                  opacity: [0.5, 0.9, 0.5],
-                  scale: [0.8, 1.6, 0.8]
-                }}
-                transition={{
-                  duration: 4 + Math.random() * 4,
-                  repeat: Infinity,
-                  delay: Math.random() * 2
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Center orb with blue-white gradient */}
-          <motion.div
-            className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-white/60 via-blue-200/40 to-blue-300/20"
-            animate={{
-              opacity: [0.6, 0.8, 0.6],
-              scale: [0.9, 1.1, 0.9]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity
-            }}
-          />
-
-          {/* Inner light source with blue tint */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: "radial-gradient(circle at 50% 50%, rgba(219, 234, 254, 0.4) 0%, transparent 70%)"
-            }}
-            animate={{
-              opacity: [0.5, 0.7, 0.5]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatType: "mirror"
-            }}
-          />
-
-          {/* Deep blue accent beams */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-32 h-2 bg-blue-300/30"
-              style={{
-                borderRadius: "2px",
-                filter: "blur(2px)",
-                transformOrigin: "center",
-                rotate: `${i * 60}deg`
-              }}
-              animate={{
-                rotate: [`${i * 60}deg`, `${i * 60 + 180}deg`, `${i * 60 + 360}deg`],
-                opacity: [0, 0.3, 0]
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                delay: i * 1.5,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-        </motion.div>
-
-        <h3 className="text-xl  text-white mt-2 tracking-wide drop-shadow-sm transition-all duration-300 hover:scale-105">Ask anything</h3>        <p className="text-gray-400 text-sm max-w-xs">
-          {/* I can help with coding questions, explain concepts, assist in bugs and errors. */}
-        </p>
-
-        <motion.div
-          className="grid grid-cols-2 gap-2 mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          {/* <SuggestionChip text="How to use React hooks?" />
-          <SuggestionChip text="Explain async/await" />
-          <SuggestionChip text="Best coding practices" />
-          <SuggestionChip text="CSS Grid vs Flexbox" /> */}
-        </motion.div>
-      </motion.div>
-    );
-  };
 
   // Add this SuggestionChip component right after the EmptyState component
 
