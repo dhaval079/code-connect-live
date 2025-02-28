@@ -249,7 +249,7 @@ export default function CodeConnect() {
                       }}
                     >
                       <motion.div
-                        className="bg-slate-900/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl "
+                        className="bg-slate-900/95 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl "
                         whileHover={{
                           boxShadow: "0 0 50px 0 rgba(6, 182, 212, 0.3)",
                           scale: 1.02,

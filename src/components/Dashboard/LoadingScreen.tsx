@@ -11,7 +11,16 @@ export default function LoadingScreen() {
     const timer = setTimeout(() => {
       setIsVisible(false);
     }, 6000);
-    return () => clearTimeout(timer);
+    
+    // Add a backup timeout
+    const backupTimer = setTimeout(() => {
+      setIsVisible(false);
+    }, 10000);
+    
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(backupTimer);
+    };
   }, []);
 
   return (

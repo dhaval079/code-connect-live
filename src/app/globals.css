@@ -6,6 +6,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body:before, body:after {
+  content: none !important;
+  background: transparent !important;
+}
+
 /* In your CSS or a global style */
 .will-change-transform {
   transform: translateZ(0);
@@ -138,11 +143,13 @@ body {
 }
 
 /* Premium visual effects */
-.premium-blur {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+@media screen and (min-width: 768px) {
+  /* Only apply backdrop filters on larger screens */
+  .premium-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
 }
-
 .premium-shadow {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }

@@ -198,7 +198,7 @@ export const ModernLoader: React.FC<ModernLoaderProps> = memo(
             >
               <div className="relative flex items-baseline">
                 <motion.span
-                  className="text-7xl text-opacity-55 italic font-thin text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400"
+                  className="text-7xl text-opacity-55 italic text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400"
                 >
                   {Math.round(progress)}
                 </motion.span>

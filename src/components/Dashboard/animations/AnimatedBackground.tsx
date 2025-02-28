@@ -44,8 +44,12 @@ export const AnimatedBackground = () => {
     window.addEventListener("resize", handleResize)
 
     return () => {
-      window.removeEventListener("resize", handleResize)
-      containerRef.current?.removeChild(renderer.domElement)
+      window.removeEventListener("resize", handleResize);
+      if (containerRef.current?.contains(renderer.domElement)) {
+        containerRef.current?.removeChild(renderer.domElement);
+      }
+      scene.clear();  // Add explicit cleanup
+      renderer.dispose();  // Dispose of renderer
     }
   }, [])
 

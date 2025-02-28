@@ -15,6 +15,23 @@ export default function Home() {
     }
   }, [isLoaded, isSignedIn]);
 
+  // Add to src/app/page.tsx
+useEffect(() => {
+  const handleKeyDown = (e:any) => {
+    // Press Ctrl+Shift+D to remove potential overlays
+    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+      document.querySelectorAll('.fixed, .absolute').forEach((el) => {
+        if (el.classList.contains('debug-remove')) {
+          (el as HTMLElement).style.display = 'none';
+        }
+      });
+    }
+  };
+  
+  window.addEventListener('keydown', handleKeyDown);
+  return () => window.removeEventListener('keydown', handleKeyDown);
+}, []);
+
   return (
     <>
       <CodeConnect />
