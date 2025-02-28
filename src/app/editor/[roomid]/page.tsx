@@ -22,9 +22,12 @@ import {
   Bot,
   Sparkles,
   MessageSquare,
+  Edit,
+  PencilRuler,
 } from "lucide-react"
 import { useSocket } from "@/providers/socketProvider"
 import dynamic from "next/dynamic"
+import Whiteboard from "@/components/Editor/WhiteBoard"
 const Button = dynamic(
   () => import("@/components/ui/button").then((mod) => mod.Button)
 );
@@ -103,6 +106,11 @@ const MonacoEditor = dynamic(() => import("@/components/Editor/monaco-editor"), 
   loading: () => <div>Loading...</div>
 });
 
+// const Whiteboard = dynamic(
+//   () => import("@/components/Editor/Whiteboard").then((mod) => mod.default),
+//   { ssr: false }
+// );
+
 function EditorPageContent() {
   // Socket and Client State
   const socketRef = useRef<any>(null)
@@ -122,6 +130,7 @@ function EditorPageContent() {
   const [showConnectingSplash, setShowConnectingSplash] = useState(true);
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
 
 
   // Editor State
@@ -582,87 +591,87 @@ function EditorPageContent() {
             </ScrollArea>
 
             {/* Room Controls */}
-            
-<motion.div 
-  className="p-4 border-t border-gray-700 space-y-3"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ duration: 0.4 }}
->
-  <motion.div
-    className="rounded-lg bg-gradient-to-br from-gray-100 to-gray-300 p-0.5 shadow-lg"
-    whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-    transition={{ duration: 0.2 }}
-  >
-    <Button 
-      data-color="white" 
-      variant="secondary" 
-      className="bg-gradient-to-br from-white to-gray-100 text-black w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
-      onClick={() => setIsShareDialogOpen(true)}
-    >
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-r from-blue-50 via-white to-blue-50 opacity-0"
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      />
-      
-      <motion.div 
-        className="flex items-center justify-center relative z-10"
-        initial={{ gap: "0.5rem" }}
-        whileHover={{ gap: "0.75rem" }}
-        transition={{ duration: 0.2 }}
-      >
-        <motion.div
-          whileHover={{ rotate: 180 }}
-          transition={{ duration: 0.6, ease: "circOut" }}
-        >
-          <Share className="h-5 w-5" />
-        </motion.div>
-        <span className="font-medium">Share Room</span>
-      </motion.div>
-    </Button>
-  </motion.div>
 
-  <motion.div
-    className="rounded-lg bg-gradient-to-br from-red-500 to-red-600 p-0.5 shadow-lg"
-    whileHover={{ 
-      boxShadow: "0 10px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -5px rgba(239, 68, 68, 0.1)",
-    }}
-    transition={{ duration: 0.2 }}
-  >
-    <Button 
-      data-color="red" 
-      variant="destructive" 
-      className="bg-gradient-to-br from-red-500 to-red-600 w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
-      onClick={leaveRoom}
-    >
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500"
-        animate={{ 
-          x: ["-100%", "100%"],
-        }}
-        transition={{ 
-          repeat: Infinity, 
-          repeatType: "mirror", 
-          duration: 2,
-          ease: "linear"
-        }}
-        style={{ opacity: 0.2 }}
-      />
-      
-      <motion.div className="flex items-center justify-center relative z-10">
-        <motion.div
-          whileHover={{ x: 5 }}
-          transition={{ repeat: Infinity, repeatType: "mirror", duration: 0.5 }}
-        >
-          <LogOut className="h-5 w-5 mr-2" />
-        </motion.div>
-        <span className="font-medium">Leave Room</span>
-      </motion.div>
-    </Button>
-  </motion.div>
-</motion.div>
+            <motion.div
+              className="p-4 border-t border-gray-700 space-y-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <motion.div
+                className="rounded-lg bg-gradient-to-br from-gray-100 to-gray-300 p-0.5 shadow-lg"
+                whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  data-color="white"
+                  variant="secondary"
+                  className="bg-gradient-to-br from-white to-gray-100 text-black w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
+                  onClick={() => setIsShareDialogOpen(true)}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-50 via-white to-blue-50 opacity-0"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+
+                  <motion.div
+                    className="flex items-center justify-center relative z-10"
+                    initial={{ gap: "0.5rem" }}
+                    whileHover={{ gap: "0.75rem" }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <motion.div
+                      whileHover={{ rotate: 180 }}
+                      transition={{ duration: 0.6, ease: "circOut" }}
+                    >
+                      <Share className="h-5 w-5" />
+                    </motion.div>
+                    <span className="font-medium">Share Room</span>
+                  </motion.div>
+                </Button>
+              </motion.div>
+
+              <motion.div
+                className="rounded-lg bg-gradient-to-br from-red-500 to-red-600 p-0.5 shadow-lg"
+                whileHover={{
+                  boxShadow: "0 10px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -5px rgba(239, 68, 68, 0.1)",
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button
+                  data-color="red"
+                  variant="destructive"
+                  className="bg-gradient-to-br from-red-500 to-red-600 w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
+                  onClick={leaveRoom}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500"
+                    animate={{
+                      x: ["-100%", "100%"],
+                    }}
+                    transition={{
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      duration: 2,
+                      ease: "linear"
+                    }}
+                    style={{ opacity: 0.2 }}
+                  />
+
+                  <motion.div className="flex items-center justify-center relative z-10">
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      transition={{ repeat: Infinity, repeatType: "mirror", duration: 0.5 }}
+                    >
+                      <LogOut className="h-5 w-5 mr-2" />
+                    </motion.div>
+                    <span className="font-medium">Leave Room</span>
+                  </motion.div>
+                </Button>
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -722,7 +731,7 @@ function EditorPageContent() {
               Language: {language}
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 mr-8">
             <Button
               variant="ghost"
               onClick={() => setIsAiPanelOpen(!isAiPanelOpen)}
@@ -754,6 +763,7 @@ function EditorPageContent() {
               />
             </Button>
 
+
             <Button
               variant="ghost"
               onClick={() => setIsChatOpen(!isChatOpen)}
@@ -767,6 +777,23 @@ function EditorPageContent() {
                 className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-400"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: isChatOpen ? 1 : 0 }}
+                transition={{ duration: 0.2 }}
+              />
+            </Button>
+
+            <Button
+              variant="ghost"
+              onClick={() => setIsWhiteboardOpen(!isWhiteboardOpen)}
+              className="relative h-10 px-4 group"
+            >
+              <span className="flex items-center">
+                <PencilRuler className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors" />
+                Edit
+              </span>
+              <motion.div
+                className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-400"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: isWhiteboardOpen ? 1 : 0 }}
                 transition={{ duration: 0.2 }}
               />
             </Button>
@@ -849,19 +876,32 @@ function EditorPageContent() {
           </motion.div>
 
 
-          <motion.div className="w-90 border-l max-h-full border-gray-700" variants={itemVariants}>
-            <Chat
-              roomId={roomId as string}
-              username={username || ""}
-              isOpen={isChatOpen}
-              onToggle={() => setIsChatOpen(!isChatOpen)}
-            />
-          </motion.div>
+          {isChatOpen && (
+  <motion.div 
+    className="w-90 border-l max-h-full border-gray-700" 
+    variants={itemVariants}
+    initial="hidden"
+    animate="visible"
+    exit="hidden"
+  >
+    <Chat
+      roomId={roomId as string}
+      username={username || ""}
+      isOpen={true} // Always true - the container decides visibility
+      onToggle={() => setIsChatOpen(false)}
+    />
+  </motion.div>
+)}
+
           <AiAssistant
             isOpen={isAiPanelOpen}
             onToggle={() => setIsAiPanelOpen(!isAiPanelOpen)}
           />
         </motion.div>
+        <Whiteboard
+          isOpen={isWhiteboardOpen}
+          onToggle={() => setIsWhiteboardOpen(!isWhiteboardOpen)}
+        />
       </motion.div>
 
       {/* Settings Panel */}
@@ -942,7 +982,7 @@ function EditorPageContent() {
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
         <DialogContent
           className={`sm:max-w-[425px] bg-white border-gray-200 text-black`}>
-            <DialogHeader>
+          <DialogHeader>
             <DialogTitle>Share Room</DialogTitle>
             <DialogDescription>Copy the link below to invite others to this room.</DialogDescription>
           </DialogHeader>
@@ -958,8 +998,8 @@ function EditorPageContent() {
 
       {/* Leave Room Dialog */}
       <Dialog open={isLeaveDialogOpen} onOpenChange={setIsLeaveDialogOpen}>
-        <DialogContent 
-        className={`sm:max-w-[425px] bg-white border-gray-200 text-black`}        >
+        <DialogContent
+          className={`sm:max-w-[425px] bg-white border-gray-200 text-black`}        >
           <DialogHeader>
             <DialogTitle>Leave Room</DialogTitle>
             <DialogDescription>Are you sure you want to leave this room?</DialogDescription>

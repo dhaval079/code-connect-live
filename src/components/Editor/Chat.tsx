@@ -110,18 +110,18 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
   useEffect(() => {
     if (!socket) return
 
-    const handleSyncMessages = ({ messages: syncedMessages }: { messages: Message[] }) => {
-      if (!hasInitialized.current) {
-        // Normalize existing usernames
-        const normalizedMessages = syncedMessages.map(msg => ({
-          ...msg,
-          sender: msg.sender.toLowerCase()
-        }))
-        setMessages(normalizedMessages)
-        hasInitialized.current = true
-        setTimeout(scrollToBottom, 100)
-      }
+  const handleSyncMessages = ({ messages: syncedMessages }: { messages: Message[] }) => {
+    if (!hasInitialized.current) {
+      // Normalize existing usernames
+      const normalizedMessages = syncedMessages.map(msg => ({
+        ...msg,
+        sender: msg.sender.toLowerCase()
+      }))
+      setMessages(normalizedMessages)
+      hasInitialized.current = true
+      setTimeout(scrollToBottom, 100)
     }
+  }
 
     const handleReceiveMessage = (message: Message) => {
       // Normalize incoming message username
@@ -129,13 +129,14 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
         ...message,
         sender: message.sender.toLowerCase()
       }
-
+  
       setMessages((prev) => {
         if (prev.some((m) => m.id === normalizedMessage.id)) return prev
         return [...prev, normalizedMessage].sort((a, b) => a.timestamp - b.timestamp)
       })
       setTimeout(scrollToBottom, 100)
     }
+
 
     const handleTypingStart = ({ username: typingUser }: { username: string }) => {
       if (typingUser.toLowerCase() !== normalizedUsername) {
@@ -148,10 +149,9 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
         setIsTyping(false)
       }
     }
-
     socket.on(ACTIONS.SYNC_MESSAGES, handleSyncMessages)
     socket.on(ACTIONS.RECEIVE_MESSAGE, handleReceiveMessage)
-
+  
     return () => {
       socket.off(ACTIONS.SYNC_MESSAGES)
       socket.off(ACTIONS.RECEIVE_MESSAGE)
@@ -247,19 +247,19 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
     <>
       <AnimatePresence>
         {!isOpen && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
-          >
-            <MessageSquare className="h-5 w-5 text-white" />
-          </Button>
+       <Button
+       variant="ghost"
+       size="icon"
+       onClick={onToggle}
+       className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
+     >
+       <MessageSquare className="h-5 w-5 text-white" />
+     </Button>
         )}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
-        {isOpen && (
+      {isOpen && (
           <motion.div
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
