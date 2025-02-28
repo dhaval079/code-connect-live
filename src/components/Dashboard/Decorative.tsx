@@ -1,3 +1,4 @@
+"use client";
 import { motion, useReducedMotion } from "framer-motion"
 import { Hexagon } from "lucide-react"
 import { useRef, useState, useEffect } from "react"

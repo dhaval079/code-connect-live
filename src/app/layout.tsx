@@ -1,36 +1,29 @@
+// app/layout.tsx or app/layout.jsx
 import { Inter } from 'next/font/google'
 import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { SocketProvider } from "@/providers/socketProvider"
 import { ClerkProvider } from '@clerk/nextjs'
+// Remove next/head if you're fully relying on metadata
+// import Head from 'next/head'
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-})
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
+
+export const metadata = {
+  title: 'Code Connect - Real-time Collaborative Coding',
+  description: 'Join a room, share your code, and build amazing projects together.',
+  icons: [
+    { rel: 'icon', url: '/main.svg' },
+    { rel: 'icon', url: '/main.svg', sizes: '32x32', type: 'image/png' },
+  ],
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-<html lang="en" className={`${inter.className} dark`}>
-        <body className="antialiased">
-        <ClerkProvider
-          appearance={{
-            layout: {
-              socialButtonsPlacement: "bottom",
-              socialButtonsVariant: "blockButton",
-            },
-            elements: {
-              formButtonPrimary: 'bg-blue-600 hover:bg-blue-700 text-white',
-              card: 'bg-transparent border-none shadow-none',
-              formField: 'gap-1',
-              formFieldInput: 'bg-gray-800 border-gray-700',
-              footerActionLink: 'text-blue-400 hover:text-blue-300',
-              dividerLine: 'bg-gray-700',
-              dividerText: 'text-gray-400',
-            }
-          }}
-        >
+    <html lang="en" className={inter.className}>
+      <body className="antialiased">
+        <ClerkProvider>
           <ThemeProvider attribute="class">
             <SocketProvider>
               {children}

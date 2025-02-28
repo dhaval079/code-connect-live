@@ -48,8 +48,8 @@ export const AnimatedBackground = () => {
       if (containerRef.current?.contains(renderer.domElement)) {
         containerRef.current?.removeChild(renderer.domElement);
       }
-      scene.clear();  // Add explicit cleanup
-      renderer.dispose();  // Dispose of renderer
+      // scene.clear();  // Add explicit cleanup
+      // renderer.dispose();  // Dispose of renderer
     }
   }, [])
 

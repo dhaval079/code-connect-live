@@ -6,10 +6,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-body:before, body:after {
+/* body:before, body:after {
   content: none !important;
   background: transparent !important;
+} */
+
+.circular-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* makes the container circular */
+  overflow: hidden;   /* ensures content doesn’t overflow the circle */
 }
+
 
 /* In your CSS or a global style */
 .will-change-transform {
