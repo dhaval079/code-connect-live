@@ -53,7 +53,7 @@ export default function Home() {
 
   // Show loading state before Clerk is loaded
   if (!isLoaded) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center h-screen bg-slate-900"></div>;
   }
 
   return (
