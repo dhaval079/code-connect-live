@@ -1284,9 +1284,9 @@ const useFluidCursor = () => {
         
         // Boost intensity for neon glow effect against dark slate
         return {
-          r: baseColor.r * 0.5,
-          g: baseColor.g * 0.5,
-          b: baseColor.b * 0.5
+          r: baseColor.r * 0.3,
+          g: baseColor.g * 0.3,
+          b: baseColor.b * 0.3
         };
       }
 

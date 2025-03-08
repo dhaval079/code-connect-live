@@ -157,7 +157,14 @@ export default function CodeConnect() {
   return (
     <div className="overflow-hidden relative">
       <LoadingScreen />
-      <EnhancedCursor />
+      <EnhancedCursor
+       primaryColor="rgba(0, 255, 255, 0.8)"  // Neon cyan
+       accentColor="rgba(110, 0, 255, 0.5)"   // Purple accent
+       trailLength={20}
+       particleCount={30}
+       cursorSize={14}
+       interactWithElements={true}
+       />
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
    
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
