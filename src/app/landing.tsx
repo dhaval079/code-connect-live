@@ -158,12 +158,12 @@ export default function CodeConnect() {
     <div className="overflow-hidden relative">
       <LoadingScreen />
       <EnhancedCursor
-       primaryColor="rgba(0, 255, 255, 0.8)"  // Neon cyan
-       accentColor="rgba(110, 0, 255, 0.5)"   // Purple accent
-       trailLength={20}
-       particleCount={30}
-       cursorSize={14}
-       interactWithElements={true}
+      //  primaryColor="rgba(0, 255, 255, 0.8)"  // Neon cyan
+      //  accentColor="rgba(110, 0, 255, 0.5)"   // Purple accent
+      //  trailLength={20}
+      //  particleCount={30}
+      //  cursorSize={14}
+      //  interactWithElements={true}
        />
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
    
@@ -182,7 +182,6 @@ export default function CodeConnect() {
 
             <RevealAnimation>
               <div className="container mx-auto px-4 py-8">
-              
                 <Header />
                 <RevealAnimation
                   effect={["fade", "slide", "blur"]}

@@ -28,6 +28,7 @@ import {
 import { useSocket } from "@/providers/socketProvider"
 import dynamic from "next/dynamic"
 import Whiteboard from "@/components/Editor/WhiteBoard"
+import ConsoleOutput from "@/components/Editor/ConsoleOutput"
 const Button = dynamic(
   () => import("@/components/ui/button").then((mod) => mod.Button)
 );
@@ -86,11 +87,11 @@ const Chat = dynamic(
 const Skeleton = dynamic(
   () => import("@/components/ui/skeleton").then((mod) => mod.Skeleton)
 );
-const ConsoleOutput = dynamic(
-  () =>
-    import("@/components/Editor/ConsoleOutput").then((mod) => mod.default),
-  { ssr: false }
-);
+// const ConsoleOutput = dynamic(
+//   () =>
+//     import("@/components/Editor/ConsoleOutput").then((mod) => mod.default),
+//   // { ssr: false }
+// );
 const AiAssistant = dynamic(
   () =>
     import("@/components/Editor/AiAssistant").then((mod) => mod.default),
@@ -124,12 +125,12 @@ function EditorPageContent() {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "failed">("connecting")
   const username = searchParams.get("username")
   const [typingUser, setTypingUser] = useState<string | null>(null)
-  const [consoleHeight, setConsoleHeight] = useState(150)
+  const [consoleHeight, setConsoleHeight] = useState(210)
   const typingTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({})
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
   const [showConnectingSplash, setShowConnectingSplash] = useState(true);
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
 
 
