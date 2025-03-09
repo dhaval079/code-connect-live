@@ -11,6 +11,158 @@ body {
   background: transparent !important;
 } */
 
+/* Hide default cursor */
+* {
+  cursor: none !important;
+}
+
+/* Main cursor container */
+.gsap-cursor-container {
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* Main cursor dot */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background-color: rgba(0, 255, 255, 0.9);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10003;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5),
+              0 0 5px rgba(0, 255, 255, 0.8),
+              inset 0 0 5px rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(1px);
+  pointer-events: none;
+  will-change: transform, width, height, opacity;
+  transition: background-color 0.3s ease;
+  mix-blend-mode: screen;
+}
+
+/* Following circle */
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 255, 255, 0.05);
+  border: 1.5px solid rgba(0, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10001;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  will-change: transform, width, height, opacity;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+/* Aura effect */
+.cursor-aura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 255, 0.15) 0%,
+    rgba(0, 255, 255, 0.08) 40%,
+    rgba(0, 255, 255, 0) 70%
+  );
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Cursor trails container */
+.cursor-trails-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Individual trail dots */
+.cursor-trail {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(0, 210, 255, 0.4);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: transform, opacity;
+  z-index: 9999;
+  filter: blur(1px);
+  mix-blend-mode: screen;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  opacity: calc(0.4 - (var(--index, 0) * 0.04));
+}
+
+/* Ripple effect for clicks */
+.cursor-ripple {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 255, 0.8);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9998;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+              inset 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Custom styles for different cursor states */
+[data-cursor="pointer"] .cursor-dot {
+  transform: translate(-50%, -50%) scale(0.7);
+  background-color: rgb(0, 255, 255);
+}
+
+[data-cursor="pointer"] .cursor-follower {
+  transform: translate(-50%, -50%) scale(1.3);
+  background-color: rgba(0, 255, 255, 0.15);
+  border-color: rgba(0, 255, 255, 0.8);
+}
+
+/* Stunning cyan glow on hover effects for interactive elements */
+a:hover, button:hover, [role="button"]:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Media query for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .gsap-cursor-container,
+  .cursor-dot,
+  .cursor-follower,
+  .cursor-aura,
+  .cursor-trails-container,
+  .cursor-trail,
+  .cursor-ripple {
+    display: none !important;
+  }
+  
+  * {
+    cursor: auto !important;
+  }
+}
+
 .circular-icon {
   width: 100px;
   height: 100px;

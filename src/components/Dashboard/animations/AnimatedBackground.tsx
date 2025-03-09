@@ -28,8 +28,8 @@ export const AnimatedBackground = () => {
 
     const animate = () => {
       requestAnimationFrame(animate)
-      icosahedron.rotation.x += 0.001
-      icosahedron.rotation.y += 0.001
+      icosahedron.rotation.x += 0.002
+      icosahedron.rotation.y += 0.002
       renderer.render(scene, camera)
     }
 
