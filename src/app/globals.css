@@ -12,9 +12,9 @@ body {
 } */
 
 /* Hide default cursor */
-* {
+/* * {
   cursor: none !important;
-}
+} */
 
 /* Main cursor container */
 .gsap-cursor-container {
