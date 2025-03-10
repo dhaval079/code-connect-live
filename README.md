@@ -21,15 +21,6 @@ CodeConnect is a state-of-the-art real-time collaborative coding platform built 
 <img width="1470" alt="Screenshot 2025-03-11 at 12 40 57 AM" src="https://github.com/user-attachments/assets/648407a8-112d-405b-9032-62912183ffa9" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 39 37 AM" src="https://github.com/user-attachments/assets/0e2701e4-5cff-40bf-a5ab-cd67d9abb871" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 39 13 AM" src="https://github.com/user-attachments/assets/6870e157-094a-4571-b0c5-0ddbf98e8fd8" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 38 43 AM" src="https://github.com/user-attachments/assets/b3f0c50f-be26-42a0-a734-3c85b5acb549" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 37 30 AM" src="https://github.com/user-attachments/assets/54d24e36-5653-47c0-9ecb-7fa1974e6379" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 37 25 AM" src="https://github.com/user-attachments/assets/c52f8fa5-f002-4ca3-8f20-c6d48c56c9b7" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 36 16 AM" src="https://github.com/user-attachments/assets/44dd087c-f1b9-4178-924e-897436f9a310" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 36 10 AM" src="https://github.com/user-attachments/assets/74010b40-4922-49c3-99a7-7bb994ad71a2" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 36 02 AM" src="https://github.com/user-attachments/assets/cb65ed74-c832-45c8-92d4-d3cd041f7a56" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 35 44 AM" src="https://github.com/user-attachments/assets/19a9480c-a976-4afa-be68-a4734d6281ae" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 34 44 AM" src="https://github.com/user-attachments/assets/c63386f6-a8dd-43c1-a264-1fa313a749e9" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 33 05 AM" src="https://github.com/user-attachments/assets/722ac0ad-609f-4c62-8678-0da6d16c6e67" />
 
 
 
@@ -46,13 +37,26 @@ CodeConnect is a state-of-the-art real-time collaborative coding platform built 
 
 ![CodeConnect Features](https://i.imgur.com/tGHwkXJ.png)
 
-## 💻 How It Works
+
+<img width="1470" alt="Screenshot 2025-03-11 at 12 38 43 AM" src="https://github.com/user-attachments/assets/b3f0c50f-be26-42a0-a734-3c85b5acb549" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 37 30 AM" src="https://github.com/user-attachments/assets/54d24e36-5653-47c0-9ecb-7fa1974e6379" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 37 25 AM" src="https://github.com/user-attachments/assets/c52f8fa5-f002-4ca3-8f20-c6d48c56c9b7" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 16 AM" src="https://github.com/user-attachments/assets/44dd087c-f1b9-4178-924e-897436f9a310" />
 
 1. **Create or Join a Room**: Start a session or join an existing room
 2. **Collaborate Seamlessly**: Share code, chat in real time, and view live updates from all participants
 3. **Execute Code Together**: Run and debug your code with the built-in console
 
 ![CodeConnect Workflow](https://i.imgur.com/vL9WE7r.png)
+
+
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 10 AM" src="https://github.com/user-attachments/assets/74010b40-4922-49c3-99a7-7bb994ad71a2" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 02 AM" src="https://github.com/user-attachments/assets/cb65ed74-c832-45c8-92d4-d3cd041f7a56" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 35 44 AM" src="https://github.com/user-attachments/assets/19a9480c-a976-4afa-be68-a4734d6281ae" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 34 44 AM" src="https://github.com/user-attachments/assets/c63386f6-a8dd-43c1-a264-1fa313a749e9" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 33 05 AM" src="https://github.com/user-attachments/assets/722ac0ad-609f-4c62-8678-0da6d16c6e67" />
+
+## 💻 How It Works
 
 ## 🛠️ Technology Stack
 
