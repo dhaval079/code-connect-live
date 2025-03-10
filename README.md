@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# CodeConnect
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Next.js-15.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-4.8.1-black?style=flat-square&logo=socket.io)](https://socket.io/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=flat-square&logo=vercel)](https://code-connect.live)
+
+
+
+## Real-Time Collaborative Coding Platform
+
+CodeConnect is a state-of-the-art real-time collaborative coding platform built for developers, by developers. Designed to transcend traditional pair programming, CodeConnect enables seamless collaboration among multiple users in one unified, secure environment.
+
+
+
+
+<img width="1470" alt="Screenshot 2025-03-11 at 12 42 51 AM" src="https://github.com/user-attachments/assets/44b8fdad-4d81-4c73-b5a8-354328076b72" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 42 17 AM" src="https://github.com/user-attachments/assets/0ce26f6e-57a8-4f8e-8080-dfcd61fc5314" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 40 57 AM" src="https://github.com/user-attachments/assets/648407a8-112d-405b-9032-62912183ffa9" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 39 37 AM" src="https://github.com/user-attachments/assets/0e2701e4-5cff-40bf-a5ab-cd67d9abb871" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 39 13 AM" src="https://github.com/user-attachments/assets/6870e157-094a-4571-b0c5-0ddbf98e8fd8" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 38 43 AM" src="https://github.com/user-attachments/assets/b3f0c50f-be26-42a0-a734-3c85b5acb549" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 37 30 AM" src="https://github.com/user-attachments/assets/54d24e36-5653-47c0-9ecb-7fa1974e6379" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 37 25 AM" src="https://github.com/user-attachments/assets/c52f8fa5-f002-4ca3-8f20-c6d48c56c9b7" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 16 AM" src="https://github.com/user-attachments/assets/44dd087c-f1b9-4178-924e-897436f9a310" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 10 AM" src="https://github.com/user-attachments/assets/74010b40-4922-49c3-99a7-7bb994ad71a2" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 36 02 AM" src="https://github.com/user-attachments/assets/cb65ed74-c832-45c8-92d4-d3cd041f7a56" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 35 44 AM" src="https://github.com/user-attachments/assets/19a9480c-a976-4afa-be68-a4734d6281ae" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 34 44 AM" src="https://github.com/user-attachments/assets/c63386f6-a8dd-43c1-a264-1fa313a749e9" />
+<img width="1470" alt="Screenshot 2025-03-11 at 12 33 05 AM" src="https://github.com/user-attachments/assets/722ac0ad-609f-4c62-8678-0da6d16c6e67" />
+
+
+
+## 🚀 Features
+
+* **Real-Time Collaboration**: Code together with multiple users in a single room, beyond traditional pair programming
+* **Ultra-Low Latency**: Fast, synchronized coding with a 75% latency reduction thanks to WebRTC technology
+* **Interactive Coding Environment**: Monaco Editor integration with syntax highlighting and code completion
+* **Integrated Chat**: Built-in real-time messaging for team discussions while coding
+* **AI Assistant**: Get real-time assistance powered by Google Generative AI and OpenAI
+* **Secure, Encrypted Rooms**: Protect your projects with robust security measures
+* **Multi-Language Support**: JavaScript, Python, Java, C++, and more
+* **Flexible Authentication**: Sign in using custom credentials, Google, or LinkedIn
+
+![CodeConnect Features](https://i.imgur.com/tGHwkXJ.png)
+
+## 💻 How It Works
+
+1. **Create or Join a Room**: Start a session or join an existing room
+2. **Collaborate Seamlessly**: Share code, chat in real time, and view live updates from all participants
+3. **Execute Code Together**: Run and debug your code with the built-in console
+
+![CodeConnect Workflow](https://i.imgur.com/vL9WE7r.png)
+
+## 🛠️ Technology Stack
+
+### Frontend
+* **Framework**: Next.js 15.1.6, React 18.3.1
+* **Language**: TypeScript
+* **UI & Styling**: Tailwind CSS, Shadcn UI, Framer Motion, Radix UI
+* **Editors**: Monaco Editor, CodeMirror
+* **Authentication**: Clerk (Custom, Google, LinkedIn)
+* **Real-Time Communication**: Socket.IO Client
+* **AI Integration**: Google Generative AI & OpenAI via OpenRouter API
+* **Graphics & Animation**: Three.js, GSAP
+* **Utilities**: UUID, Sonner, Lodash
+
+### Backend
+* **Real-Time Communication**: Socket.IO
+* **Code Execution**: Node.js built-in VM (sandboxed)
+* **Deployment**: Vercel
+
+![CodeConnect Architecture](https://i.imgur.com/W9VPmIQ.png)
+
+## 📋 Use Cases
+
+* **Remote Pair Programming**: Work with teammates on live coding projects in real-time
+* **Technical Interviews**: Conduct live coding interviews with candidates
+* **Educational Settings**: Perfect for teaching programming concepts
+* **Code Reviews**: Review code together in real-time
+* **Hackathons**: Collaborate efficiently during time-constrained events
+
+## 🚀 Getting Started
+
+### Prerequisites
+* Node.js (v18 or later)
+* npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/codeconnect.git
+cd codeconnect
+
+# Install dependencies
+npm install
+# or
+yarn install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your API keys and configuration
+
+# Run the development server
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📝 Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Learn More
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📞 Contact
 
-## Deploy on Vercel
+Dhaval Rupapara - [@dhaval079](https://github.com/dhaval079)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project Link: [https://github.com/dhaval079/codeconnect](https://github.com/dhaval079/codeconnect)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Live Demo: [https://code-connect.live](https://code-connect.live)
