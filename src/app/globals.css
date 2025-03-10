@@ -11,10 +11,172 @@ body {
   background: transparent !important;
 } */
 
-/* Hide default cursor */
-/* * {
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+/* Custom cursor styles */
+html,
+body {
   cursor: none !important;
-} */
+}
+
+a,
+button,
+input,
+select,
+textarea,
+[role="button"],
+[data-magnetic] {
+  cursor: none !important;
+}
+
+.gsap-cursor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background-color: #00ffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  transition: width 0.3s, height 0.3s, background-color 0.3s;
+}
+
+.cursor-follower {
+  position: fixed;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9998;
+  will-change: transform;
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cursor-aura {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  background-color: rgba(0, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9997;
+  will-change: transform;
+  transition: background-color 0.3s;
+}
+
+.cursor-trail {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background-color: rgba(0, 210, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  pointer-events: none;
+  z-index: 9996;
+  will-change: transform;
+  transition: background-color 0.3s;
+}
+
+.cursor-ripple {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 9995;
+  will-change: transform;
+}
+
+.cursor-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #00ffff;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cursor-dot,
+  .cursor-follower,
+  .cursor-aura,
+  .cursor-trail,
+  .cursor-ripple {
+    display: none;
+  }
+}
+
+
+
 
 /* Main cursor container */
 .gsap-cursor-container {
@@ -27,8 +189,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   background-color: rgba(0, 255, 255, 0.9);
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -141,10 +303,10 @@ body {
 }
 
 /* Stunning cyan glow on hover effects for interactive elements */
-a:hover, button:hover, [role="button"]:hover {
+/* a:hover, button:hover, [role="button"]:hover {
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
   transition: all 0.3s ease;
-}
+} */
 
 /* Media query for touch devices */
 @media (hover: none) and (pointer: coarse) {

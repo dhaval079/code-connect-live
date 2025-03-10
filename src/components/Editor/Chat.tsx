@@ -319,7 +319,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                     <div className="relative flex items-center">
                       {/* Enhanced 3D gradient border with parallax effect */}
                       <motion.div
-                        className="absolute -inset-0.5 rounded-3xl opacity-0 blur-md z-0"
+                        className="absolute -inset-0.5 rounded-3xl opacity-0 blur-sm z-0"
                         style={{
                           background: gradientColors,
                           boxShadow: "0 0 20px rgba(59, 130, 246, 0.3)",
@@ -331,7 +331,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                         }}
                         transition={{
                           opacity: { duration: 0.4, ease: "easeOut" },
-                          background: { duration: 3, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" },
+                          background: { duration: 1, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" },
                         }}
                       />
 

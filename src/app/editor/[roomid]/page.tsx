@@ -739,7 +739,7 @@ function EditorPageContent() {
               className="relative h-10 px-4 group"
             >
               <span className="flex items-center">
-                <Bot className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors" />
+                <Bot className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors  hover:bg-white" />
                 Ask AI
               </span>
               <motion.div
@@ -867,7 +867,7 @@ function EditorPageContent() {
             />
             {!isConsoleOpen && (
               <Button
-                className="fixed bottom-4 right-4 bg-gray-800"
+                className="fixed bottom-4 right-4"
                 onClick={() => setIsConsoleOpen(true)}
               >
                 <Terminal className="w-4 h-4 mr-2" />

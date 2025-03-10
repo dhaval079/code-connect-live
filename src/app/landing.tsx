@@ -165,6 +165,7 @@ export default function CodeConnect() {
       //  cursorSize={14}
       //  interactWithElements={true}
        />
+       
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
    
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">

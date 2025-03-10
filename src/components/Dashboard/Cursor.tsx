@@ -482,6 +482,16 @@
 
 // export default EnhancedCursor
 
+
+
+
+
+
+
+
+
+
+//2
 // 'use client';
 // import { useEffect } from 'react';
 
@@ -500,6 +510,16 @@
 // };
 // export default EnhancedCursor;
 
+
+
+
+
+
+
+
+
+
+// //3
 // // @ts-nocheck
 // 'use client';
 // import { useEffect, useRef, useState } from 'react';
@@ -1009,667 +1029,1038 @@
 
 // export default CyanCursor;
 
+
+
+
+
+
+
+
+
+
+
+
+//4
 "use client"
+import { useEffect, useRef } from "react"
 
-import React, { useEffect, useRef, useState, ReactElement } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useMousePosition } from "@/hooks/use-FluidCursor"
-
-export default function AdvancedCursor() {
-  // Refs for cursor elements
+const CyanCursorSimple = () => {
   const cursorDotRef = useRef<HTMLDivElement>(null)
-  const cursorRingRef = useRef<HTMLDivElement>(null)
+  const cursorFollowerRef = useRef<HTMLDivElement>(null)
   const cursorAuraRef = useRef<HTMLDivElement>(null)
-  const trailsContainerRef = useRef<HTMLDivElement>(null)
-  const particlesContainerRef = useRef<HTMLDivElement>(null)
+  const trailsRef = useRef<HTMLDivElement[]>([])
+  const trailsContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // Mouse position with custom hook
-  const mousePosition = useMousePosition()
+  // Mouse position tracking
+  const mousePosition = useRef({ x: 0, y: 0 })
+  const followerPosition = useRef({ x: 0, y: 0 })
 
-  // State management
-  const [cursorVariant, setCursorVariant] = useState("default")
-  const [cursorText, setCursorText] = useState("")
-  const [isVisible, setIsVisible] = useState(false)
-  const [isClicking, setIsClicking] = useState(false)
-  const [trailElements, setTrailElements] = useState<React.ReactElement[]>([])
-  const [particles, setParticles] = useState<React.ReactElement[]>([])
+  // Animation frame reference
+  const animationFrameId = useRef<number | null>(null)
 
-  // Track last positions for velocity calculations
-  const lastPositionRef = useRef({ x: 0, y: 0 })
-  const velocityRef = useRef({ x: 0, y: 0 })
-  const lastUpdateTimeRef = useRef(0)
-
-  // Magnetic effect tracking
-  const magneticElementRef = useRef<Element | null>(null)
-  const magneticStrengthRef = useRef(0)
-  const originalButtonPositionRef = useRef({ x: 0, y: 0 })
-
-  // Initialize cursor system
   useEffect(() => {
-    // Hide default cursor
-    document.documentElement.classList.add("hide-cursor")
+    // Create trails container
+    const trailsContainer = document.createElement("div")
+    trailsContainer.className = "cursor-trails-container"
+    document.body.appendChild(trailsContainer)
+    trailsContainerRef.current = trailsContainer
 
-    // Show cursor when mouse moves
-    const handleFirstMove = () => {
-      setIsVisible(true)
-      window.removeEventListener("mousemove", handleFirstMove)
+    // Create trail elements
+    for (let i = 0; i < 8; i++) {
+      const trail = document.createElement("div")
+      trail.className = "cursor-trail"
+      trail.style.opacity = "0"
+      trail.style.transform = "translate(-50%, -50%) scale(0)"
+      trailsContainer.appendChild(trail)
+      trailsRef.current.push(trail)
     }
 
-    window.addEventListener("mousemove", handleFirstMove)
+    // Initialize cursor position
+    if (cursorDotRef.current) {
+      cursorDotRef.current.style.opacity = "0"
+      cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(0)"
+    }
 
-    // Set up event listeners
-    window.addEventListener("mousedown", handleMouseDown)
-    window.addEventListener("mouseup", handleMouseUp)
-    window.addEventListener("mouseleave", handleMouseLeave)
-    window.addEventListener("mouseenter", handleMouseEnter)
+    if (cursorFollowerRef.current) {
+      cursorFollowerRef.current.style.opacity = "0"
+      cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(0)"
+    }
 
-    // Set up hover detection for interactive elements
-    setupHoverDetection()
+    if (cursorAuraRef.current) {
+      cursorAuraRef.current.style.opacity = "0"
+      cursorAuraRef.current.style.transform = "translate(-50%, -50%) scale(0)"
+    }
 
-    // Create initial trail elements
-    createTrailElements()
+    // Event listeners
+    document.addEventListener("mousemove", handleMouseMove)
+    document.addEventListener("mousedown", handleMouseDown)
+    document.addEventListener("mouseup", handleMouseUp)
+    document.addEventListener("mouseover", handleMouseOver)
+    document.addEventListener("mouseout", handleMouseOut)
 
+    // Start animation loop
+    startAnimationLoop()
+
+    // Cleanup
     return () => {
-      document.documentElement.classList.remove("hide-cursor")
-      window.removeEventListener("mousemove", handleFirstMove)
-      window.removeEventListener("mousedown", handleMouseDown)
-      window.removeEventListener("mouseup", handleMouseUp)
-      window.removeEventListener("mouseleave", handleMouseLeave)
-      window.removeEventListener("mouseenter", handleMouseEnter)
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current)
+      }
 
-      // Clean up hover detection
-      cleanupHoverDetection()
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mousedown", handleMouseDown)
+      document.removeEventListener("mouseup", handleMouseUp)
+      document.removeEventListener("mouseover", handleMouseOver)
+      document.removeEventListener("mouseout", handleMouseOut)
+
+      // Remove trails container
+      if (trailsContainerRef.current && trailsContainerRef.current.parentNode) {
+        trailsContainerRef.current.parentNode.removeChild(trailsContainerRef.current)
+      }
     }
   }, [])
 
-  // Update velocity calculations
-  useEffect(() => {
-    if (!mousePosition.x || !mousePosition.y) return
+  const handleMouseMove = (e: MouseEvent) => {
+    const { clientX, clientY } = e
 
-    const now = performance.now()
-    const dt = now - lastUpdateTimeRef.current
+    // Update mouse position
+    mousePosition.current = { x: clientX, y: clientY }
 
-    if (dt > 0) {
-      // Calculate velocity
-      velocityRef.current = {
-        x: ((mousePosition.x - lastPositionRef.current.x) / dt) * 15,
-        y: ((mousePosition.y - lastPositionRef.current.y) / dt) * 15,
-      }
-
-      // Update last position and time
-      lastPositionRef.current = { x: mousePosition.x, y: mousePosition.y }
-      lastUpdateTimeRef.current = now
+    // Show cursor on first move
+    if (cursorDotRef.current && cursorDotRef.current.style.opacity === "0") {
+      showCursor()
     }
-  }, [mousePosition])
-
-  // Create trail elements
-  const createTrailElements = () => {
-    const newTrails = []
-    const trailCount = 12 // Increased trail count
-
-    for (let i = 0; i < trailCount; i++) {
-      const delay = i * 0.008
-      const scale = 1 - (i / trailCount) * 0.7
-      const opacity = 0.5 - (i / trailCount) * 0.5
-
-      newTrails.push(
-        <motion.div
-          key={`trail-${i}`}
-          className="cursor-trail"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{
-            opacity: isVisible ? opacity : 0,
-            scale: isVisible ? scale : 0,
-            x: mousePosition.x || 0,
-            y: mousePosition.y || 0,
-            transition: {
-              x: { type: "spring", stiffness: 250 - i * 20, damping: 15, mass: 0.2 + i * 0.05, delay: delay },
-              y: { type: "spring", stiffness: 250 - i * 20, damping: 15, mass: 0.2 + i * 0.05, delay: delay },
-              opacity: { duration: 0.2 },
-            },
-          }}
-          style={{
-            backgroundColor: `hsla(${180 + i * 2}, 100%, ${70 - i * 2}%, ${opacity})`,
-            filter: `blur(${1 + i * 0.1}px)`,
-            boxShadow: `0 0 ${8 + i}px hsla(${180 + i * 2}, 100%, ${70 - i * 2}%, ${opacity * 0.7})`,
-            mixBlendMode: "screen",
-          }}
-        />,
-      )
-    }
-
-    setTrailElements(newTrails)
   }
 
-  // Create particle burst effect
-  const createParticleBurst = (x: number, y: number) => {
-    const newParticles: ReactElement[] = []
-    const particleCount = 12
-    const uniqueId = Date.now()
-
-    for (let i = 0; i < particleCount; i++) {
-      const angle = (i / particleCount) * Math.PI * 2
-      const speed = 2 + Math.random() * 3
-      const distance = 50 + Math.random() * 80
-      const size = 3 + Math.random() * 5
-      const duration = 0.5 + Math.random() * 0.7
-      const hue = 180 + Math.random() * 40 - 20
-
-      newParticles.push(
-        <motion.div
-          key={`particle-${uniqueId}-${i}`}
-          className="cursor-particle"
-          initial={{
-            x,
-            y,
-            scale: 0.5,
-            opacity: 0.8,
-          }}
-          animate={{
-            x: x + Math.cos(angle) * distance,
-            y: y + Math.sin(angle) * distance,
-            scale: 0,
-            opacity: 0,
-          }}
-          transition={{
-            duration: duration,
-            ease: "easeOut",
-          }}
-          style={{
-            width: `${size}px`,
-            height: `${size}px`,
-            backgroundColor: `hsla(${hue}, 100%, 70%, 0.8)`,
-            boxShadow: `0 0 ${size * 2}px hsla(${hue}, 100%, 70%, 0.5)`,
-            borderRadius: "50%",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            zIndex: 10002,
-          }}
-          onAnimationComplete={() => {
-            // Remove this particle when animation completes
-            setParticles((prev) => prev.filter((p) => p.key !== `particle-${uniqueId}-${i}`))
-          }}
-        />,
-      )
+  const showCursor = () => {
+    if (cursorDotRef.current) {
+      cursorDotRef.current.style.opacity = "1"
+      cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      cursorDotRef.current.style.transition = "opacity 0.3s ease, transform 0.3s ease"
     }
 
-    setParticles((prev) => [...prev, ...newParticles])
-  }
+    if (cursorFollowerRef.current) {
+      cursorFollowerRef.current.style.opacity = "0.9"
+      cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      cursorFollowerRef.current.style.transition = "opacity 0.4s ease, transform 0.4s ease"
+    }
 
-  // Create ripple effect
-  const createRippleEffect = (x: number, y: number) => {
-    const rippleId = `ripple-${Date.now()}`
-    const ripple = (
-      <motion.div
-        key={rippleId}
-        className="cursor-ripple"
-        initial={{
-          x,
-          y,
-          scale: 0.2,
-          opacity: 0.9,
-          borderColor: "rgba(0, 255, 255, 0.9)",
-        }}
-        animate={{
-          scale: 2,
-          opacity: 0,
-          borderColor: "rgba(0, 255, 255, 0)",
-        }}
-        transition={{
-          duration: 0.8,
-          ease: "easeOut",
-        }}
-        onAnimationComplete={() => {
-          // Remove this ripple when animation completes
-          setParticles((prev) => prev.filter((p) => p.key !== rippleId))
-        }}
-      />
-    )
+    if (cursorAuraRef.current) {
+      cursorAuraRef.current.style.opacity = "0.7"
+      cursorAuraRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      cursorAuraRef.current.style.transition = "opacity 0.5s ease, transform 0.5s ease"
+    }
 
-    setParticles((prev) => [...prev, ripple])
-  }
-
-  // Set up hover detection for interactive elements
-  const setupHoverDetection = () => {
-    const interactiveSelectors = 'a, button, [role="button"], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    const interactiveElements = document.querySelectorAll(interactiveSelectors)
-
-    interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", () => handleElementHover(el))
-      el.addEventListener("mouseleave", handleElementLeave)
-
-      // Add magnetic effect to buttons
-      if (el.tagName === "BUTTON" || el.getAttribute("role") === "button" || el.tagName === "A") {
-        el.addEventListener("mousemove", (e:any) => handleMagneticMove(e, el))
-      }
+    // Show trails
+    trailsRef.current.forEach((trail, i) => {
+      trail.style.opacity = `${0.4 - i * 0.05}`
+      trail.style.transform = `translate(-50%, -50%) scale(${0.5 - i * 0.05})`
+      trail.style.transition = `opacity 0.5s ease, transform 0.5s ease`
     })
   }
 
-  // Clean up hover detection
-  const cleanupHoverDetection = () => {
-    const interactiveSelectors = 'a, button, [role="button"], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    const interactiveElements = document.querySelectorAll(interactiveSelectors)
-
-    interactiveElements.forEach((el) => {
-      el.removeEventListener("mouseenter", () => handleElementHover(el))
-      el.removeEventListener("mouseleave", handleElementLeave)
-
-      if (el.tagName === "BUTTON" || el.getAttribute("role") === "button" || el.tagName === "A") {
-        el.removeEventListener("mousemove", (e:any) => handleMagneticMove(e, el as Element))
-      }
-    })
-  }
-
-  // Handle magnetic effect on buttons
-  const handleMagneticMove = (e: MouseEvent, element: Element) => {
-    const rect = element.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-
-    // Save original position if not already saved
-    if (!originalButtonPositionRef.current.x) {
-      originalButtonPositionRef.current = {
-        x: centerX,
-        y: centerY,
-      }
-    }
-
-    // Calculate distance from mouse to center of button
-    const distanceX = e.clientX - centerX
-    const distanceY = e.clientY - centerY
-
-    // Calculate distance
-    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
-
-    // Calculate magnetic strength based on distance
-    // Stronger when closer to center
-    const maxDistance = Math.max(rect.width, rect.height) * 1.5
-    const magneticStrength = Math.max(0, 1 - distance / maxDistance) * 0.3
-
-    magneticElementRef.current = element
-    magneticStrengthRef.current = magneticStrength
-
-    // Apply magnetic effect to the button
-    const button = element as HTMLElement
-    const moveX = distanceX * magneticStrength * 0.5
-    const moveY = distanceY * magneticStrength * 0.5
-
-    button.style.transform = `translate(${moveX}px, ${moveY}px)`
-  }
-
-  // Handle element hover
-  const handleElementHover = (element: Element) => {
-    // Get element text for label
-    let hoverText = ""
-    // if (element.tagName === "A") {
-    //   hoverText = "Click"
-    // } else if (element.tagName === "BUTTON") {
-    //   hoverText = "Press"
-    // } else if (element.tagName === "INPUT") {
-    //   const inputType = (element as HTMLInputElement).type
-    //   hoverText = inputType === "submit" ? "Submit" : "Type"
-    // }
-
-    setCursorText(hoverText)
-    setCursorVariant("hover")
-  }
-
-  // Handle element leave
-  const handleElementLeave = () => {
-    setCursorText("")
-    setCursorVariant("default")
-
-    // Reset magnetic element
-    if (magneticElementRef.current) {
-      const button = magneticElementRef.current as HTMLElement
-      button.style.transform = "translate(0, 0)"
-      magneticElementRef.current = null
-      magneticStrengthRef.current = 0
-      originalButtonPositionRef.current = { x: 0, y: 0 }
-    }
-  }
-
-  // Handle mouse down
   const handleMouseDown = () => {
-    setIsClicking(true)
-    setCursorVariant("clicking")
-
-    // Create particle burst and ripple at current mouse position
-    if (mousePosition.x && mousePosition.y) {
-      createParticleBurst(mousePosition.x, mousePosition.y)
-      createRippleEffect(mousePosition.x, mousePosition.y)
+    // Click effect
+    if (cursorDotRef.current) {
+      cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(0.7)"
+      cursorDotRef.current.style.transition = "transform 0.2s ease"
     }
+
+    if (cursorFollowerRef.current) {
+      cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(0.9)"
+      cursorFollowerRef.current.style.transition = "transform 0.2s ease"
+    }
+
+    // Create ripple effect
+    const ripple = document.createElement("div")
+    ripple.className = "cursor-ripple"
+    ripple.style.left = `${mousePosition.current.x}px`
+    ripple.style.top = `${mousePosition.current.y}px`
+    document.body.appendChild(ripple)
+
+    // Animate ripple
+    setTimeout(() => {
+      ripple.style.transform = "translate(-50%, -50%) scale(1.8)"
+      ripple.style.opacity = "0"
+      ripple.style.transition = "transform 0.8s ease, opacity 0.8s ease"
+    }, 10)
+
+    // Remove ripple after animation
+    setTimeout(() => {
+      if (ripple.parentNode) {
+        ripple.parentNode.removeChild(ripple)
+      }
+    }, 800)
   }
 
-  // Handle mouse up
   const handleMouseUp = () => {
-    setIsClicking(false)
-    setCursorVariant(cursorText ? "hover" : "default")
-  }
-
-  // Handle mouse leave
-  const handleMouseLeave = () => {
-    setIsVisible(false)
-  }
-
-  // Handle mouse enter
-  const handleMouseEnter = () => {
-    setIsVisible(true)
-  }
-
-  // Cursor variants for different states
-  const cursorVariants = {
-    default: {
-      width: 10,
-      height: 10,
-      backgroundColor: "rgba(0, 255, 255, 0.9)",
-      // Use style prop for mixBlendMode instead
-      borderRadius: "50%",
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 500,
-        damping: 28,
-        mass: 0.5,
-      },
-    },
-    hover: {
-      width: 16,
-      height: 16,
-      backgroundColor: "rgba(0, 255, 255, 1)",
-      // Use style prop for mixBlendMode instead
-      borderRadius: "50%",
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 28,
-      },
-    },
-    clicking: {
-      width: 14,
-      height: 14,
-      backgroundColor: "rgba(0, 255, 255, 1)",
-      // Use style prop for mixBlendMode instead
-      borderRadius: "50%",
-      scale: 0.8,
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 28,
-      },
-    },
-  }
-
-  // Cursor ring variants
-  const ringVariants = {
-    default: {
-      width: 40,
-      height: 40,
-      borderColor: "rgba(0, 255, 255, 0.5)",
-      borderWidth: "1.5px",
-      backgroundColor: "rgba(0, 255, 255, 0.05)",
-      opacity: 0.9,
-      borderRadius: "50%",
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-        mass: 0.8,
-      },
-    },
-    hover: {
-      width: 60,
-      height: 60,
-      borderColor: "rgba(0, 255, 255, 0.8)",
-      borderWidth: "2px",
-      backgroundColor: "rgba(0, 255, 255, 0.15)",
-      opacity: 1,
-      borderRadius: "50%",
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 200,
-        damping: 20,
-      },
-    },
-    clicking: {
-      width: 50,
-      height: 50,
-      borderColor: "rgba(0, 255, 255, 0.9)",
-      borderWidth: "3px",
-      backgroundColor: "rgba(0, 255, 255, 0.2)",
-      opacity: 1,
-      scale: 0.9,
-      borderRadius: "50%",
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 10,
-      },
-    },
-  }
-
-  // Cursor aura variants
-  const auraVariants = {
-    default: {
-      width: 80,
-      height: 80,
-      opacity: isVisible ? 0.7 : 0,
-      scale: isVisible ? 1 : 0,
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 15,
-        mass: 1,
-      },
-    },
-    hover: {
-      width: 100,
-      height: 100,
-      opacity: isVisible ? 0.9 : 0,
-      scale: isVisible ? 1.2 : 0,
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 15,
-      },
-    },
-    clicking: {
-      width: 90,
-      height: 90,
-      opacity: isVisible ? 0.95 : 0,
-      scale: isVisible ? 0.9 : 0,
-      x: mousePosition.x || 0,
-      y: mousePosition.y || 0,
-      transition: {
-        type: "spring",
-        stiffness: 200,
-        damping: 10,
-      },
-    },
-  }
-
-  // Calculate tilt based on velocity
-  const getTiltStyle = () => {
-    const maxTilt = 20 // Maximum tilt in degrees
-    const tiltX = Math.min(Math.max(-velocityRef.current.y * 0.5, -maxTilt), maxTilt)
-    const tiltY = Math.min(Math.max(velocityRef.current.x * 0.5, -maxTilt), maxTilt)
-
-    return {
-      transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
+    // Release click effect
+    if (cursorDotRef.current) {
+      cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      cursorDotRef.current.style.transition = "transform 0.3s ease"
     }
+
+    if (cursorFollowerRef.current) {
+      cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      cursorFollowerRef.current.style.transition = "transform 0.3s ease"
+    }
+  }
+
+  const handleMouseOver = (e: MouseEvent) => {
+    const target = e.target as HTMLElement
+
+    // Check if hovering over interactive element
+    if (
+      ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA"].includes(target.tagName) ||
+      getComputedStyle(target).cursor === "pointer" ||
+      target.closest("a") ||
+      target.closest("button")
+    ) {
+      // Hover effect
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.backgroundColor = "rgba(0, 255, 255, 1)"
+        cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(0.7)"
+      }
+
+      if (cursorFollowerRef.current) {
+        cursorFollowerRef.current.style.borderColor = "rgba(0, 255, 255, 0.8)"
+        cursorFollowerRef.current.style.backgroundColor = "rgba(0, 255, 255, 0.15)"
+        cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(1.3)"
+      }
+
+      trailsRef.current.forEach((trail) => {
+        trail.style.backgroundColor = "rgba(0, 255, 255, 0.6)"
+      })
+    }
+  }
+
+  const handleMouseOut = (e: MouseEvent) => {
+    const target = e.target as HTMLElement
+
+    // Check if leaving interactive element
+    if (
+      ["A", "BUTTON", "INPUT", "SELECT", "TEXTAREA"].includes(target.tagName) ||
+      getComputedStyle(target).cursor === "pointer" ||
+      target.closest("a") ||
+      target.closest("button")
+    ) {
+      // Reset hover effect
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.backgroundColor = "rgba(0, 255, 255, 0.9)"
+        cursorDotRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      }
+
+      if (cursorFollowerRef.current) {
+        cursorFollowerRef.current.style.borderColor = "rgba(0, 255, 255, 0.5)"
+        cursorFollowerRef.current.style.backgroundColor = "rgba(0, 255, 255, 0.05)"
+        cursorFollowerRef.current.style.transform = "translate(-50%, -50%) scale(1)"
+      }
+
+      trailsRef.current.forEach((trail) => {
+        trail.style.backgroundColor = "rgba(0, 210, 255, 0.4)"
+      })
+    }
+  }
+
+  const startAnimationLoop = () => {
+    const animate = () => {
+      // Smooth follower movement
+      followerPosition.current.x += (mousePosition.current.x - followerPosition.current.x) * 0.15
+      followerPosition.current.y += (mousePosition.current.y - followerPosition.current.y) * 0.15
+
+      // Update cursor dot position (follows mouse exactly)
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.left = `${mousePosition.current.x}px`
+        cursorDotRef.current.style.top = `${mousePosition.current.y}px`
+      }
+
+      // Update follower position (smoothed)
+      if (cursorFollowerRef.current) {
+        cursorFollowerRef.current.style.left = `${followerPosition.current.x}px`
+        cursorFollowerRef.current.style.top = `${followerPosition.current.y}px`
+      }
+
+      // Update aura position (same as follower)
+      if (cursorAuraRef.current) {
+        cursorAuraRef.current.style.left = `${followerPosition.current.x}px`
+        cursorAuraRef.current.style.top = `${followerPosition.current.y}px`
+      }
+
+      // Update trail positions
+      trailsRef.current.forEach((trail, i) => {
+        const progress = i / trailsRef.current.length
+        const trailX = mousePosition.current.x + (followerPosition.current.x - mousePosition.current.x) * progress
+        const trailY = mousePosition.current.y + (followerPosition.current.y - mousePosition.current.y) * progress
+
+        trail.style.left = `${trailX}px`
+        trail.style.top = `${trailY}px`
+      })
+
+      animationFrameId.current = requestAnimationFrame(animate)
+    }
+
+    animationFrameId.current = requestAnimationFrame(animate)
   }
 
   return (
     <>
+      <div ref={cursorDotRef} className="cursor-dot" />
+      <div ref={cursorFollowerRef} className="cursor-follower" />
+      <div ref={cursorAuraRef} className="cursor-aura" />
       <style jsx global>{`
-        /* Hide default cursor */
-        .hide-cursor, .hide-cursor * {
+        html, body {
           cursor: none !important;
         }
         
-        /* Cursor elements */
-        .cursor-dot, .cursor-ring, .cursor-aura, .cursor-trail, .cursor-ripple, .cursor-text {
-          pointer-events: none;
+        a, button, input, select, textarea, [role="button"] {
+          cursor: none !important;
+        }
+        
+        .cursor-dot {
           position: fixed;
-          top: 0;
-          left: 0;
-          transform: translate(-50%, -50%);
-          z-index: 10000;
-          will-change: transform, width, height, opacity;
-        }
-        
-        /* Cursor ripple */
-        .cursor-ripple {
+          width: 8px;
+          height: 8px;
+          background-color: rgba(0, 255, 255, 0.9);
           border-radius: 50%;
-          border: 2px solid rgba(0, 255, 255, 0.8);
-          box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
-                      inset 0 0 15px rgba(0, 255, 255, 0.3);
+          pointer-events: none;
+          z-index: 9999;
+          transform: translate(-50%, -50%) scale(0);
+        }
+        
+        .cursor-follower {
+          position: fixed;
+          width: 36px;
+          height: 36px;
+          border: 2px solid rgba(0, 255, 255, 0.5);
+          background-color: rgba(0, 255, 255, 0.05);
+          border-radius: 50%;
+          pointer-events: none;
           z-index: 9998;
+          transform: translate(-50%, -50%) scale(0);
         }
         
-        /* Cursor text */
-        .cursor-text {
-          color: rgba(0, 255, 255, 1);
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-          white-space: nowrap;
-          z-index: 10004;
-          text-shadow: 0 0 5px rgba(0, 255, 255, 0.8),
-                       0 0 10px rgba(0, 255, 255, 0.5);
-          backdrop-filter: blur(4px);
-          padding: 4px 8px;
-          border-radius: 4px;
-          background-color: rgba(0, 0, 0, 0.1);
+        .cursor-aura {
+          position: fixed;
+          width: 80px;
+          height: 80px;
+          background-color: rgba(0, 255, 255, 0.1);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9997;
+          transform: translate(-50%, -50%) scale(0);
+          box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.2);
         }
         
-        /* Media query for touch devices */
-        @media (hover: none) and (pointer: coarse) {
-          .cursor-dot, .cursor-ring, .cursor-aura, .cursor-trail, 
-          .cursor-ripple, .cursor-text, .cursor-particle {
-            display: none !important;
-          }
-          
-          .hide-cursor, .hide-cursor * {
-            cursor: auto !important;
+        .cursor-trail {
+          position: fixed;
+          width: 12px;
+          height: 12px;
+          background-color: rgba(0, 210, 255, 0.4);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9996;
+          transform: translate(-50%, -50%) scale(0);
+        }
+        
+        .cursor-ripple {
+          position: fixed;
+          width: 80px;
+          height: 80px;
+          border: 2px solid rgba(0, 255, 255, 0.8);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9995;
+          transform: translate(-50%, -50%) scale(0);
+        }
+        
+        @media (max-width: 768px) {
+          .cursor-dot, .cursor-follower, .cursor-aura, .cursor-trail, .cursor-ripple {
+            display: none;
           }
         }
       `}</style>
-
-      {/* Main cursor elements */}
-      <AnimatePresence>
-        {isVisible && (
-          <>
-            {/* Cursor dot */}
-            <motion.div
-              ref={cursorDotRef}
-              className="cursor-dot"
-              variants={cursorVariants}
-              animate={cursorVariant}
-              initial="default"
-              exit={{
-                opacity: 0,
-                scale: 0,
-                transition: { duration: 0.2 },
-              }}
-              style={{
-                boxShadow:
-                  "0 0 15px rgba(0, 255, 255, 0.5), 0 0 5px rgba(0, 255, 255, 0.8), inset 0 0 5px rgba(255, 255, 255, 0.5)",
-                backdropFilter: "blur(1px)",
-                mixBlendMode: "screen",
-                ...getTiltStyle(),
-              }}
-            />
-
-            {/* Cursor ring */}
-            <motion.div
-              ref={cursorRingRef}
-              className="cursor-ring"
-              variants={ringVariants}
-              animate={cursorVariant}
-              initial="default"
-              exit={{
-                opacity: 0,
-                scale: 0,
-                transition: { duration: 0.2 },
-              }}
-              style={{
-                backdropFilter: "blur(2px)",
-                boxShadow: "0 0 20px rgba(0, 255, 255, 0.2)",
-                ...getTiltStyle(),
-              }}
-            />
-
-            {/* Cursor aura */}
-            <motion.div
-              ref={cursorAuraRef}
-              className="cursor-aura"
-              variants={auraVariants}
-              animate={cursorVariant}
-              initial="default"
-              exit={{
-                opacity: 0,
-                scale: 0,
-                transition: { duration: 0.2 },
-              }}
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(0, 255, 255, 0.08) 40%, rgba(0, 255, 255, 0) 70%)",
-                mixBlendMode: "screen",
-              }}
-            />
-
-            {/* Cursor text */}
-            {cursorText && (
-              <motion.div
-                className="cursor-text"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: 1,
-                  x: mousePosition.x || 0,
-                  y: (mousePosition.y || 0) - 45,
-                }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{
-                  opacity: { duration: 0.2 },
-                  y: { duration: 0.2 },
-                  x: { type: "spring", stiffness: 500, damping: 28 },
-                }}
-              >
-                {cursorText}
-              </motion.div>
-            )}
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Cursor trails */}
-      <div ref={trailsContainerRef} className="cursor-trails-container">
-        {trailElements}
-      </div>
-
-      {/* Particles container */}
-      <div ref={particlesContainerRef}>{particles}</div>
     </>
   )
 }
+
+export default CyanCursorSimple
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//5
+// "use client"
+
+// import React, { useEffect, useRef, useState, ReactElement } from "react"
+// import { motion, AnimatePresence } from "framer-motion"
+// import { useMousePosition } from "@/hooks/use-FluidCursor"
+
+// export default function AdvancedCursor() {
+//   // Refs for cursor elements
+//   const cursorDotRef = useRef<HTMLDivElement>(null)
+//   const cursorRingRef = useRef<HTMLDivElement>(null)
+//   const cursorAuraRef = useRef<HTMLDivElement>(null)
+//   const trailsContainerRef = useRef<HTMLDivElement>(null)
+//   const particlesContainerRef = useRef<HTMLDivElement>(null)
+
+//   // Mouse position with custom hook
+//   const mousePosition = useMousePosition()
+
+//   // State management
+//   const [cursorVariant, setCursorVariant] = useState("default")
+//   const [cursorText, setCursorText] = useState("")
+//   const [isVisible, setIsVisible] = useState(false)
+//   const [isClicking, setIsClicking] = useState(false)
+//   const [trailElements, setTrailElements] = useState<React.ReactElement[]>([])
+//   const [particles, setParticles] = useState<React.ReactElement[]>([])
+
+//   // Track last positions for velocity calculations
+//   const lastPositionRef = useRef({ x: 0, y: 0 })
+//   const velocityRef = useRef({ x: 0, y: 0 })
+//   const lastUpdateTimeRef = useRef(0)
+
+//   // Magnetic effect tracking
+//   const magneticElementRef = useRef<Element | null>(null)
+//   const magneticStrengthRef = useRef(0)
+//   const originalButtonPositionRef = useRef({ x: 0, y: 0 })
+
+//   // Initialize cursor system
+//   useEffect(() => {
+//     // Hide default cursor
+//     document.documentElement.classList.add("hide-cursor")
+
+//     // Show cursor when mouse moves
+//     const handleFirstMove = () => {
+//       setIsVisible(true)
+//       window.removeEventListener("mousemove", handleFirstMove)
+//     }
+
+//     window.addEventListener("mousemove", handleFirstMove)
+
+//     // Set up event listeners
+//     window.addEventListener("mousedown", handleMouseDown)
+//     window.addEventListener("mouseup", handleMouseUp)
+//     window.addEventListener("mouseleave", handleMouseLeave)
+//     window.addEventListener("mouseenter", handleMouseEnter)
+
+//     // Set up hover detection for interactive elements
+//     setupHoverDetection()
+
+//     // Create initial trail elements
+//     createTrailElements()
+
+//     return () => {
+//       document.documentElement.classList.remove("hide-cursor")
+//       window.removeEventListener("mousemove", handleFirstMove)
+//       window.removeEventListener("mousedown", handleMouseDown)
+//       window.removeEventListener("mouseup", handleMouseUp)
+//       window.removeEventListener("mouseleave", handleMouseLeave)
+//       window.removeEventListener("mouseenter", handleMouseEnter)
+
+//       // Clean up hover detection
+//       cleanupHoverDetection()
+//     }
+//   }, [])
+
+//   // Update velocity calculations
+//   useEffect(() => {
+//     if (!mousePosition.x || !mousePosition.y) return
+
+//     const now = performance.now()
+//     const dt = now - lastUpdateTimeRef.current
+
+//     if (dt > 0) {
+//       // Calculate velocity
+//       velocityRef.current = {
+//         x: ((mousePosition.x - lastPositionRef.current.x) / dt) * 15,
+//         y: ((mousePosition.y - lastPositionRef.current.y) / dt) * 15,
+//       }
+
+//       // Update last position and time
+//       lastPositionRef.current = { x: mousePosition.x, y: mousePosition.y }
+//       lastUpdateTimeRef.current = now
+//     }
+//   }, [mousePosition])
+
+//   // Create trail elements
+//   const createTrailElements = () => {
+//     const newTrails = []
+//     const trailCount = 12 // Increased trail count
+
+//     for (let i = 0; i < trailCount; i++) {
+//       const delay = i * 0.008
+//       const scale = 1 - (i / trailCount) * 0.7
+//       const opacity = 0.5 - (i / trailCount) * 0.5
+
+//       newTrails.push(
+//         <motion.div
+//           key={`trail-${i}`}
+//           className="cursor-trail"
+//           initial={{ opacity: 0, scale: 0 }}
+//           animate={{
+//             opacity: isVisible ? opacity : 0,
+//             scale: isVisible ? scale : 0,
+//             x: mousePosition.x || 0,
+//             y: mousePosition.y || 0,
+//             transition: {
+//               x: { type: "spring", stiffness: 250 - i * 20, damping: 15, mass: 0.2 + i * 0.05, delay: delay },
+//               y: { type: "spring", stiffness: 250 - i * 20, damping: 15, mass: 0.2 + i * 0.05, delay: delay },
+//               opacity: { duration: 0.2 },
+//             },
+//           }}
+//           style={{
+//             backgroundColor: `hsla(${180 + i * 2}, 100%, ${70 - i * 2}%, ${opacity})`,
+//             filter: `blur(${1 + i * 0.1}px)`,
+//             boxShadow: `0 0 ${8 + i}px hsla(${180 + i * 2}, 100%, ${70 - i * 2}%, ${opacity * 0.7})`,
+//             mixBlendMode: "screen",
+//           }}
+//         />,
+//       )
+//     }
+
+//     setTrailElements(newTrails)
+//   }
+
+//   // Create particle burst effect
+//   const createParticleBurst = (x: number, y: number) => {
+//     const newParticles: ReactElement[] = []
+//     const particleCount = 12
+//     const uniqueId = Date.now()
+
+//     for (let i = 0; i < particleCount; i++) {
+//       const angle = (i / particleCount) * Math.PI * 2
+//       const speed = 2 + Math.random() * 3
+//       const distance = 50 + Math.random() * 80
+//       const size = 3 + Math.random() * 5
+//       const duration = 0.5 + Math.random() * 0.7
+//       const hue = 180 + Math.random() * 40 - 20
+
+//       newParticles.push(
+//         <motion.div
+//           key={`particle-${uniqueId}-${i}`}
+//           className="cursor-particle"
+//           initial={{
+//             x,
+//             y,
+//             scale: 0.5,
+//             opacity: 0.8,
+//           }}
+//           animate={{
+//             x: x + Math.cos(angle) * distance,
+//             y: y + Math.sin(angle) * distance,
+//             scale: 0,
+//             opacity: 0,
+//           }}
+//           transition={{
+//             duration: duration,
+//             ease: "easeOut",
+//           }}
+//           style={{
+//             width: `${size}px`,
+//             height: `${size}px`,
+//             backgroundColor: `hsla(${hue}, 100%, 70%, 0.8)`,
+//             boxShadow: `0 0 ${size * 2}px hsla(${hue}, 100%, 70%, 0.5)`,
+//             borderRadius: "50%",
+//             position: "fixed",
+//             top: 0,
+//             left: 0,
+//             transform: "translate(-50%, -50%)",
+//             pointerEvents: "none",
+//             zIndex: 10002,
+//           }}
+//           onAnimationComplete={() => {
+//             // Remove this particle when animation completes
+//             setParticles((prev) => prev.filter((p) => p.key !== `particle-${uniqueId}-${i}`))
+//           }}
+//         />,
+//       )
+//     }
+
+//     setParticles((prev) => [...prev, ...newParticles])
+//   }
+
+//   // Create ripple effect
+//   const createRippleEffect = (x: number, y: number) => {
+//     const rippleId = `ripple-${Date.now()}`
+//     const ripple = (
+//       <motion.div
+//         key={rippleId}
+//         className="cursor-ripple"
+//         initial={{
+//           x,
+//           y,
+//           scale: 0.2,
+//           opacity: 0.9,
+//           borderColor: "rgba(0, 255, 255, 0.9)",
+//         }}
+//         animate={{
+//           scale: 2,
+//           opacity: 0,
+//           borderColor: "rgba(0, 255, 255, 0)",
+//         }}
+//         transition={{
+//           duration: 0.8,
+//           ease: "easeOut",
+//         }}
+//         onAnimationComplete={() => {
+//           // Remove this ripple when animation completes
+//           setParticles((prev) => prev.filter((p) => p.key !== rippleId))
+//         }}
+//       />
+//     )
+
+//     setParticles((prev) => [...prev, ripple])
+//   }
+
+//   // Set up hover detection for interactive elements
+//   const setupHoverDetection = () => {
+//     const interactiveSelectors = 'a, button, [role="button"], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+//     const interactiveElements = document.querySelectorAll(interactiveSelectors)
+
+//     interactiveElements.forEach((el) => {
+//       el.addEventListener("mouseenter", () => handleElementHover(el))
+//       el.addEventListener("mouseleave", handleElementLeave)
+
+//       // Add magnetic effect to buttons
+//       if (el.tagName === "BUTTON" || el.getAttribute("role") === "button" || el.tagName === "A") {
+//         el.addEventListener("mousemove", (e:any) => handleMagneticMove(e, el))
+//       }
+//     })
+//   }
+
+//   // Clean up hover detection
+//   const cleanupHoverDetection = () => {
+//     const interactiveSelectors = 'a, button, [role="button"], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+//     const interactiveElements = document.querySelectorAll(interactiveSelectors)
+
+//     interactiveElements.forEach((el) => {
+//       el.removeEventListener("mouseenter", () => handleElementHover(el))
+//       el.removeEventListener("mouseleave", handleElementLeave)
+
+//       if (el.tagName === "BUTTON" || el.getAttribute("role") === "button" || el.tagName === "A") {
+//         el.removeEventListener("mousemove", (e:any) => handleMagneticMove(e, el as Element))
+//       }
+//     })
+//   }
+
+//   // Handle magnetic effect on buttons
+//   const handleMagneticMove = (e: MouseEvent, element: Element) => {
+//     const rect = element.getBoundingClientRect()
+//     const centerX = rect.left + rect.width / 2
+//     const centerY = rect.top + rect.height / 2
+
+//     // Save original position if not already saved
+//     if (!originalButtonPositionRef.current.x) {
+//       originalButtonPositionRef.current = {
+//         x: centerX,
+//         y: centerY,
+//       }
+//     }
+
+//     // Calculate distance from mouse to center of button
+//     const distanceX = e.clientX - centerX
+//     const distanceY = e.clientY - centerY
+
+//     // Calculate distance
+//     const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
+
+//     // Calculate magnetic strength based on distance
+//     // Stronger when closer to center
+//     const maxDistance = Math.max(rect.width, rect.height) * 1.5
+//     const magneticStrength = Math.max(0, 1 - distance / maxDistance) * 0.3
+
+//     magneticElementRef.current = element
+//     magneticStrengthRef.current = magneticStrength
+
+//     // Apply magnetic effect to the button
+//     const button = element as HTMLElement
+//     const moveX = distanceX * magneticStrength * 0.5
+//     const moveY = distanceY * magneticStrength * 0.5
+
+//     button.style.transform = `translate(${moveX}px, ${moveY}px)`
+//   }
+
+//   // Handle element hover
+//   const handleElementHover = (element: Element) => {
+//     // Get element text for label
+//     let hoverText = ""
+//     // if (element.tagName === "A") {
+//     //   hoverText = "Click"
+//     // } else if (element.tagName === "BUTTON") {
+//     //   hoverText = "Press"
+//     // } else if (element.tagName === "INPUT") {
+//     //   const inputType = (element as HTMLInputElement).type
+//     //   hoverText = inputType === "submit" ? "Submit" : "Type"
+//     // }
+
+//     setCursorText(hoverText)
+//     setCursorVariant("hover")
+//   }
+
+//   // Handle element leave
+//   const handleElementLeave = () => {
+//     setCursorText("")
+//     setCursorVariant("default")
+
+//     // Reset magnetic element
+//     if (magneticElementRef.current) {
+//       const button = magneticElementRef.current as HTMLElement
+//       button.style.transform = "translate(0, 0)"
+//       magneticElementRef.current = null
+//       magneticStrengthRef.current = 0
+//       originalButtonPositionRef.current = { x: 0, y: 0 }
+//     }
+//   }
+
+//   // Handle mouse down
+//   const handleMouseDown = () => {
+//     setIsClicking(true)
+//     setCursorVariant("clicking")
+
+//     // Create particle burst and ripple at current mouse position
+//     if (mousePosition.x && mousePosition.y) {
+//       createParticleBurst(mousePosition.x, mousePosition.y)
+//       createRippleEffect(mousePosition.x, mousePosition.y)
+//     }
+//   }
+
+//   // Handle mouse up
+//   const handleMouseUp = () => {
+//     setIsClicking(false)
+//     setCursorVariant(cursorText ? "hover" : "default")
+//   }
+
+//   // Handle mouse leave
+//   const handleMouseLeave = () => {
+//     setIsVisible(false)
+//   }
+
+//   // Handle mouse enter
+//   const handleMouseEnter = () => {
+//     setIsVisible(true)
+//   }
+
+//   // Cursor variants for different states
+//   const cursorVariants = {
+//     default: {
+//       width: 10,
+//       height: 10,
+//       backgroundColor: "rgba(0, 255, 255, 0.9)",
+//       // Use style prop for mixBlendMode instead
+//       borderRadius: "50%",
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 500,
+//         damping: 28,
+//         mass: 0.5,
+//       },
+//     },
+//     hover: {
+//       width: 16,
+//       height: 16,
+//       backgroundColor: "rgba(0, 255, 255, 1)",
+//       // Use style prop for mixBlendMode instead
+//       borderRadius: "50%",
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 400,
+//         damping: 28,
+//       },
+//     },
+//     clicking: {
+//       width: 14,
+//       height: 14,
+//       backgroundColor: "rgba(0, 255, 255, 1)",
+//       // Use style prop for mixBlendMode instead
+//       borderRadius: "50%",
+//       scale: 0.8,
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 400,
+//         damping: 28,
+//       },
+//     },
+//   }
+
+//   // Cursor ring variants
+//   const ringVariants = {
+//     default: {
+//       width: 40,
+//       height: 40,
+//       borderColor: "rgba(0, 255, 255, 0.5)",
+//       borderWidth: "1.5px",
+//       backgroundColor: "rgba(0, 255, 255, 0.05)",
+//       opacity: 0.9,
+//       borderRadius: "50%",
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 300,
+//         damping: 20,
+//         mass: 0.8,
+//       },
+//     },
+//     hover: {
+//       width: 60,
+//       height: 60,
+//       borderColor: "rgba(0, 255, 255, 0.8)",
+//       borderWidth: "2px",
+//       backgroundColor: "rgba(0, 255, 255, 0.15)",
+//       opacity: 1,
+//       borderRadius: "50%",
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 200,
+//         damping: 20,
+//       },
+//     },
+//     clicking: {
+//       width: 50,
+//       height: 50,
+//       borderColor: "rgba(0, 255, 255, 0.9)",
+//       borderWidth: "3px",
+//       backgroundColor: "rgba(0, 255, 255, 0.2)",
+//       opacity: 1,
+//       scale: 0.9,
+//       borderRadius: "50%",
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 300,
+//         damping: 10,
+//       },
+//     },
+//   }
+
+//   // Cursor aura variants
+//   const auraVariants = {
+//     default: {
+//       width: 80,
+//       height: 80,
+//       opacity: isVisible ? 0.7 : 0,
+//       scale: isVisible ? 1 : 0,
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 150,
+//         damping: 15,
+//         mass: 1,
+//       },
+//     },
+//     hover: {
+//       width: 100,
+//       height: 100,
+//       opacity: isVisible ? 0.9 : 0,
+//       scale: isVisible ? 1.2 : 0,
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 150,
+//         damping: 15,
+//       },
+//     },
+//     clicking: {
+//       width: 90,
+//       height: 90,
+//       opacity: isVisible ? 0.95 : 0,
+//       scale: isVisible ? 0.9 : 0,
+//       x: mousePosition.x || 0,
+//       y: mousePosition.y || 0,
+//       transition: {
+//         type: "spring",
+//         stiffness: 200,
+//         damping: 10,
+//       },
+//     },
+//   }
+
+//   // Calculate tilt based on velocity
+//   const getTiltStyle = () => {
+//     const maxTilt = 20 // Maximum tilt in degrees
+//     const tiltX = Math.min(Math.max(-velocityRef.current.y * 0.5, -maxTilt), maxTilt)
+//     const tiltY = Math.min(Math.max(velocityRef.current.x * 0.5, -maxTilt), maxTilt)
+
+//     return {
+//       transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
+//     }
+//   }
+
+//   return (
+//     <>
+//       <style jsx global>{`
+//         /* Hide default cursor */
+//         .hide-cursor, .hide-cursor * {
+//           cursor: none !important;
+//         }
+        
+//         /* Cursor elements */
+//         .cursor-dot, .cursor-ring, .cursor-aura, .cursor-trail, .cursor-ripple, .cursor-text {
+//           pointer-events: none;
+//           position: fixed;
+//           top: 0;
+//           left: 0;
+//           transform: translate(-50%, -50%);
+//           z-index: 10000;
+//           will-change: transform, width, height, opacity;
+//         }
+        
+//         /* Cursor ripple */
+//         .cursor-ripple {
+//           border-radius: 50%;
+//           border: 2px solid rgba(0, 255, 255, 0.8);
+//           box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+//                       inset 0 0 15px rgba(0, 255, 255, 0.3);
+//           z-index: 9998;
+//         }
+        
+//         /* Cursor text */
+//         .cursor-text {
+//           color: rgba(0, 255, 255, 1);
+//           font-size: 12px;
+//           font-weight: 600;
+//           letter-spacing: 0.5px;
+//           text-transform: uppercase;
+//           white-space: nowrap;
+//           z-index: 10004;
+//           text-shadow: 0 0 5px rgba(0, 255, 255, 0.8),
+//                        0 0 10px rgba(0, 255, 255, 0.5);
+//           backdrop-filter: blur(4px);
+//           padding: 4px 8px;
+//           border-radius: 4px;
+//           background-color: rgba(0, 0, 0, 0.1);
+//         }
+        
+//         /* Media query for touch devices */
+//         @media (hover: none) and (pointer: coarse) {
+//           .cursor-dot, .cursor-ring, .cursor-aura, .cursor-trail, 
+//           .cursor-ripple, .cursor-text, .cursor-particle {
+//             display: none !important;
+//           }
+          
+//           .hide-cursor, .hide-cursor * {
+//             cursor: auto !important;
+//           }
+//         }
+//       `}</style>
+
+//       {/* Main cursor elements */}
+//       <AnimatePresence>
+//         {isVisible && (
+//           <>
+//             {/* Cursor dot */}
+//             <motion.div
+//               ref={cursorDotRef}
+//               className="cursor-dot"
+//               variants={cursorVariants}
+//               animate={cursorVariant}
+//               initial="default"
+//               exit={{
+//                 opacity: 0,
+//                 scale: 0,
+//                 transition: { duration: 0.2 },
+//               }}
+//               style={{
+//                 boxShadow:
+//                   "0 0 15px rgba(0, 255, 255, 0.5), 0 0 5px rgba(0, 255, 255, 0.8), inset 0 0 5px rgba(255, 255, 255, 0.5)",
+//                 backdropFilter: "blur(1px)",
+//                 mixBlendMode: "screen",
+//                 ...getTiltStyle(),
+//               }}
+//             />
+
+//             {/* Cursor ring */}
+//             <motion.div
+//               ref={cursorRingRef}
+//               className="cursor-ring"
+//               variants={ringVariants}
+//               animate={cursorVariant}
+//               initial="default"
+//               exit={{
+//                 opacity: 0,
+//                 scale: 0,
+//                 transition: { duration: 0.2 },
+//               }}
+//               style={{
+//                 backdropFilter: "blur(2px)",
+//                 boxShadow: "0 0 20px rgba(0, 255, 255, 0.2)",
+//                 ...getTiltStyle(),
+//               }}
+//             />
+
+//             {/* Cursor aura */}
+//             <motion.div
+//               ref={cursorAuraRef}
+//               className="cursor-aura"
+//               variants={auraVariants}
+//               animate={cursorVariant}
+//               initial="default"
+//               exit={{
+//                 opacity: 0,
+//                 scale: 0,
+//                 transition: { duration: 0.2 },
+//               }}
+//               style={{
+//                 background:
+//                   "radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(0, 255, 255, 0.08) 40%, rgba(0, 255, 255, 0) 70%)",
+//                 mixBlendMode: "screen",
+//               }}
+//             />
+
+//             {/* Cursor text */}
+//             {cursorText && (
+//               <motion.div
+//                 className="cursor-text"
+//                 initial={{ opacity: 0, y: 10 }}
+//                 animate={{
+//                   opacity: 1,
+//                   x: mousePosition.x || 0,
+//                   y: (mousePosition.y || 0) - 45,
+//                 }}
+//                 exit={{ opacity: 0, y: 10 }}
+//                 transition={{
+//                   opacity: { duration: 0.2 },
+//                   y: { duration: 0.2 },
+//                   x: { type: "spring", stiffness: 500, damping: 28 },
+//                 }}
+//               >
+//                 {cursorText}
+//               </motion.div>
+//             )}
+//           </>
+//         )}
+//       </AnimatePresence>
+
+//       {/* Cursor trails */}
+//       <div ref={trailsContainerRef} className="cursor-trails-container">
+//         {trailElements}
+//       </div>
+
+//       {/* Particles container */}
+//       <div ref={particlesContainerRef}>{particles}</div>
+//     </>
+//   )
+// }
 
