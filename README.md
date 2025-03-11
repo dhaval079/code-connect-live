@@ -27,6 +27,8 @@
 
 CodeConnect is a state-of-the-art real-time collaborative coding platform built for developers, by developers. Designed to transcend traditional pair programming, CodeConnect enables seamless collaboration among multiple users in one unified, secure environment.
 
+## Screenshots
+
 <img width="1470" alt="Screenshot 2025-03-11 at 12 33 05 AM" src="https://github.com/user-attachments/assets/722ac0ad-609f-4c62-8678-0da6d16c6e67" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 34 44 AM" src="https://github.com/user-attachments/assets/c63386f6-a8dd-43c1-a264-1fa313a749e9" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 35 44 AM" src="https://github.com/user-attachments/assets/19a9480c-a976-4afa-be68-a4734d6281ae" />
@@ -49,6 +51,7 @@ CodeConnect is a state-of-the-art real-time collaborative coding platform built 
 * **Flexible Authentication**: Sign in using custom credentials, Google, or LinkedIn
 
 
+## Editor
 
 <img width="1470" alt="Screenshot 2025-03-11 at 12 37 25 AM" src="https://github.com/user-attachments/assets/c52f8fa5-f002-4ca3-8f20-c6d48c56c9b7" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 37 30 AM" src="https://github.com/user-attachments/assets/54d24e36-5653-47c0-9ecb-7fa1974e6379" />
