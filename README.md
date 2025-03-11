@@ -89,7 +89,6 @@ CodeConnect is a state-of-the-art real-time collaborative coding platform built 
 * **Code Execution**: Node.js built-in VM (sandboxed)
 * **Deployment**: Vercel
 
-![CodeConnect Architecture](https://i.imgur.com/W9VPmIQ.png)
 
 ##  Use Cases
 
