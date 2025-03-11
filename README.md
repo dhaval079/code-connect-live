@@ -54,7 +54,6 @@ CodeConnect is a state-of-the-art real-time collaborative coding platform built 
 <img width="1470" alt="Screenshot 2025-03-11 at 12 42 51 AM" src="https://github.com/user-attachments/assets/44b8fdad-4d81-4c73-b5a8-354328076b72" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 38 43 AM" src="https://github.com/user-attachments/assets/b3f0c50f-be26-42a0-a734-3c85b5acb549" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 39 37 AM" src="https://github.com/user-attachments/assets/0e2701e4-5cff-40bf-a5ab-cd67d9abb871" />
-<img width="1470" alt="Screenshot 2025-03-11 at 12 39 13 AM" src="https://github.com/user-attachments/assets/6870e157-094a-4571-b0c5-0ddbf98e8fd8" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 40 57 AM" src="https://github.com/user-attachments/assets/648407a8-112d-405b-9032-62912183ffa9" />
 <img width="1470" alt="Screenshot 2025-03-11 at 12 42 17 AM" src="https://github.com/user-attachments/assets/0ce26f6e-57a8-4f8e-8080-dfcd61fc5314" />
 
