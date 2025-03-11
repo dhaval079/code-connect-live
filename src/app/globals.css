@@ -63,11 +63,6 @@ body {
   }
 }
 
-/* Custom cursor styles */
-html,
-body {
-  cursor: none !important;
-}
 
 a,
 button,
@@ -76,7 +71,7 @@ select,
 textarea,
 [role="button"],
 [data-magnetic] {
-  cursor: none !important;
+  /* cursor: none !important; */
 }
 
 .gsap-cursor-container {
