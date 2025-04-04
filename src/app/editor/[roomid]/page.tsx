@@ -127,7 +127,7 @@ function EditorPageContent() {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "failed">("connecting")
   const username = searchParams.get("username")
   const [typingUser, setTypingUser] = useState<string | null>(null)
-  const [consoleHeight, setConsoleHeight] = useState(210)
+  const [consoleHeight, setConsoleHeight] = useState(240)
   const typingTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({})
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
   const [showConnectingSplash, setShowConnectingSplash] = useState(true);
