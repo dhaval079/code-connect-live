@@ -718,19 +718,19 @@ function EditorPageContent() {
                 backgroundColor: isSidebarOpen ? "rgba(22, 163, 74, 0.2)" : "transparent"
               }}
               transition={{ duration: 0.3 }}
-              className="rounded-md text-white"
+              className="rounded-xl text-white" 
             >
               <Button
                 variant="default"
                 className="bg-green-500 text-white hover:bg-green-600 transition-colors duration-200"
                 onClick={handleRunCode}
               >
-                <BugPlay className="h-5 w-5 mr-2" />
+                <BugPlay className="mr-1" />
                 Run Code
               </Button>
             </motion.div>
 
-            <div className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+            <div className={`${isDarkMode ? "text-gray-400" : "text-gray-600 bg-cyan-700"}`}>
               Language: {language}
             </div>
           </div>

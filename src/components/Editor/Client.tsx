@@ -177,7 +177,7 @@ export const Client: React.FC<ClientProps> = ({
   return (
     <motion.div
       ref={ref}
-      className="relative flex items-center overflow-y-scroll space-x-4 p-6 rounded-2xl bg-gradient-to-r from-slate-600/50 to-slate-700/50 hover:from-slate-800/50 hover:to-slate-600/50 transition-all duration-300 shadow-lg overflow-hidden"
+      className="relative flex items-center overflow-y-scroll space-x-4 p-6 rounded-2xl bg-gradient-to-r from-slate-700/50 to-slate-700/60 hover:from-slate-800/50 hover:to-slate-600/50 transition-all duration-300 shadow-lg overflow-hidden"
       variants={cardVariants}
       initial="hidden"
       animate={controls}
