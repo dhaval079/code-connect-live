@@ -24,6 +24,8 @@ import {
   MessageSquare,
   Edit,
   PencilRuler,
+  Twitch,
+  BugPlay,
 } from "lucide-react"
 import { useSocket } from "@/providers/socketProvider"
 import dynamic from "next/dynamic"
@@ -720,10 +722,10 @@ function EditorPageContent() {
             >
               <Button
                 variant="default"
-                className="bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
+                className="bg-green-500 text-white hover:bg-green-600 transition-colors duration-200"
                 onClick={handleRunCode}
               >
-                <Play className="h-5 w-5 mr-2" />
+                <BugPlay className="h-5 w-5 mr-2" />
                 Run Code
               </Button>
             </motion.div>
@@ -739,7 +741,12 @@ function EditorPageContent() {
               className="relative h-10 px-4 group"
             >
               <span className="flex items-center">
-                <Bot className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors  hover:bg-white" />
+                {/* <Twitch className="h-5 w-5 mr-2 group-hover:text-blue-400 transition-colors  hover:bg-white" /> */}
+                <div className="mr-1">
+                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 20 20">Icon from Fluent UI System Color Icons by Microsoft Corporation - https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE<g fill="none"><path fill="url(#fluentColorAgents200)" d="M13.18 2H10.5C8.768 7.023 6.823 12.62 6.823 18h6.483a1.75 1.75 0 0 0 1.485-.825l3.998-6.42a1.43 1.43 0 0 0 0-1.51L14.98 3.13A2 2 0 0 0 13.18 2"></path><path fill="url(#fluentColorAgents201)" fillOpacity=".5" d="M13.18 2H10.5C8.768 7.023 6.823 12.62 6.823 18h6.483a1.75 1.75 0 0 0 1.485-.825l3.998-6.42a1.43 1.43 0 0 0 0-1.51L14.98 3.13A2 2 0 0 0 13.18 2"></path><path fill="url(#fluentColorAgents202)" d="M13.25 2.001H6.69c-.601 0-1.16.308-1.48.816l-3.942 6.25a1.75 1.75 0 0 0 0 1.867L5.13 17.06c.354.56.96.91 1.619.938l.067.002h.006a2 2 0 0 0 1.969-1.662l.003-.002L11.18 3.953a2 2 0 0 1 2.069-1.952"></path><path fill="url(#fluentColorAgents203)" fillOpacity=".4" d="M13.25 2.001H6.69c-.601 0-1.16.308-1.48.816l-3.942 6.25a1.75 1.75 0 0 0 0 1.867L5.13 17.06c.354.56.96.91 1.619.938l.067.002h.006a2 2 0 0 0 1.969-1.662l.003-.002L11.18 3.953a2 2 0 0 1 2.069-1.952"></path><defs><radialGradient id="fluentColorAgents200" cx="0" cy="0" r="1" gradientTransform="rotate(-87.881 17.698 4.836)scale(23.3302 18.6978)" gradientUnits="userSpaceOnUse"><stop stopColor="#FFC470"></stop><stop offset=".251" stopColor="#FF835C"></stop><stop offset=".584" stopColor="#F24A9D"></stop><stop offset=".871" stopColor="#B339F0"></stop><stop offset="1" stopColor="#C354FF"></stop></radialGradient><radialGradient id="fluentColorAgents201" cx="0" cy="0" r="1" gradientTransform="matrix(-9.9932 -9.83058 9.94854 -10.1131 11.777 16.154)" gradientUnits="userSpaceOnUse"><stop offset=".709" stopColor="#FFB357" stopOpacity="0"></stop><stop offset=".942" stopColor="#FFB357"></stop></radialGradient><radialGradient id="fluentColorAgents202" cx="0" cy="0" r="1" gradientTransform="rotate(-160.247 10.243 6.665)scale(22.9945 19.4416)" gradientUnits="userSpaceOnUse"><stop offset=".222" stopColor="#4E46E2"></stop><stop offset=".578" stopColor="#625DF6"></stop><stop offset=".955" stopColor="#E37DFF"></stop></radialGradient><linearGradient id="fluentColorAgents203" x1="4.823" x2="10.254" y1="8.629" y2="9.914" gradientUnits="userSpaceOnUse"><stop stopColor="#7563F7" stopOpacity="0"></stop><stop offset=".986" stopColor="#4916AE"></stop></linearGradient></defs></g></svg> */}
+                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24" >Icon from Fluent UI System Color Icons by Microsoft Corporation - https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE<g fill="none"><path fill="url(#fluentColorChatMore240)" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.96 9.96 0 0 1-4.644-1.142l-4.29 1.117a.85.85 0 0 1-1.037-1.036l1.116-4.289A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2"></path><path fill="url(#fluentColorChatMore241)" d="M13.252 13H8.75l-.102.007a.75.75 0 0 0 0 1.486l.102.007h4.502l.101-.007a.75.75 0 0 0 0-1.486zm1.998-3.5h-6.5l-.102.007a.75.75 0 0 0 0 1.486L8.75 11h6.5l.102-.007a.75.75 0 0 0 0-1.486z"></path><defs><linearGradient id="fluentColorChatMore240" x1="2.714" x2="20.178" y1="5.751" y2="35.521" gradientUnits="userSpaceOnUse"><stop stopColor="#0FAFFF"></stop><stop offset="1" stopColor="#CC23D1"></stop></linearGradient><linearGradient id="fluentColorChatMore241" x1="8.7" x2="9.227" y1="9.588" y2="15.025" gradientUnits="userSpaceOnUse"><stop stopColor="#FDFDFD"></stop><stop offset="1" stopColor="#CCEAFF"></stop></linearGradient></defs></g></svg> */}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 24 24">{/* Icon from Fluent UI System Color Icons by Microsoft Corporation - https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE */}<g fill="none"><path fill="url(#fluentColorChatMultiple240)" fillRule="evenodd" d="M22 13.5a7.5 7.5 0 1 0-4.411 6.836c1.258.29 2.613.54 3.236.652a.996.996 0 0 0 1.153-1.17a68 68 0 0 0-.681-3.143A7.5 7.5 0 0 0 22 13.5M14.517 18h-.034z" clipRule="evenodd"></path><path fill="url(#fluentColorChatMultiple241)" fillRule="evenodd" d="M2 10.5a7.5 7.5 0 1 1 4.411 6.836c-1.258.29-2.613.54-3.236.652a.996.996 0 0 1-1.153-1.17a68 68 0 0 1 .681-3.143A7.5 7.5 0 0 1 2 10.5M9.483 15h.034z" clipRule="evenodd"></path><defs><radialGradient id="fluentColorChatMultiple240" cx="0" cy="0" r="1" gradientTransform="matrix(6.90278 8.0094 -8.01592 6.9084 11.027 10.005)" gradientUnits="userSpaceOnUse"><stop offset=".63" stopColor="#3D35B1"></stop><stop offset=".85" stopColor="#6553C9"></stop><stop offset="1" stopColor="#7660D3"></stop></radialGradient><linearGradient id="fluentColorChatMultiple241" x1="2" x2="17.003" y1="3" y2="18" gradientUnits="userSpaceOnUse"><stop stopColor="#0FAFFF"></stop><stop offset="1" stopColor="#2764E7"></stop></linearGradient></defs></g></svg>
+                </div>
                 Ask AI
               </span>
               <motion.div
@@ -878,21 +885,21 @@ function EditorPageContent() {
 
 
           {isChatOpen && (
-  <motion.div 
-    className="w-90 border-l max-h-full border-gray-700" 
-    variants={itemVariants}
-    initial="hidden"
-    animate="visible"
-    exit="hidden"
-  >
-    <Chat
-      roomId={roomId as string}
-      username={username || ""}
-      isOpen={true} // Always true - the container decides visibility
-      onToggle={() => setIsChatOpen(false)}
-    />
-  </motion.div>
-)}
+            <motion.div
+              className="w-90 border-l max-h-full border-gray-700 rounded-l-lg shadow-md overflow-hidden"
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              <Chat
+                roomId={roomId as string}
+                username={username || ""}
+                isOpen={true} // Always true - the container decides visibility
+                onToggle={() => setIsChatOpen(false)}
+              />
+            </motion.div>
+          )}
 
           <AiAssistant
             isOpen={isAiPanelOpen}
@@ -1009,7 +1016,7 @@ function EditorPageContent() {
             <Button variant="outline" className="bg-black text-white" onClick={() => setIsLeaveDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" className="bg-red-500 hover:bg-red-600 text-white" onClick={confirmLeaveRoom}>
+            <Button variant="destructive" className="bg-rose-500 hover:bg-rose-600 text-white" onClick={confirmLeaveRoom}>
               Leave
             </Button>
           </div>

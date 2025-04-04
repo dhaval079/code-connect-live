@@ -265,10 +265,10 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 20 }}
-            className="fixed right-0 top-0 h-full w-80 border-l border-gray-700 bg-gray-800/95 backdrop-blur-sm"
+            className="fixed right-0 top-0 h-full w-80 bprder-4 border-gray-700 bg-gray-800/95 backdrop-blur-sm"
           >
             <TooltipProvider>
-              <div className="flex flex-col h-full bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg shadow-xl">
+              <div className="flex flex-col h-full bg-gradient-to-br  from-gray-900 to-gray-800 rounded-2xl shadow-xl">
                 <motion.div className="flex-none flex items-center justify-center gap-4 py-5 border-b border-gray-700 bg-gray-800/95">
                   <h2 className="text-lg font-semibold text-gray-100">Chat</h2>
                   <div className="text-sm text-gray-400">

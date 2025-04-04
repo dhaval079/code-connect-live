@@ -22,7 +22,7 @@
     "@next/font": "^14.2.15",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-avatar": "^1.1.2",
-    "@radix-ui/react-dialog": "^1.1.5",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-scroll-area": "^1.2.2",
@@ -69,9 +69,11 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.173.0",
     "three-stdlib": "^2.28.9",
-    "uuid": "^11.0.5"
+    "uuid": "^11.0.5",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@iconify-json/fluent-color": "^1.2.10",
     "@types/lodash": "^4.17.15",
     "@types/node": "^20",
     "@types/react": "^19",
