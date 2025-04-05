@@ -785,7 +785,7 @@ const ConsoleOutput = ({
           <div className="h-full flex flex-col">
             {/* Console Header */}
             <div className={`flex items-center justify-between px-4 py-2 border-b ${isDarkMode
-                ? 'border-slate-700/50 bg-slate-900/95'
+                ? 'border-slate-700/50 bg-slate-800/95'
                 : 'border-slate-200 bg-white/95'
               } backdrop-blur-sm`}>
               <div className="flex items-center space-x-2">
