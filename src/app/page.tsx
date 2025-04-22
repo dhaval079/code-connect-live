@@ -1,68 +1,40 @@
 "use client"
-import { useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
-import CodeConnect from './landing';
-import AuthModal from '@/components/Auth/AuthDialog';
+
+import { useUser } from '@clerk/nextjs'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
+import CodeConnect from './landing'
 
 export default function Home() {
-  const { isLoaded, isSignedIn } = useUser();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const { isLoaded, isSignedIn } = useUser()
+  const router = useRouter()
 
-  // Handle initial auth state
+  // Redirect to auth page if not signed in
   useEffect(() => {
-    if (isLoaded) {
-      setInitialLoadComplete(true);
-      // Show auth modal if user is not signed in
-      setShowAuthModal(!isSignedIn);
+    if (isLoaded && !isSignedIn) {
+      router.push('/auth')
     }
-  }, [isLoaded, isSignedIn]);
-
-  // If auth state changes, update modal visibility
-  useEffect(() => {
-    if (initialLoadComplete) {
-      setShowAuthModal(!isSignedIn);
-    }
-  }, [isSignedIn, initialLoadComplete]);
-
-  // Keyboard shortcut for debug mode
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Press Ctrl+Shift+D to remove potential overlays
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-        document.querySelectorAll('.fixed, .absolute').forEach((el) => {
-          if (el.classList.contains('debug-remove')) {
-            (el as HTMLElement).style.display = 'none';
-          }
-        });
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Handle modal close attempt
-  const handleCloseModal = () => {
-    // Only allow closing the modal if user is signed in
-    if (isSignedIn) {
-      setShowAuthModal(false);
-    }
-    // If not signed in, modal remains open
-  };
+  }, [isLoaded, isSignedIn, router])
 
   // Show loading state before Clerk is loaded
   if (!isLoaded) {
-    return <div className="flex items-center justify-center h-screen bg-slate-900"></div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-900">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    )
   }
 
-  return (
-    <>
-      <CodeConnect />
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={handleCloseModal}
-      />
-    </>
-  );
+  // Show loading state while redirecting
+  if (!isSignedIn) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-900">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    )
+  }
+
+  // Show the main app once authenticated
+  return <CodeConnect />
 }

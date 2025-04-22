@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils"
 interface FuturisticInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   icon: React.FC<React.SVGProps<SVGSVGElement>>
+  // id: string;
+  error?: string;
 }
 
 export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: Icon, className, ...props }) => {

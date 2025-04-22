@@ -3,6 +3,9 @@ import { authMiddleware } from "@clerk/nextjs";
 export default authMiddleware({
   publicRoutes: [
     "/",
+    "/auth",          // Allow access to the auth page
+    "/auth/(.*)",     // Allow all routes under auth
+    "/api/webhook",
     "/sign-in(.*)",
     "/sign-up(.*)",
     "/sso-callback(.*)",

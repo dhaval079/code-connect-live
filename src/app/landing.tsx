@@ -27,6 +27,8 @@ import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import dynamic from "next/dynamic"
 import { Skeleton } from "@/components/ui/skeleton"
 import DotBackgroundDemo from "./dotgrid/page";
+import EnhancedParticleField from "@/components/Dashboard/animations/ParticleField";
+import SimpleShiningParticles from "@/components/Dashboard/animations/ParticleField";
 
 const PremiumParallax = dynamic(
   () => import('@/components/Dashboard/animations/ParallaxScroll').then((mod) => mod.default),
@@ -82,6 +84,11 @@ const AnimatedBackground = dynamic(
   }
 );
 
+const ShadowGlowParticles = dynamic(
+  () => import('@/components/Dashboard/animations/ParticleField').then((mod) => mod.default),
+  { ssr: false }
+);
+
 
 
 const NeonGlow = dynamic(
@@ -116,7 +123,7 @@ export default function CodeConnect() {
     console.log("Mounted");
     return () => console.log("Unmounted");
   }, []);
-  
+
 
   const handleJoin = async () => {
     if (!roomId || !username) {
@@ -158,16 +165,16 @@ export default function CodeConnect() {
     <div className="overflow-hidden relative">
       <LoadingScreen />
       <EnhancedCursor
-      //  primaryColor="rgba(0, 255, 255, 0.8)"  // Neon cyan
-      //  accentColor="rgba(110, 0, 255, 0.5)"   // Purple accent
-      //  trailLength={20}
-      //  particleCount={30}
-      //  cursorSize={14}
-      //  interactWithElements={true}
-       />
-       
+      />
+ <ShadowGlowParticles 
+  particleCount={50}
+  baseColor="#6ee7b7"
+  accentColor="#06b6d4"
+  glowSize={6}
+  speed={0.15}
+/>
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
-   
+
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
           <div className="items-center justify-center text-center">
             <AnimatedBackground />
@@ -376,7 +383,7 @@ export default function CodeConnect() {
             >
               <motion.div>
 
- 
+
 
               </motion.div>
               <motion.section id="features" className="mt-32 px-6 justify-center  items-center mx-auto">

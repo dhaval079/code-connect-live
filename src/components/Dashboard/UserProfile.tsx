@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { LogOut, UserCircle, Settings, Camera, Edit, Bell, ChevronRight, Shield, Key, Smartphone, Globe, Moon, Sun, Sparkles } from 'lucide-react';
+import { LogOut, UserCircle, Settings, Camera, Edit, Bell, ChevronRight, Shield, Key, Smartphone, Globe, Moon, Sun, Sparkles, X } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -35,20 +35,20 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isHovering, setIsHovering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Mouse follower effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   if (!user) return null;
 
   const fullName = user.fullName || user.username || 'User';
   const fallbackText = fullName[0].toUpperCase();
-  
+
   const handleSignOut = async () => {
     try {
       setIsLoading(true);
-      
+
       // Visual feedback animation before sign out
       toast.promise(
         new Promise((resolve) => {
@@ -97,8 +97,8 @@ const UserProfile = () => {
               )}
             </AnimatePresence>
             <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-offset-2 ring-offset-background transition-all duration-300 ring-blue-500/50 group-hover:ring-blue-500 z-10">
-              <AvatarImage 
-                src={user.imageUrl} 
+              <AvatarImage
+                src={user.imageUrl}
                 alt={fullName}
                 className="object-cover"
               />
@@ -108,8 +108,8 @@ const UserProfile = () => {
             </Avatar>
           </motion.button>
         </DropdownMenuTrigger>
-        
-        <DropdownMenuContent 
+
+        <DropdownMenuContent
           className="w-72 p-2 bg-card/95 backdrop-blur-md border-border shadow-xl rounded-xl"
           align="end"
           sideOffset={8}
@@ -139,11 +139,11 @@ const UserProfile = () => {
                 </div>
               </div>
             </DropdownMenuLabel>
-            
+
             <DropdownMenuSeparator className="bg-border my-2" />
-            
+
             <div className="px-1 py-1 space-y-1">
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className="flex items-center justify-between px-3 py-2.5 hover:bg-primary/10 rounded-lg cursor-pointer text-foreground transition-all duration-200"
                 onClick={() => setShowProfileDialog(true)}
                 asChild
@@ -158,8 +158,8 @@ const UserProfile = () => {
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
               </DropdownMenuItem>
-              
-              <DropdownMenuItem 
+
+              <DropdownMenuItem
                 className="flex items-center justify-between px-3 py-2.5 hover:bg-primary/10 rounded-lg cursor-pointer text-foreground transition-all duration-200"
                 onClick={() => setShowSettingsDialog(true)}
                 asChild
@@ -174,17 +174,17 @@ const UserProfile = () => {
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
               </DropdownMenuItem>
-              
+
               <DropdownMenuSeparator className="bg-border my-2" />
-              
-              <DropdownMenuItem 
+
+              <DropdownMenuItem
                 className="flex items-center justify-between px-3 py-2.5 hover:bg-red-500/10 rounded-lg cursor-pointer text-red-500 transition-all duration-200"
                 onClick={handleSignOut}
                 disabled={isLoading}
                 asChild
               >
-                <motion.div 
-                  whileHover={{ x: 2 }} 
+                <motion.div
+                  whileHover={{ x: 2 }}
                   whileTap={{ scale: 0.98 }}
                   className="w-full flex items-center justify-between"
                 >
@@ -213,8 +213,8 @@ const UserProfile = () => {
       {/* Combined Profile & Settings Dialog */}
       <AnimatePresence>
         {(showProfileDialog || showSettingsDialog) && (
-          <Dialog 
-            open={showProfileDialog || showSettingsDialog} 
+          <Dialog
+            open={showProfileDialog || showSettingsDialog}
             onOpenChange={(open) => {
               if (!open) {
                 setShowProfileDialog(false);
@@ -222,21 +222,32 @@ const UserProfile = () => {
               }
             }}
           >
-            <DialogContent 
+            <DialogContent
               className="sm:max-w-[500px] p-0 overflow-hidden bg-card border-border rounded-xl"
               onMouseMove={handleMouseMove}
             >
-              <motion.div 
+              {/* Add this custom close button */}
+              <button
+                className="absolute right-4 top-4 z-20 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+                onClick={() => {
+                  setShowProfileDialog(false);
+                  setShowSettingsDialog(false);
+                }}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </button>
+
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 pointer-events-none"
-                style={{ 
+                style={{
                   backgroundPosition: "calc(50% + 40px) calc(50% + 40px)",
                   backgroundSize: "120% 120%"
                 }}
               />
-              
-              <div className="relative z-10">
-                <Tabs 
-                  defaultValue={showProfileDialog ? "profile" : "settings"} 
+              <div className="relative z-10 px-4">
+                <Tabs
+                  defaultValue={showProfileDialog ? "profile" : "settings"}
                   className="w-full"
                   onValueChange={setActiveTab}
                 >
@@ -245,13 +256,13 @@ const UserProfile = () => {
                       {activeTab === "profile" ? "Your Profile" : "Account Settings"}
                     </DialogTitle>
                     <TabsList className="grid grid-cols-2 h-9">
-                      <TabsTrigger 
-                        value="profile" 
+                      <TabsTrigger
+                        value="profile"
                         className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
                       >
                         Profile
                       </TabsTrigger>
-                      <TabsTrigger 
+                      <TabsTrigger
                         value="settings"
                         className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary"
                       >
@@ -259,11 +270,11 @@ const UserProfile = () => {
                       </TabsTrigger>
                     </TabsList>
                   </div>
-                  
+
                   <TabsContent value="profile" className="mt-0">
                     <ProfileTab user={user} />
                   </TabsContent>
-                  
+
                   <TabsContent value="settings" className="mt-0">
                     <SettingsTab />
                   </TabsContent>
@@ -281,7 +292,7 @@ const ProfileTab = ({ user }: { user: any }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isImageHovering, setIsImageHovering] = useState(false);
-  
+
   // Get user data including external accounts if available
   const userData = getUserData(user);
   const [firstName, setFirstName] = useState(userData.firstName);
@@ -317,7 +328,7 @@ const ProfileTab = ({ user }: { user: any }) => {
   const handleProfileUpdate = async () => {
     try {
       setIsLoading(true);
-      
+
       toast.promise(
         new Promise((resolve) => {
           setTimeout(async () => {
@@ -336,7 +347,7 @@ const ProfileTab = ({ user }: { user: any }) => {
           error: 'Failed to update profile',
         }
       );
-      
+
       setIsEditing(false);
     } catch (error) {
       console.error('Profile update error:', error);
@@ -350,7 +361,7 @@ const ProfileTab = ({ user }: { user: any }) => {
     <div className="space-y-6 p-6">
       <div className="flex flex-col items-center space-y-6">
         {/* Avatar with upload */}
-        <motion.div 
+        <motion.div
           className="relative group"
           whileHover={{ scale: 1.02 }}
           onHoverStart={() => setIsImageHovering(true)}
@@ -370,10 +381,10 @@ const ProfileTab = ({ user }: { user: any }) => {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             <Avatar className="h-28 w-28 ring-4 ring-offset-4 ring-offset-background ring-blue-500/30 transition-all duration-300 group-hover:ring-blue-500/70">
-              <AvatarImage 
-                src={userData.profileImageUrl} 
+              <AvatarImage
+                src={userData.profileImageUrl}
                 alt={`${userData.firstName} ${userData.lastName}`}
                 className="object-cover"
               />
@@ -381,12 +392,12 @@ const ProfileTab = ({ user }: { user: any }) => {
                 {userData.firstName?.[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            
+
             {userData.provider !== "LinkedIn" && (
               <label className="absolute bottom-0 right-0 cursor-pointer">
-                <input 
-                  type="file" 
-                  className="hidden" 
+                <input
+                  type="file"
+                  className="hidden"
                   accept="image/*"
                   onChange={handleImageUpload}
                   disabled={isLoading}
@@ -394,9 +405,9 @@ const ProfileTab = ({ user }: { user: any }) => {
               </label>
             )}
           </div>
-          
+
           {isLoading && (
-            <motion.div 
+            <motion.div
               className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full z-20"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -452,7 +463,7 @@ const ProfileTab = ({ user }: { user: any }) => {
                              group-hover:border-blue-400 relative z-10"
                   />
                 </div>
-                
+
                 {/* Bio Input */}
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-300" />
@@ -518,7 +529,7 @@ const ProfileTab = ({ user }: { user: any }) => {
                 className="space-y-6"
               >
                 <div className="flex flex-col items-center space-y-3">
-                  <motion.h3 
+                  <motion.h3
                     className="text-2xl font-bold"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -528,8 +539,8 @@ const ProfileTab = ({ user }: { user: any }) => {
                       {`${userData.firstName} ${userData.lastName}`}
                     </span>
                   </motion.h3>
-                  
-                  <motion.p 
+
+                  <motion.p
                     className="text-muted-foreground text-center"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -537,9 +548,9 @@ const ProfileTab = ({ user }: { user: any }) => {
                   >
                     {userData.email}
                   </motion.p>
-                  
+
                   {userData.provider === "LinkedIn" && (
-                    <motion.div 
+                    <motion.div
                       className="flex items-center space-x-2 bg-blue-500/10 px-3 py-1.5 rounded-full"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -549,9 +560,9 @@ const ProfileTab = ({ user }: { user: any }) => {
                       <span className="text-sm text-blue-500 font-medium">LinkedIn Account</span>
                     </motion.div>
                   )}
-                  
+
                   {bio && (
-                    <motion.p 
+                    <motion.p
                       className="text-sm text-muted-foreground text-center max-w-md mt-2"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -598,16 +609,16 @@ const SettingsTab = () => {
     push: false,
     marketing: false
   });
-  
+
   const handleThemeChange = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 ml-4">
       <div className="space-y-4">
         {/* Theme Toggle */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-between p-4 bg-card/50 rounded-xl border border-border hover:border-blue-500/30 transition-colors duration-300"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
@@ -625,15 +636,15 @@ const SettingsTab = () => {
               <p className="text-sm text-muted-foreground">Toggle between light and dark themes</p>
             </div>
           </div>
-          <Switch 
-            checked={theme === 'dark'} 
+          <Switch
+            checked={theme === 'dark'}
             onCheckedChange={handleThemeChange}
             className="data-[state=checked]:bg-blue-500"
           />
         </motion.div>
 
         {/* Notification Settings */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-between p-4 bg-card/50 rounded-xl border border-border hover:border-purple-500/30 transition-colors duration-300"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
@@ -647,15 +658,15 @@ const SettingsTab = () => {
               <p className="text-sm text-muted-foreground">Receive email updates and alerts</p>
             </div>
           </div>
-          <Switch 
-            checked={notifications.email} 
-            onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
+          <Switch
+            checked={notifications.email}
+            onCheckedChange={(checked) => setNotifications({ ...notifications, email: checked })}
             className="data-[state=checked]:bg-purple-500"
           />
         </motion.div>
 
         {/* Security Settings */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-between p-4 bg-card/50 rounded-xl border border-border hover:border-green-500/30 transition-colors duration-300"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
@@ -674,7 +685,7 @@ const SettingsTab = () => {
         </motion.div>
 
         {/* Two-Factor Authentication */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-between p-4 bg-card/50 rounded-xl border border-border hover:border-amber-500/30 transition-colors duration-300"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
@@ -693,7 +704,7 @@ const SettingsTab = () => {
         </motion.div>
 
         {/* Device Management */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-between p-4 bg-card/50 rounded-xl border border-border hover:border-indigo-500/30 transition-colors duration-300"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
