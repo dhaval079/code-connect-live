@@ -27,8 +27,8 @@ import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import dynamic from "next/dynamic"
 import { Skeleton } from "@/components/ui/skeleton"
 import DotBackgroundDemo from "./dotgrid/page";
-import EnhancedParticleField from "@/components/Dashboard/animations/ParticleField";
-import SimpleShiningParticles from "@/components/Dashboard/animations/ParticleField";
+// import EnhancedParticleField from "@/components/Dashboard/animations/ParticleField";
+// import SimpleShiningParticles from "@/components/Dashboard/animations/ParticleField";
 
 const PremiumParallax = dynamic(
   () => import('@/components/Dashboard/animations/ParallaxScroll').then((mod) => mod.default),
@@ -84,10 +84,10 @@ const AnimatedBackground = dynamic(
   }
 );
 
-const ShadowGlowParticles = dynamic(
-  () => import('@/components/Dashboard/animations/ParticleField').then((mod) => mod.default),
-  { ssr: false }
-);
+// const ShadowGlowParticles = dynamic(
+//   () => import('@/components/Dashboard/animations/ParticleField').then((mod) => mod.default),
+//   { ssr: false }
+// );
 
 
 
@@ -166,13 +166,13 @@ export default function CodeConnect() {
       <LoadingScreen />
       <EnhancedCursor
       />
- <ShadowGlowParticles 
-  particleCount={50}
-  baseColor="#6ee7b7"
-  accentColor="#06b6d4"
-  glowSize={6}
-  speed={0.15}
-/>
+      {/* <ShadowGlowParticles 
+            particleCount={50}
+            baseColor="#6ee7b7"
+            accentColor="#06b6d4"
+            glowSize={6}
+            speed={0.15}
+          /> */}
       <PremiumParallax speed={0.2} friction={0.8} ease={0.2}>
 
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
