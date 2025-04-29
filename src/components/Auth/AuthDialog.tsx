@@ -1278,14 +1278,14 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/_3.jpeg" // Add your image to the public folder
+            src="/gradient.png" // Add your image to the public folder
             alt="Code background"
             fill
-            className="object-cover opacity-100"
+            className="object-cover opacity-70"
             priority
           />
           {/* Dark overlay gradient for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div>
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div> */}
         </div>
 
         {/* Radial gradient effects on top of the image */}
@@ -1313,8 +1313,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
               className="relative group"
               whileHover={{ y: -5 }}
             >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
                 <h2 className="text-2xl font-bold text-white mb-4">Code Together</h2>
                 <p className="text-gray-300">
                   Join our community of developers to collaborate on projects, share knowledge, and build amazing
@@ -1330,8 +1330,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
               className="relative group"
               whileHover={{ y: -5 }}
             >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-purple-500/50 transition-colors duration-300">
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-purple-500/50 transition-colors duration-300">
                 <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
                 <p className="text-gray-300">
                   Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
@@ -1347,8 +1347,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
               className="relative group"
               whileHover={{ y: -5 }}
             >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-pink-500 to-blue-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 border border-gray-800 hover:border-pink-500/50 transition-colors duration-300">
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-pink-500 to-blue-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-pink-500/50 transition-colors duration-300">
                 <h2 className="text-2xl font-bold text-white mb-4">Build Your Portfolio</h2>
                 <p className="text-gray-300">
                   Showcase your projects, contributions, and skills to potential employers and the developer community.
