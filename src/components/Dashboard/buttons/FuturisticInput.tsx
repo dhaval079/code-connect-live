@@ -30,10 +30,10 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
           onBlur={() => setIsFocused(false)}
           className={cn(
             `
-            w-full bg-slate-900/80 
-            border-3 border-cyan-500/30 
+            w-full bg-slate-700/80 
+            border-1 border-cyan-500/30 
             text-cyan-50 placeholder:text-slate-500 
-            rounded-lg px-2 py-2 pl-12
+            rounded-md px-2 py-2 pl-12
             outline-none transition-all duration-300 
             hover:border-cyan-400/50
             focus:border-cyan-400 focus:ring-3 focus:ring-cyan-400/30

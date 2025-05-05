@@ -557,6 +557,14 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { AnimatedBackground } from "../Dashboard/animations/AnimatedBackground"
+import AnimatedGradientBackground from "../Dashboard/animations/AnimatedGradient"
+import AnimatedGradientImpl from "../Dashboard/animations/AnimatedGradient"
+import EnhancedGradientFlow from "../Dashboard/animations/AnimatedGradient"
+import UltraPremiumGradient from "../Dashboard/animations/AnimatedGradient"
+import PureGradientFlow from "../Dashboard/animations/AnimatedGradient"
+import TrendyGradientFlow from "../Dashboard/animations/AnimatedGradient"
+import WaterGradient from "../Dashboard/animations/AnimatedGradient"
 
 type AuthView = "sign-in" | "sign-up" | "verify-otp"
 
@@ -860,6 +868,90 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         }}
       />
 
+       <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0 z-0">
+      <WaterGradient 
+              colorScheme="mixed"
+              className="rounded-lg shadow-xl"
+            />     {/* Dark overlay gradient for better text readability */}
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div> */}
+        </div>
+
+        {/* Radial gradient effects on top of the image */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2),transparent_40%),radial-gradient(circle_at_70%_70%,rgba(147,51,234,0.2),transparent_40%)] z-20"></div>
+
+        {/* Animated grid lines */}
+        <div className="absolute inset-0 opacity-20 z-30">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(75, 85, 99, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(75, 85, 99, 0.1) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          ></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
+          <div className="max-w-md space-y-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="relative group"
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+                <h2 className="text-2xl font-bold text-white mb-4">Code Together</h2>
+                <p className="text-gray-300">
+                  Join our community of developers to collaborate on projects, share knowledge, and build amazing
+                  applications together.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="relative group"
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-purple-500/50 transition-colors duration-300">
+                <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
+                <p className="text-gray-300">
+                  Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
+                  latest technologies.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.8 }}
+              className="relative group"
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-pink-500 to-blue-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-pink-500/50 transition-colors duration-300">
+                <h2 className="text-2xl font-bold text-white mb-4">Build Your Portfolio</h2>
+                <p className="text-gray-300">
+                  Showcase your projects, contributions, and skills to potential employers and the developer community.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Floating code elements */}
+
+          </div>
+        </div>
+      </div>
+
       {/* Left side - Auth form */}
       <div className="w-full min-h-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12 relative overflow-hidden">
         {/* Animated background */}
@@ -877,31 +969,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           />
 
           {/* Animated particles */}
-          <div className="absolute inset-0">
-            {[...Array(15)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 rounded-full bg-white/30"
-                initial={{
-                  x: Math.random() * 100 + "%",
-                  y: Math.random() * 100 + "%",
-                  opacity: Math.random() * 0.5 + 0.3,
-                  scale: Math.random() * 1.5 + 0.5,
-                }}
-                animate={{
-                  x: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
-                  y: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
-                  opacity: [0.3, 0.7, 0.3],
-                  scale: [Math.random() * 1.5 + 0.5, Math.random() * 2 + 1, Math.random() * 1.5 + 0.5],
-                }}
-                transition={{
-                  duration: 10 + Math.random() * 20,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                }}
-              />
-            ))}
-          </div>
+          
         </div>
 
         {/* Back to home link - Only show in fullscreen mode */}
@@ -927,7 +995,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           transition={{ delay: 0.5 }}
         >
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+            className="h-full bg-gradient-to-r from-red-500 to-purple-500"
             initial={{ width: 0 }}
             animate={{ width: `${getProgress()}%` }}
             transition={{ duration: 0.5 }}
@@ -983,7 +1051,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                       ? "bg-gradient-to-r from-cyan-400 to-blue-500"
                       : view === "sign-up"
                         ? "bg-gradient-to-r from-purple-400 to-pink-500"
-                        : "bg-gradient-to-r from-cyan-400 to-blue-500",
+                        : "bg-gradient-to-r from-green-400 to-blue-500",
                   )}
                 >
                   {title}
@@ -1274,93 +1342,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
       </div>
 
       {/* Right side - Feature showcase with background image */}
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
-        {/* Background image with overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/gradient.png" // Add your image to the public folder
-            alt="Code background"
-            fill
-            className="object-cover opacity-70"
-            priority
-          />
-          {/* Dark overlay gradient for better text readability */}
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div> */}
-        </div>
-
-        {/* Radial gradient effects on top of the image */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2),transparent_40%),radial-gradient(circle_at_70%_70%,rgba(147,51,234,0.2),transparent_40%)] z-20"></div>
-
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-20 z-30">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(75, 85, 99, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(75, 85, 99, 0.1) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          ></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
-          <div className="max-w-md space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Code Together</h2>
-                <p className="text-gray-300">
-                  Join our community of developers to collaborate on projects, share knowledge, and build amazing
-                  applications together.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-purple-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
-                <p className="text-gray-300">
-                  Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
-                  latest technologies.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-pink-500 to-blue-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-pink-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Build Your Portfolio</h2>
-                <p className="text-gray-300">
-                  Showcase your projects, contributions, and skills to potential employers and the developer community.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Floating code elements */}
-
-          </div>
-        </div>
-      </div>
+     
     </div>
   )
 }
