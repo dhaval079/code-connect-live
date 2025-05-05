@@ -868,13 +868,13 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         }}
       />
 
-       <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
+      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
-      <WaterGradient 
-              colorScheme="mixed"
-              className="rounded-lg shadow-xl"
-            />     {/* Dark overlay gradient for better text readability */}
+          <WaterGradient
+            colorScheme="mixed"
+            className="rounded-lg shadow-xl"
+          />     {/* Dark overlay gradient for better text readability */}
           {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div> */}
         </div>
 
@@ -969,7 +969,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           />
 
           {/* Animated particles */}
-          
+
         </div>
 
         {/* Back to home link - Only show in fullscreen mode */}
@@ -1342,7 +1342,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
       </div>
 
       {/* Right side - Feature showcase with background image */}
-     
+
     </div>
   )
 }
