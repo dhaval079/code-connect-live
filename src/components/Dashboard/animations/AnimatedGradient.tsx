@@ -58,10 +58,10 @@ const BackgroundWaterGradient: React.FC<BackgroundWaterGradientProps> = ({
       color4: new THREE.Color('#3366ff')
     },
     'blue-cyan': {
-      color1: new THREE.Color('#00ccff'),
-      color2: new THREE.Color('#0066ff'),
-      color3: new THREE.Color('#33ffcc'),
-      color4: new THREE.Color('#0033cc')
+      color1: new THREE.Color('#0066ff'),
+      color2: new THREE.Color('#00ccff'),
+      color3: new THREE.Color('#0033dd'),
+      color4: new THREE.Color('#33ffcc'),
     },
     'mixed': {
       color1: new THREE.Color('#ff3366'),
