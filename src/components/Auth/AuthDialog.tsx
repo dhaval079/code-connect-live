@@ -885,7 +885,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           /> */}
           
            {/* Dark overlay gradient for better text readability */}
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-gray-950/90 z-10"></div> */}
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-100 z-10"></div> */}
         </div>
 
         {/* Radial gradient effects on top of the image */}
