@@ -19,7 +19,7 @@ import {
 export default function Home() {
   const { isLoaded, isSignedIn } = useUser()
   const router = useRouter()
-
+  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Redirect to auth page if not signed in
@@ -65,16 +65,16 @@ export default function Home() {
   return (
     <>
       {/* Fixed Navbar */}
-      <Navbar className=''>
+      <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
-          <NavbarLogo visible={undefined} /> {/* We'll pass visible through context instead */}
-          <NavItems items={navItems} className="cursor-pointer" />
+          <NavbarLogo />
+          <NavItems items={navItems} />
           <div className="flex items-center">
             <UserProfile />
           </div>
         </NavBody>
-
+        
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
@@ -105,7 +105,7 @@ export default function Home() {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-
+      
       {/* Main Content */}
       <div className="min-h-screen">
         <CodeConnect />

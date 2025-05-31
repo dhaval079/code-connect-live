@@ -147,7 +147,7 @@ export default function CodeConnect() {
       <EnhancedCursor />
       
       {/* Main Content - starts after navbar */}
-      <div className=""> {/* Increased padding to account for larger initial navbar */}
+      <div className="pt-12"> {/* Increased padding to account for larger initial navbar */}
         {/* Remove PremiumParallax wrapper that's interfering with scroll detection */}
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
           <div className="items-center justify-center text-center">
@@ -160,7 +160,7 @@ export default function CodeConnect() {
             ))}
           </div>
 
-            <div className="z-10 relative mt-20">
+            <div className="z-10 relative">
               <RevealAnimation>
                 <div className="container mx-auto px-4 py-20">
                   <RevealAnimation
