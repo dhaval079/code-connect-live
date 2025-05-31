@@ -25,6 +25,7 @@ import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
 import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import dynamic from "next/dynamic"
 import { Skeleton } from "@/components/ui/skeleton"
+import ScrollToTopButton from "@/components/Dashboard/ScrollToTop";
 
 const RevealAnimation = dynamic(
   () => import('@/components/Dashboard/animations/RevealAnimation').then((mod) => mod.RevealAnimation),
@@ -446,6 +447,7 @@ export default function CodeConnect() {
             </div>
           </div>
         </div>
+        <ScrollToTopButton />
       </div>
   )
 }
