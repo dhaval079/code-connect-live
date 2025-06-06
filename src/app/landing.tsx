@@ -427,6 +427,7 @@ export default function CodeConnect() {
                 <FAQSection />
               </RevealAnimation>
 
+
               <RevealAnimation>
                 <CodeConnectSlider />
               </RevealAnimation>

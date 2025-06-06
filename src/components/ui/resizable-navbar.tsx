@@ -593,57 +593,143 @@ export const MobileNavToggle = ({
 //   )
 // }
 
+
+
 export const NavbarLogo = ({ visible }: { visible?: boolean }) => {
   return (
     <motion.a
       href="#"
-      className="flex items-center space-x-3"
+      className="flex items-center gap-3 group cursor-pointer ml-2"
       animate={{
-        scale: visible ? 0.85 : 1, // 1.2 when full (visible=false), 0.85 when compact (visible=true)
+        scale: visible ? 0.9 : 1,
       }}
       whileHover={{ 
-        scale: visible ? 0.87 : 1.22 // Slight hover effect
+        scale: visible ? 0.95 : 1.05,
+      }}
+      whileTap={{ 
+        scale: visible ? 0.88 : 0.98,
       }}
       transition={{ 
         type: "spring", 
-        stiffness: 200, 
-        damping: 50 
+        stiffness: 300, 
+        damping: 30,
+        mass: 0.8
       }}
     >
-      <div className="relative w-8 h-8">
+      <div className="relative w-9 h-9">
+        {/* Glow effect background */}
         <motion.div
-          className="absolute inset-0"
+          className="absolute inset-0 rounded-full bg-cyan-400/20 blur-md"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Main rotating hexagon */}
+        <motion.div
+          className="absolute inset-0 z-10"
           animate={{
             rotate: [0, 360],
           }}
+          whileHover={{
+            rotate: [0, 360],
+            transition: {
+              duration: 8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }
+          }}
           transition={{
-            duration: 20,
+            duration: 15,
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
         >
-          <svg viewBox="0 0 24 24" className="w-full h-full text-cyan-400" fill="currentColor">
-            <path d="M17.5 3.5L22 12l-4.5 8.5h-11L2 12l4.5-8.5h11z" />
-          </svg>
+          <motion.svg 
+            viewBox="0 0 24 24" 
+            className="w-full h-full text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <motion.path 
+              d="M17.5 3.5L22 12l-4.5 8.5h-11L2 12l4.5-8.5h11z"
+              animate={{ 
+                pathLength: [0, 1, 1, 0],
+                opacity: [0.6, 1, 1, 0.6],
+              }}
+              whileHover={{
+                strokeWidth: "2",
+              }}
+              transition={{ 
+                pathLength: { 
+                  duration: 4, 
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  times: [0, 0.3, 0.7, 1]
+                },
+                opacity: { 
+                  duration: 4, 
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  times: [0, 0.3, 0.7, 1]
+                },
+                strokeWidth: { duration: 0.2 }
+              }}
+            />
+          </motion.svg>
         </motion.div>
+
+        {/* Subtle pulse ring */}
+        <motion.div
+          className="absolute inset-0 rounded-full border border-cyan-400/30"
+          animate={{
+            scale: [1, 1.4, 1],
+            opacity: [0, 0.4, 0],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeOut",
+            delay: 0.5,
+          }}
+        />
       </div>
-      <motion.span
-        className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
-        animate={{
-          backgroundPosition: ["0%", "100%", "0%"],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-        }}
-      >
-        CodeConnect
-      </motion.span>
+      
+      <motion.div className="relative overflow-hidden">
+        <motion.span
+          className="block text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-[length:200%_100%] text-transparent bg-clip-text"
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+            opacity: visible ? 0.95 : 1,
+          }}
+          whileHover={{
+            scale: 1.02,
+          }}
+          transition={{
+            backgroundPosition: {
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            },
+            opacity: { duration: 0.2 },
+            scale: { duration: 0.2 },
+          }}
+        >
+          CodeConnect
+        </motion.span>
+      </motion.div>
     </motion.a>
   );
 };
-
 
 export const NavbarButton = ({
   href,
