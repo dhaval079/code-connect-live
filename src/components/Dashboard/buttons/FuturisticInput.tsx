@@ -20,6 +20,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
     <div className="space-y-2 relative w-full">
       <label className="text-sm font-medium text-cyan-300" htmlFor={props.id}>
         {label}
+        {props.required && <span className="text-red-400 ml-1">*</span>}
       </label>
 
       <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
@@ -30,7 +31,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
           onBlur={() => setIsFocused(false)}
           className={cn(
             `
-            w-full bg-slate-900/30 
+            w-full bg-slate-700/30 
             border-1 border-cyan-500/30 
             text-cyan-50 placeholder:text-slate-500 
             rounded-lg px-2 py-2 pl-12

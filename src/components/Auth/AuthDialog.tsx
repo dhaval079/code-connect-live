@@ -548,7 +548,7 @@ import type React from "react"
 import { useSignIn, useSignUp } from "@clerk/nextjs"
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion"
 import { useState, useCallback, useEffect } from "react"
-import { Code, Mail, Loader2, ArrowRight, Globe, Check, ChevronLeft, AlertCircle, Eye, EyeOff } from "lucide-react"
+import { Code, Mail, Loader2, ArrowRight, Globe, Check, ChevronLeft, AlertCircle, Eye, EyeOff, Coffee, Star, Sparkles, Zap, User, Shield, Globe2 } from "lucide-react"
 import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
 import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import { toast } from "sonner"
@@ -809,7 +809,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         return {
           title: "Welcome Back",
           subtitle: "Sign in to continue your coding journey",
-          buttonText: "Send Verification Code",
+          buttonText: "Sign In",
         }
       case "sign-up":
         return {
@@ -867,155 +867,120 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           top: useTransform(mouseY, (value) => value - 192),
         }}
       />
-
-      {/* Left side - Content */}
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
-        {/* Background image with overlay */}
-        <div className="absolute inset-0 z-0">
-          <WaterGradient
-            colorScheme="blue-cyan"
-            className="rounded-lg shadow-xl"
-          />    
-          {/* <Image
-            src="/_3.jpeg" // Add your image to the public folder
-            alt="Code background"
-            fill
-            className="object-cover opacity-100"
-            priority
-          /> */}
-          
-           {/* Dark overlay gradient for better text readability */}
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-100 z-10"></div> */}
-        </div>
-
-        {/* Radial gradient effects on top of the image */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2),transparent_40%),radial-gradient(circle_at_70%_70%,rgba(147,51,234,0.2),transparent_40%)] z-20"></div>
-
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-20 z-30">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(75, 85, 99, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(75, 85, 99, 0.1) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          ></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
-          <div className="max-w-md space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Code Together</h2>
-                <p className="text-gray-300">
-                  Join our community of developers to collaborate on projects, share knowledge, and build amazing
-                  applications together.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-purple-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
-                <p className="text-gray-300">
-                  Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
-                  latest technologies.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-pink-500 to-blue-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-pink-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Build Your Portfolio</h2>
-                <p className="text-gray-300">
-                  Showcase your projects, contributions, and skills to potential employers and the developer community.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Floating code elements */}
-
-          </div>
-        </div>
-      </div>
-
-      {/* Right side - Auth form */}
+      {/* Left side - Auth form */}
       <div className="w-full min-h-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12 relative overflow-hidden">
         {/* Animated background */}
+        <motion.div
+          className="fixed pointer-events-none w-96 h-96 rounded-full opacity-30 z-0 blur-3xl"
+          style={{
+            background: "radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(147, 51, 234, 0.2) 50%, rgba(0, 0, 0, 0) 70%)",
+            left: useTransform(mouseX, (value) => value - 192),
+            top: useTransform(mouseY, (value) => value - 192),
+          }}
+        />
+
+        {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"
-            animate={{
-              background: [
-                "linear-gradient(to right bottom, rgba(59,130,246,0.1), rgba(147,51,234,0.1), rgba(236,72,153,0.1))",
-                "linear-gradient(to right bottom, rgba(236,72,153,0.1), rgba(59,130,246,0.1), rgba(147,51,234,0.1))",
-              ],
-            }}
-            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
-            style={{ filter: "blur(100px)" }}
-          />
+          {/* Floating orbs */}
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={`absolute w-32 h-32 rounded-full opacity-20 blur-2xl ${i % 3 === 0 ? 'bg-blue-500' : i % 3 === 1 ? 'bg-cyan-500' : 'bg-cyan-500'
+                }`}
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -50, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 10 + i * 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+                delay: i * 2,
+              }}
+              style={{
+                left: `${20 + i * 15}%`,
+                top: `${10 + i * 20}%`,
+              }}
+            />
+          ))}
 
-          {/* Animated particles */}
-
+          {/* Grid pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "linear-gradient(to right, rgba(59, 130, 246, 0.3) 1px, transparent 1px), linear-gradient(to bottom, rgba(59, 130, 246, 0.3) 1px, transparent 1px)",
+                backgroundSize: "50px 50px",
+              }}
+            />
+          </div>
         </div>
 
-        {/* Back to home link - Only show in fullscreen mode */}
+        {/* Back to home link */}
         <motion.div
-          className="absolute top-6 left-6 z-10"
+          className="absolute top-6 left-6 z-20"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <Link href="/" className="group flex items-center text-gray-300 hover:text-white transition-colors">
-            <motion.div whileHover={{ x: -3 }} whileTap={{ scale: 0.95 }}>
-              <ChevronLeft className="w-4 h-4 mr-1 group-hover:text-blue-400 transition-colors" />
+          <a href="/" className="group flex items-center text-gray-300 hover:text-white transition-all duration-300">
+            <motion.div
+              className="p-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mr-3"
+              whileHover={{ x: -3, scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <ChevronLeft className="w-4 h-4 group-hover:text-blue-400 transition-colors" />
             </motion.div>
-            <span className="group-hover:text-blue-400 transition-colors">Back to home</span>
-          </Link>
+            <span className="group-hover:text-blue-400 transition-colors font-medium">Back to home</span>
+          </a>
         </motion.div>
 
-        {/* Progress bar */}
+        {/* Enhanced Progress bar */}
         <motion.div
-          className="absolute top-0 left-0 right-0 h-1 bg-gray-800"
+          className="absolute top-0 left-0 right-0 h-1 bg-gray-800/50 backdrop-blur-sm z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
           <motion.div
-            className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
+            className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${getProgress()}%` }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute top-0 left-0 h-full w-8 bg-white/30 rounded-full blur-sm"
+            initial={{ x: 0 }}
+            animate={{ x: `${getProgress() * 8}px` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           />
         </motion.div>
 
-        {/* Content */}
-        <div className="relative w-full max-w-md mt-10 flex flex-col items-center z-10">
-          {/* Logo and Title */}
-          <motion.div
+        {/* Main content card */}
+        <motion.div
+          className="relative w-full max-w-lg z-10 mt-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Glass card container */}
+          <div className="relative">
+            {/* Card glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-slate-700/30 via-slate-700/40 to-slate-800/30 rounded-2xl blur-xl opacity-75" />
+
+            {/* Main card */}
+            <div className="relative bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-gray-700/50 p-8 md:p-10 shadow-2xl">
+              {/* Logo and Title Section */}
+              <motion.div
+                className="flex flex-col items-center mb-10"
+                initial="hidden"
+                animate="visible"
+                custom={0}
+                variants={itemVariants}
+              >
+                {/* Enhanced Logo */}
+                <motion.div
             className="flex flex-col items-center mb-10"
             initial="hidden"
             animate="visible"
@@ -1044,310 +1009,518 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                 <Code className="w-10 h-10 text-blue-400" />
               </motion.div>
             </motion.div>
+            </motion.div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={view}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-center mt-8"
-              >
-                <h1
-                  className={cn(
-                    "text-3xl md:text-4xl font-bold bg-clip-text text-transparent transition-all duration-500",
-                    view === "sign-in"
-                      ? "bg-gradient-to-r from-cyan-400 to-blue-500"
-                      : view === "sign-up"
-                        ? "bg-gradient-to-r from-purple-400 to-pink-500"
-                        : "bg-gradient-to-r from-green-400 to-blue-500",
-                  )}
-                >
-                  {title}
-                </h1>
-                <p className="mt-3 text-gray-300 text-lg">{subtitle}</p>
+                {/* Title with enhanced animations */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={view}
+                    initial={{ y: 20, opacity: 0, filter: "blur(10px)" }}
+                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                    exit={{ y: -20, opacity: 0, filter: "blur(10px)" }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="text-center"
+                  >
+                    <h1 className={`text-4xl md:text-5xl font-bold bg-clip-text text-transparent mb-3 transition-all duration-500 ${view === "sign-in"
+                        ? "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500"
+                        : view === "sign-up"
+                          ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
+                          : "bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500"
+                      }`}>
+                      {title}
+                    </h1>
+                    <p className="text-gray-300 text-lg font-medium">{subtitle}</p>
+                  </motion.div>
+                </AnimatePresence>
               </motion.div>
-            </AnimatePresence>
-          </motion.div>
 
-          {/* Form */}
-          <AnimatePresence mode="wait">
-            <motion.form
-              key={view}
-              onSubmit={view === "verify-otp" ? handleOTPVerification : handleEmailSubmit}
-              className="w-full space-y-6"
-              initial="hidden"
-              animate="visible"
-              custom={1}
-              variants={itemVariants}
-            >
-              {view === "verify-otp" ? (
-                <motion.div custom={2} variants={itemVariants} className="space-y-5">
-                  <div className="text-center mb-2">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 260,
-                        damping: 20,
-                        delay: 0.2,
-                      }}
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-4"
-                    >
-                      <Mail className="w-8 h-8 text-emerald-400" />
+              {/* Form Section */}
+              <AnimatePresence mode="wait">
+                <motion.form
+                  key={view}
+                  onSubmit={view === "verify-otp" ? handleOTPVerification : handleEmailSubmit}
+                  className="space-y-6"
+                  initial="hidden"
+                  animate="visible"
+                  variants={itemVariants}
+                >
+                  {view === "verify-otp" ? (
+                    <motion.div custom={2} variants={itemVariants} className="space-y-6">
+                      {/* OTP Info */}
+                      <div className="text-center mb-6">
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                          className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 mb-4"
+                        >
+                          <Shield className="w-8 h-8 text-emerald-400" />
+                        </motion.div>
+                        <p className="text-gray-300 mb-2">We've sent a verification code to</p>
+                        <p className="font-semibold text-white text-lg">{email}</p>
+                      </div>
+
+                      <OTPInput value={otpCode} onChange={(e) => setOtpCode(e.target.value)} />
+
+                      {/* OTP Actions */}
+                      <div className="flex items-center justify-between text-sm text-gray-400 pt-4">
+                        <motion.button
+                          type="button"
+                          onClick={() => setView("sign-in")}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-medium flex items-center gap-1"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Mail className="w-4 h-4" />
+                          Try different email
+                        </motion.button>
+
+                        <motion.button
+                          type="button"
+                          onClick={() => setOtpCode("")}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-medium flex items-center gap-1"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Zap className="w-4 h-4" />
+                          Resend code
+                        </motion.button>
+                      </div>
                     </motion.div>
-                    <p className="text-gray-300 mb-1">We've sent a verification code to</p>
-                    <p className="font-medium text-white">{email}</p>
-                  </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {view === "sign-up" && (
+                        <motion.div custom={2} variants={itemVariants}>
+                          <FuturisticInput
+                            label="Username"
+                            id="username"
+                            icon={User}
+                            value={username}
+                            onChange={(e) => {
+                              setUsername(e.target.value);
+                              if (formErrors.username) {
+                                setFormErrors({ ...formErrors, username: undefined });
+                              }
+                            }}
+                            placeholder="Choose a unique username"
+                            required
+                            autoFocus
+                            error={formErrors.username}
+                          />
+                        </motion.div>
+                      )}
 
-                  <OTPInput value={otpCode} onChange={(event) => setOtpCode(event.target.value)} />
+                      <motion.div custom={3} variants={itemVariants}>
+                        <FuturisticInput
+                          label="Email Address"
+                          id="email"
+                          icon={Mail}
+                          type="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (formErrors.email) {
+                              setFormErrors({ ...formErrors, email: undefined });
+                            }
+                          }}
+                          placeholder="Enter your email address"
+                          required
+                          autoFocus={view === "sign-in"}
+                          error={formErrors.email}
+                        />
+                      </motion.div>
 
-                  <div className="flex items-center justify-between text-sm text-gray-400 mt-4">
-                    <motion.button
-                      type="button"
-                      onClick={() => setView("sign-in")}
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Try different email
-                    </motion.button>
+                      {view === "sign-up" && (
+                        <motion.div custom={4} variants={itemVariants} className="relative">
+                          <FuturisticInput
+                            label="Password"
+                            id="password"
+                            icon={Globe2}
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => {
+                              setPassword(e.target.value);
+                              if (formErrors.password) {
+                                setFormErrors({ ...formErrors, password: undefined });
+                              }
+                            }}
+                            placeholder="Create a strong password"
+                            required
+                            error={formErrors.password}
+                          />
 
-                    <motion.button
-                      type="button"
-                      onClick={() => {
-                        setOtpCode("")
-                        toast.info("Resending verification code...", {
-                          position: "top-center",
-                        })
-                        // Here you would typically call the resend code API
-                      }}
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Resend code
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ) : (
-                <>
-                  {view === "sign-up" && (
-                    <motion.div custom={2} variants={itemVariants}>
-                      <FuturisticInput
-                        label="Username"
-                        id="username"
-                        icon={Globe}
-                        value={username}
-                        onChange={(e) => {
-                          setUsername(e.target.value)
-                          if (formErrors.username) {
-                            setFormErrors({ ...formErrors, username: undefined })
-                          }
-                        }}
-                        placeholder="Choose a username"
-                        required
-                        autoFocus
-                        error={formErrors.username}
-                      />
-                    </motion.div>
+                          <motion.button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-[38px] text-gray-400 hover:text-gray-300 transition-colors p-1 rounded-md hover:bg-gray-700/50"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </motion.button>
+
+                          {/* Enhanced Password Strength Indicator */}
+                          {password && (
+                            <motion.div
+                              className="mt-3"
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                            >
+                              <div className="flex gap-1 mb-2">
+                                {[...Array(4)].map((_, i) => (
+                                  <motion.div
+                                    key={i}
+                                    className={`h-1.5 flex-1 rounded-full ${i < Math.min(Math.floor(password.length / 2), 4)
+                                        ? 'bg-gradient-to-r from-emerald-400 to-green-500'
+                                        : 'bg-gray-700'
+                                      }`}
+                                    initial={{ scaleX: 0 }}
+                                    animate={{ scaleX: 1 }}
+                                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                                  />
+                                ))}
+                              </div>
+                              <p className={`text-xs flex items-center gap-1 ${password.length < 8 ? 'text-amber-400' : 'text-emerald-400'
+                                }`}>
+                                {password.length < 8 ? (
+                                  <>
+                                    <AlertCircle className="w-3 h-3" />
+                                    Password must be at least 8 characters
+                                  </>
+                                ) : (
+                                  <>
+                                    <Check className="w-3 h-3" />
+                                    Strong password
+                                  </>
+                                )}
+                              </p>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
                   )}
 
-                  <motion.div custom={3} variants={itemVariants}>
-                    <FuturisticInput
-                      label="Email"
-                      id="email"
-                      icon={Mail}
-                      type="email"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value)
-                        if (formErrors.email) {
-                          setFormErrors({ ...formErrors, email: undefined })
-                        }
-                      }}
-                      placeholder="Enter your email"
-                      required
-                      autoFocus={view === "sign-in"}
-                      error={formErrors.email}
-                    />
+                  {/* Submit Button and OAuth Section */}
+                  <motion.div custom={5} variants={itemVariants} className="space-y-6 pt-4">
+                    <GlowingButton
+                      className="w-full py-3 text-lg"
+                      disabled={isLoading || !isSignInLoaded || !isSignUpLoaded}
+                      type="submit"
+                      color={view === "verify-otp" ? "green" : view === "sign-up" ? "purple" : "blue"}
+                    >
+                      <AnimatePresence mode="wait">
+                        {isLoading ? (
+                          <motion.div
+                            key="loading"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex items-center justify-center gap-3"
+                          >
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>
+                              {view === "verify-otp" ? "Verifying..." : view === "sign-in" ? "Signing in..." : "Creating account..."}
+                            </span>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="default"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex items-center justify-center gap-3"
+                          >
+                            <span>{buttonText}</span>
+                            <ArrowRight className="w-5 h-5" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </GlowingButton>
+
+                    {/* OAuth Section */}
+                    {view !== "verify-otp" && (
+                      <>
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-600/50" />
+                          </div>
+                          <div className="relative flex justify-center">
+                            <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
+                              Or continue with
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <motion.button
+                            type="button"
+                            onClick={() => handleOAuthSignIn("oauth_google")}
+                            className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                            whileHover={{
+                              scale: 1.02,
+                              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                                  <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
+                            </div>
+                            <span className="font-medium">Google</span>
+                          </motion.button>
+
+                          <motion.button
+                            type="button"
+                            onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
+                            className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                            whileHover={{
+                              scale: 1.02,
+                              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                        <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
+                            </div>
+                            <span className="font-medium">LinkedIn</span>
+                          </motion.button>
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                </motion.form>
+              </AnimatePresence>
+
+              {/* Footer */}
+              {view !== "verify-otp" && (
+                <motion.div
+                  className="mt-8 pt-6 border-t border-gray-700/50 text-center"
+                  initial="hidden"
+                  animate="visible"
+                  custom={6}
+                  variants={itemVariants}
+                >
+                  <p className="text-gray-300 text-base">
+                    {view === "sign-in" ? (
+                      <>
+                        Don't have an account?{" "}
+                        <motion.button
+                          type="button"
+                          onClick={() => setView("sign-up")}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Sign up
+                        </motion.button>
+                      </>
+                    ) : (
+                      <>
+                        Already have an account?{" "}
+                        <motion.button
+                          type="button"
+                          onClick={() => setView("sign-in")}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Sign in
+                        </motion.button>
+                      </>
+                    )}
+                  </p>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Decorative elements */}
+        <div className="absolute bottom-10 left-10 text-gray-600 opacity-50">
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          >
+            <Coffee className="w-6 h-6" />
+          </motion.div>
+        </div>
+
+        <div className="absolute top-20 right-20 text-gray-600 opacity-50">
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          >
+            <Star className="w-5 h-5" />
+          </motion.div>
+        </div>
+
+      </div>
+
+      {/* Right side - Content */}
+      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0 z-0">
+          <WaterGradient
+            colorScheme="blue-cyan"
+            className="rounded-lg shadow-xl"
+          />
+          {/* <Image
+            src="/_3.jpeg" // Add your image to the public folder
+            alt="Code background"
+            fill
+            className="object-cover opacity-100"
+            priority
+          /> */}
+
+          {/* Dark overlay gradient for better text readability */}
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-100 z-10"></div> */}
+        </div>
+
+        {/* Radial gradient effects on top of the image */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2),transparent_40%),radial-gradient(circle_at_70%_70%,rgba(147,51,234,0.2),transparent_40%)] z-20"></div>
+
+        {/* Animated grid lines */}
+        <div className="absolute inset-0 opacity-20 z-30">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(75, 85, 99, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(75, 85, 99, 0.1) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          ></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
+          <div className="max-w-md space-y-8">
+               <div className="mx-auto w-full">
+                 <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="w-full max-w-md mb-12"
+          >
+            <div className="relative">
+               <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="w-full max-w-md mb-12"
+          >
+              {/* Terminal window mockup */}
+              <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl border-2 border-gray-800 overflow-hidden shadow-2xl">
+                {/* Terminal header */}
+                <div className="flex items-center justify-between px-4 py-2 bg-gray-800/80 border-b border-gray-700">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  </div>
+                  {/* <div className="text-xs text-gray-400">~/codeconnect/project</div> */}
+                  <div className="w-4"></div>
+                </div>
+
+                {/* Terminal content */}
+                <div className="p-4 font-mono text-sm">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="flex items-center text-green-400 mb-2"
+                  >
+                    <span className="text-blue-400 mr-2">~$</span>
+                    <motion.span
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ delay: 0.6, duration: 1.5 }}
+                      className="overflow-hidden whitespace-nowrap"
+                    >
+                      npm create codeconnect-app
+                    </motion.span>
                   </motion.div>
 
-                  {view === "sign-up" && (
-                    <motion.div custom={4} variants={itemVariants} className="relative">
-                      <FuturisticInput
-                        label="Password"
-                        id="password"
-                        icon={showPassword ? Eye : EyeOff}
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value)
-                          if (formErrors.password) {
-                            setFormErrors({ ...formErrors, password: undefined })
-                          }
-                        }}
-                        placeholder="Create a password"
-                        required
-                        error={formErrors.password}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-[38px] text-gray-400 hover:text-gray-300 transition-colors"
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    transition={{ delay: 2.2, duration: 0.5 }}
+                    className="text-gray-300 ml-4 mb-2"
+                  >
+                    <p>✓ Creating a new CodeConnect project...</p>
+                    <p>✓ Installing dependencies...</p>
+                    <p>✓ Setting up development environment...</p>
+                    <p className="text-green-400">✓ Success! Project ready.</p>
+                  </motion.div>
 
-                      {password && (
-                        <div className="mt-2">
-                          <div className="flex gap-1 mb-1">
-                            {[...Array(4)].map((_, i) => (
-                              <motion.div
-                                key={i}
-                                className={`h-1 flex-1 rounded-full ${i < Math.min(Math.floor(password.length / 2), 4) ? "bg-emerald-500" : "bg-gray-700"
-                                  }`}
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ duration: 0.2, delay: i * 0.1 }}
-                              />
-                            ))}
-                          </div>
-                          <p className="text-xs text-gray-400">
-                            {password.length < 8 ? "Password must be at least 8 characters" : "Strong password"}
-                          </p>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </>
-              )}
-
-              <motion.div custom={5} variants={itemVariants} className="space-y-6 pt-2">
-                <GlowingButton
-                  className="w-full py-3 text-base"
-                  disabled={isLoading || !isSignInLoaded || !isSignUpLoaded}
-                  type="submit"
-                  color={view === "verify-otp" ? "green" : view === "sign-up" ? "purple" : "blue"}
-                >
-                  <AnimatePresence mode="wait">
-                    {isLoading ? (
-                      <motion.div
-                        key="loading"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-center justify-center"
-                      >
-                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                        {view === "verify-otp" ? "Verifying..." : view === "sign-in" ? "Sending..." : "Creating..."}
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="default"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-center justify-center"
-                      >
-                        {buttonText}
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </GlowingButton>
-
-                {view !== "verify-otp" && (
-                  <>
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-700/50" />
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-gray-900/80 text-gray-400">Or continue with</span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <motion.button
-                        type="button"
-                        onClick={() => handleOAuthSignIn("oauth_google")}
-                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/80 hover:bg-gray-700/90 text-white rounded-lg border border-gray-700/50 transition-all duration-200"
-                        whileHover={{
-                          scale: 1.02,
-                          backgroundColor: "rgba(55, 65, 81, 0.9)",
-                          boxShadow: "0 0 15px rgba(59, 130, 246, 0.3)",
-                        }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
-                        <span className="text-base">Google</span>
-                      </motion.button>
-
-                      <motion.button
-                        type="button"
-                        onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
-                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-800/80 hover:bg-gray-700/90 text-white rounded-lg border border-gray-700/50 transition-all duration-200"
-                        whileHover={{
-                          scale: 1.02,
-                          backgroundColor: "rgba(55, 65, 81, 0.9)",
-                          boxShadow: "0 0 15px rgba(59, 130, 246, 0.3)",
-                        }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Image width={20} height={20} src="/linkedin.svg" alt="LinkedIn" className="w-5 h-5" />
-                        <span className="text-base">LinkedIn</span>
-                      </motion.button>
-                    </div>
-                  </>
-                )}
-              </motion.div>
-            </motion.form>
-          </AnimatePresence>
-
-          {/* Footer */}
-          {view !== "verify-otp" && (
-            <motion.div
-              className="w-full mt-10 pt-6 border-t border-gray-800/50 text-center"
-              initial="hidden"
-              animate="visible"
-              custom={6}
-              variants={itemVariants}
-            >
-              <p className="text-gray-300 text-base">
-                {view === "sign-in" ? (
-                  <>
-                    Don't have an account?{" "}
-                    <motion.button
-                      type="button"
-                      onClick={() => setView("sign-up")}
-                      className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 3.0, duration: 0.5 }}
+                    className="flex items-center text-green-400 mt-2"
+                  >
+                    <span className="text-blue-400 mr-2">~$</span>
+                    <motion.span
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ delay: 3.1, duration: 1.2 }}
+                      className="overflow-hidden whitespace-nowrap"
                     >
-                      Sign up
-                    </motion.button>
-                  </>
-                ) : (
-                  <>
-                    Already have an account?{" "}
-                    <motion.button
-                      type="button"
-                      onClick={() => setView("sign-in")}
-                      className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Sign in
-                    </motion.button>
-                  </>
-                )}
-              </p>
+                      cd codeconnect-app && npm run dev
+                    </motion.span>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    transition={{ delay: 4.5, duration: 0.5 }}
+                    className="text-gray-300 ml-4"
+                  >
+                    <p>✓ Starting development server...</p>
+                    <p className="text-cyan-400">✓ Ready! Available at: http://localhost:3000</p>
+                  </motion.div>
+                </div>
+              </div>
             </motion.div>
-          )}
+              {/* Glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl opacity-20 blur-lg -z-10"></div>
+            </div>
+          </motion.div>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="relative group w-full mx-auto align-middle justify-cente"
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute -inset-2 w-full mx-auto align-middle justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+                <h2 className="text-2xl font-bold text-white mb-4 w-full mx-auto align-middle justify-center">Code Together</h2>
+                <p className="text-gray-300 mx-auto w-full">
+                  Join our community of developers to collaborate on projects, share knowledge, and build amazing
+                  applications together.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="relative group"
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-cyan-500/50 transition-colors duration-300">
+                <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
+                <p className="text-gray-300">
+                  Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
+                  latest technologies.
+                </p>
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </div>
     </div>
