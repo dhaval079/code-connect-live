@@ -981,35 +981,35 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
               >
                 {/* Enhanced Logo */}
                 <motion.div
-            className="flex flex-col items-center mb-10"
-            initial="hidden"
-            animate="visible"
-            custom={0}
-            variants={itemVariants}
-          >
-            <motion.div
-              animate={{
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 30,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-              }}
-              className="relative"
-            >
-              <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg transform scale-125" />
-              <motion.div
-                className="relative bg-gray-900/80 rounded-full p-4 border border-gray-700"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
-                }}
-              >
-                <Code className="w-10 h-10 text-blue-400" />
-              </motion.div>
-            </motion.div>
-            </motion.div>
+                  className="flex flex-col items-center mb-10"
+                  initial="hidden"
+                  animate="visible"
+                  custom={0}
+                  variants={itemVariants}
+                >
+                  <motion.div
+                    animate={{
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 30,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "linear",
+                    }}
+                    className="relative"
+                  >
+                    <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg transform scale-125" />
+                    <motion.div
+                      className="relative bg-gray-900/80 rounded-full p-4 border border-gray-700"
+                      whileHover={{
+                        scale: 1.05,
+                        boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
+                      }}
+                    >
+                      <Code className="w-10 h-10 text-blue-400" />
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
 
                 {/* Title with enhanced animations */}
                 <AnimatePresence mode="wait">
@@ -1022,18 +1022,67 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     className="text-center"
                   >
                     <h1 className={`text-4xl md:text-5xl font-bold bg-clip-text text-transparent mb-3 transition-all duration-500 ${view === "sign-in"
-                        ? "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500"
-                        : view === "sign-up"
-                          ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
-                          : "bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500"
+                      ? "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500"
+                      : view === "sign-up"
+                        ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
+                        : "bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500"
                       }`}>
                       {title}
                     </h1>
                     <p className="text-gray-300 text-lg font-medium">{subtitle}</p>
+
+
                   </motion.div>
                 </AnimatePresence>
               </motion.div>
+              {view !== "verify-otp" && (
+                      <>
+                    
+              <div className="grid grid-cols-2 gap-4 my-2 w-full">
+                <motion.button
+                  type="button"
+                  onClick={() => handleOAuthSignIn("oauth_google")}
+                  className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                    <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
+                  </div>
+                  <span className="font-medium">Google</span>
+                </motion.button>
 
+                <motion.button
+                  type="button"
+                  onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
+                  className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                    <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
+                  </div>
+                  <span className="font-medium">LinkedIn</span>
+                </motion.button>
+              </div>
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-600/50" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+                </>
+                    )}
               {/* Form Section */}
               <AnimatePresence mode="wait">
                 <motion.form
@@ -1171,8 +1220,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                                   <motion.div
                                     key={i}
                                     className={`h-1.5 flex-1 rounded-full ${i < Math.min(Math.floor(password.length / 2), 4)
-                                        ? 'bg-gradient-to-r from-emerald-400 to-green-500'
-                                        : 'bg-gray-700'
+                                      ? 'bg-gradient-to-r from-emerald-400 to-green-500'
+                                      : 'bg-gray-700'
                                       }`}
                                     initial={{ scaleX: 0 }}
                                     animate={{ scaleX: 1 }}
@@ -1239,54 +1288,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     </GlowingButton>
 
                     {/* OAuth Section */}
-                    {view !== "verify-otp" && (
-                      <>
-                        <div className="relative">
-                          <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-600/50" />
-                          </div>
-                          <div className="relative flex justify-center">
-                            <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
-                              Or continue with
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <motion.button
-                            type="button"
-                            onClick={() => handleOAuthSignIn("oauth_google")}
-                            className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
-                            whileHover={{
-                              scale: 1.02,
-                              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                            }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                                  <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
-                            </div>
-                            <span className="font-medium">Google</span>
-                          </motion.button>
-
-                          <motion.button
-                            type="button"
-                            onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
-                            className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
-                            whileHover={{
-                              scale: 1.02,
-                              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                            }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                        <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
-                            </div>
-                            <span className="font-medium">LinkedIn</span>
-                          </motion.button>
-                        </div>
-                      </>
-                    )}
                   </motion.div>
                 </motion.form>
               </AnimatePresence>
@@ -1394,97 +1396,97 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         {/* Content */}
         <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
           <div className="max-w-md space-y-8">
-               <div className="mx-auto w-full">
-                 <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="w-full max-w-md mb-12"
-          >
-            <div className="relative">
-               <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="w-full max-w-md mb-12"
-          >
-              {/* Terminal window mockup */}
-              <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl border-2 border-gray-800 overflow-hidden shadow-2xl">
-                {/* Terminal header */}
-                <div className="flex items-center justify-between px-4 py-2 bg-gray-800/80 border-b border-gray-700">
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
-                  {/* <div className="text-xs text-gray-400">~/codeconnect/project</div> */}
-                  <div className="w-4"></div>
+            <div className="mx-auto w-full">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="w-full max-w-md mb-12"
+              >
+                <div className="relative">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
+                    className="w-full max-w-md mb-12"
+                  >
+                    {/* Terminal window mockup */}
+                    <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl border-2 border-gray-800 overflow-hidden shadow-2xl">
+                      {/* Terminal header */}
+                      <div className="flex items-center justify-between px-4 py-2 bg-gray-800/80 border-b border-gray-700">
+                        <div className="flex space-x-2">
+                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        {/* <div className="text-xs text-gray-400">~/codeconnect/project</div> */}
+                        <div className="w-4"></div>
+                      </div>
+
+                      {/* Terminal content */}
+                      <div className="p-4 font-mono text-sm">
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.5, duration: 0.5 }}
+                          className="flex items-center text-green-400 mb-2"
+                        >
+                          <span className="text-blue-400 mr-2">~$</span>
+                          <motion.span
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ delay: 0.6, duration: 1.5 }}
+                            className="overflow-hidden whitespace-nowrap"
+                          >
+                            npm create codeconnect-app
+                          </motion.span>
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ delay: 2.2, duration: 0.5 }}
+                          className="text-gray-300 ml-4 mb-2"
+                        >
+                          <p>✓ Creating a new CodeConnect project...</p>
+                          <p>✓ Installing dependencies...</p>
+                          <p>✓ Setting up development environment...</p>
+                          <p className="text-green-400">✓ Success! Project ready.</p>
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 3.0, duration: 0.5 }}
+                          className="flex items-center text-green-400 mt-2"
+                        >
+                          <span className="text-blue-400 mr-2">~$</span>
+                          <motion.span
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ delay: 3.1, duration: 1.2 }}
+                            className="overflow-hidden whitespace-nowrap"
+                          >
+                            cd codeconnect-app && npm run dev
+                          </motion.span>
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ delay: 4.5, duration: 0.5 }}
+                          className="text-gray-300 ml-4"
+                        >
+                          <p>✓ Starting development server...</p>
+                          <p className="text-cyan-400">✓ Ready! Available at: http://localhost:3000</p>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </motion.div>
+                  {/* Glow effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl opacity-20 blur-lg -z-10"></div>
                 </div>
-
-                {/* Terminal content */}
-                <div className="p-4 font-mono text-sm">
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 0.5 }}
-                    className="flex items-center text-green-400 mb-2"
-                  >
-                    <span className="text-blue-400 mr-2">~$</span>
-                    <motion.span
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ delay: 0.6, duration: 1.5 }}
-                      className="overflow-hidden whitespace-nowrap"
-                    >
-                      npm create codeconnect-app
-                    </motion.span>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    transition={{ delay: 2.2, duration: 0.5 }}
-                    className="text-gray-300 ml-4 mb-2"
-                  >
-                    <p>✓ Creating a new CodeConnect project...</p>
-                    <p>✓ Installing dependencies...</p>
-                    <p>✓ Setting up development environment...</p>
-                    <p className="text-green-400">✓ Success! Project ready.</p>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 3.0, duration: 0.5 }}
-                    className="flex items-center text-green-400 mt-2"
-                  >
-                    <span className="text-blue-400 mr-2">~$</span>
-                    <motion.span
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ delay: 3.1, duration: 1.2 }}
-                      className="overflow-hidden whitespace-nowrap"
-                    >
-                      cd codeconnect-app && npm run dev
-                    </motion.span>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    transition={{ delay: 4.5, duration: 0.5 }}
-                    className="text-gray-300 ml-4"
-                  >
-                    <p>✓ Starting development server...</p>
-                    <p className="text-cyan-400">✓ Ready! Available at: http://localhost:3000</p>
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-              {/* Glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl opacity-20 blur-lg -z-10"></div>
-            </div>
-          </motion.div>
+              </motion.div>
             </div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
