@@ -39,8 +39,14 @@ export const StatsCard = ({
       <div>
         <div className="flex items-center gap-2">
           <p className="text-sm text-slate-400">{title}</p>
-          <span className="text-xs italic text-slate-500">Capacity</span>
-        </div>
+<motion.span 
+            className="text-xs text-slate-500 opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            /{capacity} capacity
+          </motion.span>        </div>
         <motion.p
           className="text-2xl font-bold text-white"
           initial={{ opacity: 0, y: 20 }}

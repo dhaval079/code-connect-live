@@ -1036,53 +1036,52 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                 </AnimatePresence>
               </motion.div>
               {view !== "verify-otp" && (
-                      <>
-                    
-              <div className="grid grid-cols-2 gap-4 my-2 w-full">
-                <motion.button
-                  type="button"
-                  onClick={() => handleOAuthSignIn("oauth_google")}
-                  className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
-                  whileHover={{
-                    scale: 1.02,
-                    boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                    <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
-                  </div>
-                  <span className="font-medium">Google</span>
-                </motion.button>
+                <>
+                  <div className="grid grid-cols-2 gap-4 my-2 w-full">
+                    <motion.button
+                      type="button"
+                      onClick={() => handleOAuthSignIn("oauth_google")}
+                      className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                      whileHover={{
+                        scale: 1.02,
+                        boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                        <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
+                      </div>
+                      <span className="font-medium">Google</span>
+                    </motion.button>
 
-                <motion.button
-                  type="button"
-                  onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
-                  className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
-                  whileHover={{
-                    scale: 1.02,
-                    boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                    <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
+                    <motion.button
+                      type="button"
+                      onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
+                      className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
+                      whileHover={{
+                        scale: 1.02,
+                        boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                        <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
+                      </div>
+                      <span className="font-medium">LinkedIn</span>
+                    </motion.button>
                   </div>
-                  <span className="font-medium">LinkedIn</span>
-                </motion.button>
-              </div>
-              <div className="relative my-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-600/50" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
+                  <div className="relative my-8">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-600/50" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
                 </>
-                    )}
+              )}
               {/* Form Section */}
               <AnimatePresence mode="wait">
                 <motion.form

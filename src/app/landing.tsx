@@ -216,8 +216,8 @@ export default function CodeConnect() {
                           like never before.
                         </motion.p>
                         <div className="grid grid-cols-2 gap-4 mb-8">
-                          <StatsCard icon={Globe} title="Active Rooms" value="1,234" capacity="2k" />
-                          <StatsCard icon={Users} title="Connected Devs" value="567" capacity="10k" />
+                          <StatsCard icon={Globe} title="Active Rooms" value="1,346" capacity="2k" />
+                          <StatsCard icon={Users} title="Connected Devs" value="258" capacity="10k" />
                         </div>
                         <CodeBlock />
                       </motion.div>
