@@ -23,7 +23,7 @@ export const GlowingButton: React.FC<{
     <motion.button
       ref={buttonRef}
       className={cn(
-        "relative overflow-hidden px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500  text-white font-medium",
+        "relative overflow-hidden px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500   text-white font-medium",
         "shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all duration-300",
         disabled ? "opacity-50 cursor-not-allowed" : "",
         className,

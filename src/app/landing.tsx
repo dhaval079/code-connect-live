@@ -14,6 +14,8 @@ import {
   Server,
   GitBranch,
   Boxes,
+  LucideCircle,
+  CircleFadingPlus,
 } from "lucide-react"
 import {
   FloatingHexagon,
@@ -176,34 +178,34 @@ export default function CodeConnect() {
                         animate={isInView ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                       >
-                        <motion.h1
-                          className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
-                          variants={{
-                            hidden: { opacity: 0, y: 50 },
-                            visible: { opacity: 1, y: 0 },
-                          }}
-                          initial="hidden"
-                          animate="visible"
-                          transition={{ duration: 0.8, delay: 0.3 }}
-                        >
-                          Collaborate in Real-Time <br />
-                          with{" "}
-                          <motion.span
-                            className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
-                            animate={{
-                              backgroundPosition: ["0%", "100%", "0%"],
-                            }}
-                            transition={{
-                              duration: 10,
-                              repeat: Number.POSITIVE_INFINITY,
-                              repeatType: "reverse",
-                            }}
-                          >
-                            CodeConnect
+             <motion.h1
+  className="
+    text-4xl lg:text-5xl font-bold relative z-10 
+    bg-clip-text text-transparent 
+    bg-gradient-to-b from-neutral-200 to-neutral-500 
+    font-sans
+  "
+  variants={{
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  }}
+  initial="hidden"
+  animate="visible"
+  transition={{ duration: 0.8, delay: 0.3 }}
+>
+  Collaborate in Real-Time<br/>
+  with{" "}
+                         <motion.span
+  className="bg-gradient-to-b from-cyan-400 to-blue-500 text-transparent bg-clip-text"
+  style={{
+    // top 50% cyan, bottom 50% blue
+  }}
+>
+  CodeConnect
                           </motion.span>
                         </motion.h1>
                         <motion.p
-                          className="text-xl text-slate-300 mb-8"
+                          className="text-lg my-8 text-neutral-400"
                           variants={{
                             hidden: { opacity: 0, y: 50 },
                             visible: { opacity: 1, y: 0 },
@@ -253,7 +255,9 @@ export default function CodeConnect() {
                             ease: [0.34, 1.56, 0.64, 1]
                           }}
                         >
-                          <h2 className="text-2xl font-bold mb-6 text-center">Join a Room</h2>
+                          <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent 
+    bg-gradient-to-b from-neutral-100 to-neutral-500 
+    font-sans">Join a Room</h2>
                           <div className="space-y-6">
                             <FuturisticInput
                               label="Room ID"
@@ -321,7 +325,7 @@ export default function CodeConnect() {
                                       ease: "easeOut"
                                     }}
                                   >
-                                    <Sparkles className="w-5 h-5 mr-2" />
+                                    <CircleFadingPlus className="w-5 h-5 mr-2" />
                                     Join Room
                                   </motion.div>
                                 )}
@@ -353,7 +357,7 @@ export default function CodeConnect() {
 
               <RevealAnimation>
                 <motion.section id="features" className="mt-32 px-6 justify-center items-center mx-auto">
-                  <h2 className="text-4xl font-bold text-center mb-16">Key Features</h2>
+                  <h2 className="text-4xl text-center mb-16 font-bold">Key Features</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
                     <HoverCard
                       icon={Laptop}
