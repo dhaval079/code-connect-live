@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Undo, Redo, Trash2, Square, Circle, Minus, Pencil, ChevronRight, Download, Type, Image as ImageIcon } from 'lucide-react';
+import { Undo, Redo, Trash2, Square, Circle, Minus, Pencil, Download, Type, Image as ImageIcon, SquareActivityIcon, SquareDashed, Crop, TypeOutline, CircleChevronRight, SquareChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import {
@@ -38,7 +38,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentTool, setCurrentTool] = useState<Tool>('pen');
   const [currentColor, setCurrentColor] = useState('#000000');
-  const [currentWidth, setCurrentWidth] = useState(3);
+  const [currentWidth, setCurrentWidth] = useState(2);
   const [actions, setActions] = useState<DrawingAction[]>([]);
   const [redoStack, setRedoStack] = useState<DrawingAction[]>([]);
   const [currentAction, setCurrentAction] = useState<DrawingAction | null>(null);
@@ -410,7 +410,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed right-0 top-0 bottom-0 h-full w-full md:w-4/5 lg:w-3/4 xl:w-2/3 bg-gray-100 shadow-lg z-40 flex flex-col"
+          className="fixed right-0 top-0 bottom-0 h-full max-w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 bg-gray-100 shadow-lg z-40 flex flex-col"
         >
           {/* Whiteboard header - upgraded UI */}
           <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-md">
@@ -421,9 +421,9 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                 onClick={onToggle}
                 className="mr-2 text-gray-200 hover:text-white hover:bg-gray-700/50"
               >
-                <ChevronRight className="h-5 w-5" />
+                <SquareChevronRight className="h-14 w-14" />
               </Button>
-              <h2 className="text-xl font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              <h2 className="text-xl font-semibold bg-neutral-100  bg-clip-text text-transparent">
                 Whiteboard
               </h2>
             </div>
@@ -432,7 +432,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
               {/* Color picker with enhanced UI */}
               <div className="flex items-center rounded-lg  p-2 shadow-inner justify-center mx-auto">
                 <div className="relative group mr-4">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute -inset-0.5 bg-black rounded-full opacity-75 group-hover:opacity-100 transition-opacity"></div>
                   <input
                     type="color"
                     value={currentColor}
@@ -489,7 +489,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                   variant="ghost"
                   size="icon"
                   onClick={handleExport}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-cyan-500 hover:bg-cyan-600 text-white"
                 >
                   <Download className="h-5 w-5" />
                 </Button>
@@ -498,7 +498,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1 px-3"
+                      className="bg-cyan-500 hover:bg-cyan-600 text-white flex items-center gap-1 px-3"
                     >
                       <ImageIcon className="h-5 w-5" />
                       <span>Add Image</span>
@@ -524,15 +524,15 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
           </div>
           
           {/* Toolbar - upgraded UI */}
-          <div className="p-2 border-b bg-gray-800 shadow-md ">
-            <div className="flex items-center justify-center bg-gray-900/50 rounded-lg p-1.5 w-full mx-auto gap-2">
+          <div className="p-2 border-b bg-gray-800 shadow-md">
+            <div className="flex items-center justify-center bg-gray-900/50 rounded-lg p-1.5 w-full mx-auto gap-6 overflow-auto">
               {[
                 { tool: 'pen', icon: Pencil, label: 'Pen' },
-                { tool: 'eraser', icon: Trash2, label: 'Eraser' },
                 { tool: 'line', icon: Minus, label: 'Line' },
-                { tool: 'rectangle', icon: Square, label: 'Rectangle' },
+                { tool: 'rectangle', icon: Crop, label: 'Rectangle' },
                 { tool: 'circle', icon: Circle, label: 'Circle' },
-                { tool: 'text', icon: Type, label: 'Text' }
+                { tool: 'text', icon: TypeOutline, label: 'Text' },
+                { tool: 'eraser', icon: Trash2, label: 'Eraser' },
               ].map(item => (
                 <Button
                   key={item.tool}
@@ -541,7 +541,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                   onClick={() => setCurrentTool(item.tool as Tool)}
                   className={`relative mx-1 flex items-center ${
                     currentTool === item.tool 
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' 
+                      ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white' 
                       : 'bg-gray-800/70 text-gray-300 hover:text-white hover:bg-gray-700'
                   } rounded-md transition-all duration-200`}
                 >
@@ -550,7 +550,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                   {currentTool === item.tool && (
                     <motion.div 
                       layoutId="activeTool" 
-                      className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-blue-400/20 rounded-md -z-10"
+                      className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-400 rounded-md -z-10"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -565,7 +565,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
           {/* Canvas container */}
           <div 
             ref={containerRef}
-            className="flex-1 relative overflow-hidden bg-gray-50"
+            className="flex-1 relative overflow-hidden bg-white"
           >
             {/* Grid pattern background */}
             <div className="absolute inset-0 bg-grid-small text-gray-200 opacity-30"></div>
@@ -616,7 +616,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                   zIndex: 20,
                 }}
               >
-                <div className="bg-white border-2 border-blue-500 rounded-lg shadow-lg p-1">
+                <div className="bg-white border-2 border-cyan-500 rounded-lg shadow-lg p-1">
                   <input
                     type="text"
                     value={textInput}
@@ -630,15 +630,15 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
                     Press Enter to add or Escape to cancel
                   </div>
                 </div>
-                <div className="w-4 h-4 bg-white border-l-2 border-b-2 border-blue-500 transform rotate-45 absolute -bottom-2 left-4 z-10"></div>
+                <div className="w-4 h-4 bg-white border-l-2 border-b-2 border-cyan-500 transform rotate-45 absolute -bottom-2 left-4 z-10"></div>
               </div>
             )}
             
             {/* "Powered by" watermark */}
-            <div className="absolute bottom-2 right-3 text-gray-400 text-lg font-medium opacity-70 select-none z-10 pointer-events-none">
+            <div className="absolute bottom-2 right-3 text-gray-400 text-sm font-medium opacity-70 select-none z-10 pointer-events-none">
               <span className="mr-1">Powered by</span>
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text font-bold">
-                CodeConnect
+              <span className="bg-gradient-to-r from-cyan-400 to-cyan-500 text-transparent bg-clip-text font-bold">
+                Code Connect
               </span>
             </div>
             

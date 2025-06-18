@@ -759,7 +759,7 @@ const ConsoleOutput = ({
           ref={containerRef}
           initial={{ height: 0, opacity: 0 }}
           animate={{
-            height: isMaximized ? '80vh' : height,
+            height: isMaximized ? '60vh' : height,
             opacity: 1,
             bottom: 0,
           }}

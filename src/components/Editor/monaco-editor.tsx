@@ -155,7 +155,7 @@ const MonacoEditor = ({
       options={options}
       onChange={handleEditorChange}
       onMount={handleEditorDidMount}
-      className="w-full h-full min-h-[300px] border border-gray-700 rounded-lg overflow-hidden"
+      className="z-0 w-full h-full min-h-[300px] border border-gray-700 rounded-lg overflow-hidden"
     />
   );
 };
