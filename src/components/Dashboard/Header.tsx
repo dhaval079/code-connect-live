@@ -130,7 +130,7 @@ const Header = () => {
       >
         <AnimatedLogo />
         <motion.span
-          className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
+          className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text"
           animate={{
             backgroundPosition: ["0%", "100%", "0%"],
           }}
