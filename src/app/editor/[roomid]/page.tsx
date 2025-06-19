@@ -130,7 +130,7 @@ function EditorPageContent() {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "failed">("connecting")
   const username = searchParams.get("username")
   const [typingUser, setTypingUser] = useState<string | null>(null)
-  const [consoleHeight, setConsoleHeight] = useState(190)
+  const [consoleHeight, setConsoleHeight] = useState(240)
   const typingTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({})
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
   const [showConnectingSplash, setShowConnectingSplash] = useState(true);
@@ -579,7 +579,7 @@ function EditorPageContent() {
                   : "text-gray-600"
                   }`}
               >
-              <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-gray-400 lowercase">({clients.length} users)</span>
+                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-gray-400 lowercase">({clients.length} users)</span>
               </motion.h2>
               <motion.div className="max-h-[calc(100vh-200px)] overflow-y-auto space-y-3" variants={itemVariants}>
                 {clients.map((client) => (
@@ -722,7 +722,7 @@ function EditorPageContent() {
                 backgroundColor: isSidebarOpen ? "rgba(22, 163, 74, 0.2)" : "transparent"
               }}
               transition={{ duration: 0.3 }}
-              className="rounded-xl text-white" 
+              className="rounded-xl text-white"
             >
               <Button
                 variant="default"
@@ -884,23 +884,13 @@ function EditorPageContent() {
               </Button>
             )}
           </motion.div>
-
-
           {isChatOpen && (
-            <motion.div
-              className="w-90 border-l max-h-full border-gray-700 rounded-l-lg shadow-md overflow-hidden"
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              <Chat
-                roomId={roomId as string}
-                username={username || ""}
-                isOpen={true} // Always true - the container decides visibility
-                onToggle={() => setIsChatOpen(false)}
-              />
-            </motion.div>
+           <Chat
+        roomId={roomId as string}
+        username={username || ""}
+        isOpen={isChatOpen}
+        onToggle={() => setIsChatOpen(!isChatOpen)}
+      />
           )}
 
           <AiAssistant

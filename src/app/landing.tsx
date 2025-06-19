@@ -183,7 +183,7 @@ export default function CodeConnect() {
                         className="
     text-4xl lg:text-5xl font-bold relative z-10 
     bg-clip-text text-transparent 
-    bg-gradient-to-b from-neutral-200 to-neutral-500 
+    bg-gradient-to-b from-neutral-100 to-neutral-500 
     font-sans
   "
                         variants={{

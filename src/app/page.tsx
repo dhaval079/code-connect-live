@@ -1,97 +1,115 @@
-// page.tsx - Updated with debug and proper state management
 "use client";
-import UserProfile from "@/components/Dashboard/UserProfile";
-import { MobileNav, MobileNavHeader, MobileNavMenu, MobileNavToggle, Navbar, NavbarButton, NavbarLogo, NavBody, NavItems } from "@/components/ui/resizable-navbar";
-import { useState, useEffect } from "react";
-import CodeConnect from "./landing";
+import { useUser } from '@clerk/nextjs'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
+import CodeConnect from './landing'
+import UserProfile from '@/components/Dashboard/UserProfile'
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/components/ui/resizable-navbar";
 
-export default function Page() {
+export default function Home() {
+  const { isLoaded, isSignedIn } = useUser()
+  const router = useRouter()
+
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Debug: Log state changes
+  // Redirect to auth page if not signed in
   useEffect(() => {
-    console.log('Mobile menu open state changed:', isMobileMenuOpen);
-  }, [isMobileMenuOpen]);
+    if (isLoaded && !isSignedIn) {
+      router.push('/auth')
+    }
+  }, [isLoaded, isSignedIn, router])
 
-  const navigationItems = [
-    { name: "Features", link: "#features" },
-    { name: "How It Works", link: "#how-it-works" },
-    { name: "FAQ", link: "#faq" },
+  // Show loading state before Clerk is loaded
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-900">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    )
+  }
+
+  // Show loading state while redirecting
+  if (!isSignedIn) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-900">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    )
+  }
+
+  const navItems = [
+    {
+      name: "Features",
+      link: "#features",
+    },
+    {
+      name: "How It Works",
+      link: "#how-it-works",
+    },
+    {
+      name: "FAQ",
+      link: "#faq",
+    },
   ];
 
-  const handleMobileItemClick = () => {
-    console.log('Menu item clicked, closing menu');
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleToggleClick = () => {
-    console.log('Toggle clicked, current state:', isMobileMenuOpen);
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
-    <div className="min-h-screen">
-      {/* Desktop navbar - hidden on mobile */}
-      <div className="hidden lg:block">
-        <Navbar className="top-0">
-          <NavBody className="flex">
+    <>
+      {/* Fixed Navbar */}
+      <Navbar className=''>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo visible={undefined} /> {/* We'll pass visible through context instead */}
+          <NavItems items={navItems} className="cursor-pointer" />
+          <div className="flex items-center">
+            <UserProfile />
+          </div>
+        </NavBody>
+
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
             <NavbarLogo />
-            <div className="flex gap-8 items-center">
-              <NavItems
-                items={navigationItems}
-                onItemClick={handleMobileItemClick}
-                className="justify-center align-middle items-center mx-auto w-full"
+            <div className="flex items-center gap-3">
+              <UserProfile />
+              <MobileNavToggle
+                isOpen={isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               />
             </div>
-            <div className="flex items-center gap-4">
-              <UserProfile />
-            </div>
-          </NavBody>
-        </Navbar>
+          </MobileNavHeader>
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-white hover:text-cyan-400 transition-colors border-b border-gray-800 last:border-b-0"
+              >
+                {item.name}
+              </a>
+            ))}
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
+
+      {/* Main Content */}
+      <div className="min-h-screen">
+        <CodeConnect />
       </div>
-
-      {/* Mobile navbar - hidden on desktop */}
-      <div className="block lg:hidden">
-        <Navbar className="top-0">
-          <MobileNav>
-            <MobileNavHeader className="flex items-center justify-between p-4">
-              <NavbarLogo />
-              <div className="flex items-center gap-4">
-                <UserProfile />
-                <MobileNavToggle
-                  isOpen={isMobileMenuOpen}
-                  onClick={handleToggleClick}
-                />
-              </div>
-            </MobileNavHeader>
-
-            <MobileNavMenu
-              isOpen={isMobileMenuOpen}
-              onClose={() => setIsMobileMenuOpen(false)}
-            >
-              {/* Debug: Show state */}
-              <div className="text-xs text-gray-400 mb-2">
-                Menu state: {isMobileMenuOpen ? 'OPEN' : 'CLOSED'}
-              </div>
-              
-              {/* Mobile Menu Items */}
-              {navigationItems.map((item, index) => (
-                <a
-                  key={index}
-                  href={item.link}
-                  onClick={handleMobileItemClick}
-                  className="block py-3 px-4 text-white hover:bg-white/10 rounded-lg transition-colors"
-                >
-                  {item.name}
-                </a>
-              ))}
-            </MobileNavMenu>
-          </MobileNav>
-        </Navbar>
-      </div>
-
-      {/* Your main content - NO CHANGES to CodeConnect */}
-      <CodeConnect />
-    </div>
-  );
+    </>
+  )
 }

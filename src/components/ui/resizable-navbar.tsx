@@ -57,17 +57,17 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   useEffect(() => {
     const updateScrollState = () => {
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      
+
       if (Math.abs(scrollY - lastScrollY.current) > 5) {
         const shouldBeVisible = scrollY > 50;
-        
+
         if (shouldBeVisible !== visible) {
           setVisible(shouldBeVisible);
         }
-        
+
         lastScrollY.current = scrollY;
       }
-      
+
       ticking.current = false;
     };
 
@@ -174,7 +174,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "flex items-center mx-auto justify-center space-x-8 text-sm font-medium",
+        "flex items-center justify-center space-x-8 text-sm font-medium",
         className,
       )}
     >
@@ -214,7 +214,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         willChange: 'transform, background-color, backdrop-filter',
       }}
       className={cn(
-        "relative z-50 w-full flex flex-col", // Added relative positioning
+        "relative z-50 w-full flex flex-col lg:hidden",
         visible ? "mobile-navbar-compact" : "mobile-navbar-full",
         className,
       )}
@@ -231,7 +231,7 @@ export const MobileNavHeader = ({
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-between h-16 px-4", // Added padding and height
+        "flex w-full items-center justify-between h-full",
         className,
       )}
     >
@@ -240,7 +240,7 @@ export const MobileNavHeader = ({
   );
 };
 
-// Only replace the MobileNavMenu component - keep everything else the same
+
 export const MobileNavMenu = ({
   children,
   className,
@@ -250,37 +250,37 @@ export const MobileNavMenu = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Background overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 z-[9998] h-full" // Increased z-index
-            onClick={onClose}
-          />
-          
-          {/* Menu content */}
-          <motion.div
-            initial={{ opacity: 1, height: 100, y: 0 }}
-            animate={{ opacity: 1, height: "100vh", y: 0 }}
-            exit={{ opacity: 1, height: 100, y: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              duration: 0.3,
-            }}
-            className={cn(
-              "absolute top-full left-4 h-full right-4 z-[100] mt-2 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden", // Added bg-slate-900/95
-              className,
-            )}
-          >
-            <div className="p-6 space-y-4">
-              {children}
-            </div>
-          </motion.div>
-        </>
+        <motion.div
+          initial={{ opacity: 0, height: 0, y: -10 }}
+          animate={{ opacity: 1, height: "auto", y: 0 }}
+          exit={{ opacity: 0, height: 0, y: -10 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+          }}
+          className={cn(
+            "absolute top-full left-0 right-0 mt-4 mx-4 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden",
+            className,
+          )}
+        >
+          <div className="p-6 space-y-4">
+            {children}
+          </div>
+        </motion.div>
+
+
+
+
+
+
+
+
+
+
+
+
+
       )}
     </AnimatePresence>
   );
@@ -296,7 +296,7 @@ export const MobileNavToggle = ({
   return (
     <motion.button 
       onClick={onClick} 
-      className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors z-50 relative"
+      className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -307,7 +307,7 @@ export const MobileNavToggle = ({
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.01 }}
+            transition={{ duration: 0.2 }}
           >
             <IconX className="w-6 h-6" />
           </motion.div>
@@ -317,7 +317,7 @@ export const MobileNavToggle = ({
             initial={{ rotate: 90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: -90, opacity: 0 }}
-            transition={{ duration: 0.01 }}
+            transition={{ duration: 0.2 }}
           >
             <IconMenu2 className="w-6 h-6" />
           </motion.div>
@@ -326,6 +326,7 @@ export const MobileNavToggle = ({
     </motion.button>
   );
 };
+
 
 // export const NavbarLogo = () => {
 //   const [isHovered, setIsHovered] = useState(false)
@@ -643,7 +644,7 @@ export const NavbarLogo = ({ visible }: { visible?: boolean }) => {
             ease: "easeInOut",
           }}
         />
-        
+
         {/* Main rotating hexagon */}
         <motion.div
           className="absolute inset-0 z-10"
@@ -716,10 +717,10 @@ export const NavbarLogo = ({ visible }: { visible?: boolean }) => {
           }}
         />
       </div>
-      
+
       <motion.div className="relative overflow-hidden">
         <motion.span
-          className="block text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text"
+          className="block text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-[length:200%_100%] text-transparent bg-clip-text"
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             opacity: visible ? 0.95 : 1,
@@ -785,4 +786,4 @@ export const NavbarButton = ({
       </Tag>
     </motion.div>
   );
-};
+}
