@@ -40,19 +40,7 @@ const AIThinkingAnimation = () => {
           />
           
           {/* Pulsing core */}
-          <motion.div
-            className="w-2 h-2 bg-blue-400 rounded-full"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.7, 1, 0.7],
-              backgroundColor: ["#60a5fa", "#818cf8", "#60a5fa"],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+         
         </div>
         
         {/* Animated text */}

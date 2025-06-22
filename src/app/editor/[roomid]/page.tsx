@@ -29,6 +29,8 @@ import {
   NotebookPen,
   SquarePen,
   MessageSquareMore,
+  MessageCircle,
+  Sparkle,
 } from "lucide-react"
 import { useSocket } from "@/providers/socketProvider"
 import dynamic from "next/dynamic"
@@ -780,7 +782,7 @@ function EditorPageContent() {
               className="relative h-10 px-4 group "
             >
               <span className="flex items-center">
-                <MessageSquareMore className="h-5 w-5 mr-2 hover:bg-white group-hover:text-blue-400 transition-colors" />
+                <MessageCircle className="h-5 w-5 mr-2 hover:bg-white group-hover:text-blue-400 transition-colors" />
                 Chat
               </span>
               <motion.div
@@ -885,12 +887,12 @@ function EditorPageContent() {
             )}
           </motion.div>
           {isChatOpen && (
-           <Chat
-        roomId={roomId as string}
-        username={username || ""}
-        isOpen={isChatOpen}
-        onToggle={() => setIsChatOpen(!isChatOpen)}
-      />
+            <Chat
+              roomId={roomId as string}
+              username={username || ""}
+              isOpen={isChatOpen}
+              onToggle={() => setIsChatOpen(!isChatOpen)}
+            />
           )}
 
           <AiAssistant
@@ -1014,7 +1016,6 @@ function EditorPageContent() {
           </div>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </motion.div>
   )
 }

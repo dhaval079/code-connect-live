@@ -333,7 +333,7 @@ export const Chat = ({ roomId, username, isOpen, onToggle }: ChatProps) => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1, type: "spring", stiffness: 400 }}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between ">
                   <div className="space-y-1">
                     <motion.h2
                       className="text-lg font-bold bg-gradient-to-r from-white via-violet-200 to-purple-200 bg-clip-text text-transparent"

@@ -181,7 +181,7 @@ export function PlaceholdersAndVanishInput({
   const isActive = animating || isFocused;
 
   return (
-    <div className="relative w-full max-w-xl mx-auto">
+    <div className="relative w-full mx-auto">
       {/* Animated border - positioned behind the form */}
       {/* Replace these two motion.div elements for enhanced pulsing */}
 
@@ -257,7 +257,7 @@ export function PlaceholdersAndVanishInput({
 
       <form
         className={cn(
-          "w-full relative bg-white dark:bg-zinc-800 h-12 rounded-full overflow-hidden transition duration-200 border-2 border-transparent",
+          "w-full relative bg-white dark:bg-zinc-800 py-4 rounded-full overflow-hidden transition duration-200 border-2 border-transparent",
           value && "bg-gray-50 dark:bg-zinc-700"
         )}
         style={{ zIndex: 10 }}  // Ensure the form is above the animations

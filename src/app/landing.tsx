@@ -253,7 +253,7 @@ export default function CodeConnect() {
                         }}
                       >
                         <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent 
-    bg-gradient-to-b from-neutral-100 to-neutral-500 
+    bg-gradient-to-b from-neutral-100 to-neutral-400 
     font-sans">Join a Room</h2>
                         <div className="space-y-6">
                           <FuturisticInput
