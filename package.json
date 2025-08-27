@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "tsc --noEmit --skipLibCheck && next build",
-    "build:all-errors": "tsc --noEmit --pretty --listFiles false",
+    "build": "prisma generate && tsc --noEmit --skipLibCheck && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
     "shadcn": "shadcn-ui"
