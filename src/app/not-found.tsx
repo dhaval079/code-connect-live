@@ -3,7 +3,6 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from "framer-motion";
 import Link from "next/link";
-
 function NotFoundContent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-gray-900 to-black text-white">

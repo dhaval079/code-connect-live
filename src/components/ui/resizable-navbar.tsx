@@ -676,26 +676,10 @@ export const NavbarLogo = ({ visible }: { visible?: boolean }) => {
           >
             <motion.path 
               d="M17.5 3.5L22 12l-4.5 8.5h-11L2 12l4.5-8.5h11z"
-              animate={{ 
-                pathLength: [0, 1, 1, 0],
-                opacity: [0.6, 1, 1, 0.6],
-              }}
               whileHover={{
                 strokeWidth: "2",
               }}
               transition={{ 
-                pathLength: { 
-                  duration: 4, 
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  times: [0, 0.3, 0.7, 1]
-                },
-                opacity: { 
-                  duration: 4, 
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  times: [0, 0.3, 0.7, 1]
-                },
                 strokeWidth: { duration: 0.2 }
               }}
             />

@@ -177,7 +177,7 @@ export const Client: React.FC<ClientProps> = ({
   return (
     <motion.div
       ref={ref}
-      className="relative flex items-center overflow-y-scroll space-x-4 p-6 rounded-2xl bg-gradient-to-r from-slate-700/50 to-slate-700/60 hover:from-slate-800/50 hover:to-slate-600/50 transition-all duration-300 shadow-lg overflow-hidden"
+      className="relative flex items-center overflow-y-scroll space-x-5 p-6 rounded-3xl bg-gradient-to-r from-slate-700/50 to-slate-700/60 hover:bg-slate-700/50 transition-all duration-300 shadow-lg overflow-hidden"
       variants={cardVariants}
       initial="hidden"
       animate={controls}
@@ -224,7 +224,7 @@ export const Client: React.FC<ClientProps> = ({
           </motion.span>
           {isActive && (
             <motion.span
-              className="text-xs bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white px-2 py-1 rounded-full flex items-center space-x-1"
+              className="text-xs bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 text-white px-2 py-1 rounded-full flex items-center space-x-1"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, type: "spring" }}
@@ -255,7 +255,7 @@ export const Client: React.FC<ClientProps> = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="text-sm text-gray-400 flex items-center space-x-1"
+              className="text-sm text-slate-400 flex items-center space-x-1"
               variants={itemVariants}
             >
               <Zap size={14} />
@@ -266,7 +266,7 @@ export const Client: React.FC<ClientProps> = ({
       </div>
 
       <motion.div
-        className="absolute top-2 right-2 bg-gray-700 rounded-full px-2 py-1 text-xs text-white flex items-center space-x-1"
+        className="absolute top-2 right-2 bg-slate-700 rounded-full px-2 py-1 text-xs text-white flex items-center space-x-1"
         initial={{ opacity: 0, scale: 0, rotate: -45 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         transition={{ delay: 0.6, type: "spring" }}

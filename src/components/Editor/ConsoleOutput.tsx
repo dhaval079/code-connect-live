@@ -131,8 +131,8 @@
 //         transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
 //         className={`fixed bottom-0 right-0 ${
 //           isDarkMode 
-//             ? 'bg-gray-800 border-t border-gray-700' 
-//             : 'bg-white border-t border-gray-200'
+//             ? 'bg-slate-900 border-t border-slate-800' 
+//             : 'bg-white border-t border-slate-200'
 //         }`}
 //         style={{ 
 //           zIndex: 40,
@@ -146,8 +146,8 @@
 //          >
 //            <div className={`w-20 h-1 ${
 //              isDarkMode 
-//                ? 'bg-gray-600 hover:bg-gray-500' 
-//                : 'bg-gray-300 hover:bg-gray-400'
+//                ? 'bg-slate-600 hover:bg-slate-500' 
+//                : 'bg-slate-300 hover:bg-slate-400'
 //            } rounded-full transition-colors`} />
 //          </div>
 
@@ -155,8 +155,8 @@
 //            {/* Console Header */}
 //            <div className={`flex items-center justify-between px-4 py-2 border-b ${
 //              isDarkMode 
-//                ? 'border-gray-700' 
-//                : 'border-gray-200'
+//                ? 'border-slate-800' 
+//                : 'border-slate-200'
 //            }`}>
 //              <div className="flex items-center space-x-2">
 //                <TooltipProvider>
@@ -166,7 +166,7 @@
 //                        variant="ghost" 
 //                        size="sm"
 //                        onClick={onClose}
-//                        className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}
+//                        className={isDarkMode ? 'text-slate-300' : 'text-slate-800'}
 //                        disabled={isPinned}
 //                      >
 //                        <ChevronDown className="h-4 w-4" />
@@ -178,10 +178,10 @@
 //                  </Tooltip>
 //                </TooltipProvider>
 //                <span className={`text-base font-medium ${
-//                  isDarkMode ? 'text-white' : 'text-gray-900'
+//                  isDarkMode ? 'text-white' : 'text-slate-900'
 //                }`}>Console Output</span>
 //                <span className={`text-xs rounded-full px-2 py-0.5 ${
-//                  isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'
+//                  isDarkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'
 //                }`}>
 //                  {filteredLogs.length} {filteredLogs.length === 1 ? 'item' : 'items'}
 //                </span>
@@ -197,8 +197,8 @@
 //                        onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
 //                        className={cn(
 //                          "hover:text-black",
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500',
-//                          isFilterMenuOpen && (isDarkMode ? 'bg-gray-700' : 'bg-gray-200')
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500',
+//                          isFilterMenuOpen && (isDarkMode ? 'bg-slate-800' : 'bg-slate-200')
 //                        )}
 //                      >
 //                        <Filter className="h-4 w-4" />
@@ -218,7 +218,7 @@
 //                        size="sm"
 //                        onClick={exportLogs}
 //                        className={`hover:text-black ${
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //                        }`}
 //                      >
 //                        <Download className="h-4 w-4" />
@@ -239,8 +239,8 @@
 //                        onClick={() => setIsPinned(!isPinned)}
 //                        className={cn(
 //                          "hover:text-black",
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500',
-//                          isPinned && (isDarkMode ? 'bg-gray-700' : 'bg-gray-200')
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500',
+//                          isPinned && (isDarkMode ? 'bg-slate-800' : 'bg-slate-200')
 //                        )}
 //                      >
 //                        <Pin className={`h-4 w-4 ${isPinned ? 'fill-current' : ''}`} />
@@ -260,7 +260,7 @@
 //                        size="sm"
 //                        onClick={toggleFullscreen}
 //                        className={`hover:text-black ${
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //                        }`}
 //                      >
 //                        {isFullscreen ? 
@@ -283,7 +283,7 @@
 //                        size="sm"
 //                        onClick={onClear}
 //                        className={`hover:text-black ${
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //                        }`}
 //                      >
 //                        <Trash className="h-4 w-4" />
@@ -304,7 +304,7 @@
 //                        onClick={isPinned ? undefined : onClose}
 //                        disabled={isPinned}
 //                        className={`hover:text-black ${
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //                        }`}
 //                      >
 //                        <X className="h-4 w-4" />
@@ -326,14 +326,14 @@
 //                  animate={{ height: 'auto', opacity: 1 }}
 //                  exit={{ height: 0, opacity: 0 }}
 //                  className={`p-2 border-b ${
-//                    isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'
+//                    isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-slate-50'
 //                  }`}
 //                >
 //                  <div className="flex items-center space-x-4">
 //                    <div className="flex-1">
 //                      <div className="relative">
 //                        <Search className={`absolute left-2 top-2.5 h-4 w-4 ${
-//                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //                        }`} />
 //                        <Input
 //                          placeholder="Search console output..."
@@ -341,8 +341,8 @@
 //                          onChange={(e) => setSearchTerm(e.target.value)}
 //                          className={`pl-8 ${
 //                            isDarkMode 
-//                              ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' 
-//                              : 'bg-white border-gray-300 text-black placeholder:text-gray-500'
+//                              ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-400' 
+//                              : 'bg-white border-slate-300 text-black placeholder:text-slate-500'
 //                          }`}
 //                        />
 //                      </div>
@@ -390,7 +390,7 @@
 //            <ScrollArea 
 //              ref={scrollAreaRef} 
 //              className={`flex-1 p-4 font-mono ${
-//                isDarkMode ? 'text-gray-200' : 'text-gray-800'
+//                isDarkMode ? 'text-slate-200' : 'text-slate-900'
 //              }`}
 //            >
 //              <motion.div layout className="space-y-2">
@@ -398,7 +398,7 @@
 //                  <ConsoleEntry key={index} log={log} isDarkMode={isDarkMode} />
 //                ))}
 //                {filteredLogs.length === 0 && (
-//                  <div className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+//                  <div className={`text-center py-8 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
 //                    {consoleOutput.length === 0 ? 
 //                      'No console output (run code)' : 
 //                      'No matching console entries'
@@ -411,8 +411,8 @@
 //            {/* Status Bar */}
 //            <div className={`px-4 py-1 border-t flex justify-between items-center text-xs ${
 //              isDarkMode 
-//                ? 'border-gray-700 bg-gray-800 text-gray-400' 
-//                : 'border-gray-200 bg-gray-50 text-gray-500'
+//                ? 'border-slate-800 bg-slate-900 text-slate-400' 
+//                : 'border-slate-200 bg-slate-50 text-slate-500'
 //            }`}>
 //              <div>
 //                {filteredLogs.length} of {consoleOutput.length} console entries
@@ -464,8 +464,8 @@
 //           : log.type === 'warn' 
 //             ? `bg-yellow-500/10 ${isDarkMode ? 'text-yellow-300' : 'text-yellow-600'}`
 //             : isDarkMode
-//               ? 'bg-gray-700/50 text-gray-200'
-//               : 'bg-gray-100/50 text-gray-700'
+//               ? 'bg-slate-800/50 text-slate-200'
+//               : 'bg-slate-100/50 text-slate-800'
 //       )}
 //     >
 //       <div className="flex items-start space-x-2">
@@ -532,7 +532,7 @@
 
 //       {log.timestamp && (
 //         <div className={`text-xs absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity ${
-//           isDarkMode ? 'text-gray-400' : 'text-gray-500'
+//           isDarkMode ? 'text-slate-400' : 'text-slate-500'
 //         }`}>
 //           {new Date(log.timestamp).toLocaleTimeString()}
 //         </div>
@@ -766,7 +766,7 @@ const ConsoleOutput = ({
           exit={{ height: 0, opacity: 0 }}
           transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
           className={`fixed ${isSidebarOpen ? 'left-80' : 'left-0'} right-0 ${isDarkMode
-              ? 'bg-slate-900 border-t border-slate-700/50'
+              ? 'bg-slate-900 border-t border-slate-800/50'
               : 'bg-white border-t border-slate-200'
             } backdrop-blur-sm shadow-lg`}
           style={{ zIndex: 10 }}
@@ -785,7 +785,7 @@ const ConsoleOutput = ({
           <div className="h-full flex flex-col">
             {/* Console Header */}
             <div className={`flex items-center justify-between px-4 py-2 border-b ${isDarkMode
-                ? 'border-slate-700/50 bg-slate-800/95'
+                ? 'border-slate-700/50 bg-slate-800/90 rounded-md'
                 : 'border-slate-200 bg-white/95'
               } backdrop-blur-sm`}>
               <div className="flex items-center space-x-2">
@@ -793,7 +793,7 @@ const ConsoleOutput = ({
                   variant="ghost"
                   size="sm"
                   onClick={onClose}
-                  className={`${isDarkMode ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'} hover:bg-transparent`}
+                  className={`${isDarkMode ? 'text-slate-300 hover:text-white' : 'text-slate-800 hover:text-black'} hover:bg-transparent`}
                 >
                   <ChevronDown className="h-4 w-4" />
                 </Button>
@@ -827,7 +827,7 @@ const ConsoleOutput = ({
               <div className="flex items-center space-x-1.5">
                 {/* Search Filter */}
                 <div className="relative mr-2 group">
-                  <div className="flex items-center space-x-1 bg-slate-800/50 rounded-md border border-slate-700/50 px-2">
+                  <div className="flex items-center space-x-1 bg-slate-900/50 rounded-md border border-slate-800/50 px-2">
                     <Search className="h-3.5 w-3.5 text-slate-400" />
                     <Input
                       placeholder="Filter logs..."
@@ -855,7 +855,7 @@ const ConsoleOutput = ({
                       variant="outline"
                       size="sm"
                       className={`px-2 py-1 h-7 text-xs gap-1 ${isDarkMode
-                          ? 'bg-slate-800 border-slate-700/50 hover:bg-slate-700'
+                          ? 'bg-slate-900 border-slate-800/50 hover:bg-slate-800'
                           : 'bg-slate-200 border-slate-300/50'
                         }`}
                     >
@@ -870,7 +870,7 @@ const ConsoleOutput = ({
                   </PopoverTrigger>
                   <PopoverContent
                     className={`p-1 w-40 ${isDarkMode
-                        ? 'bg-slate-800 border-slate-700/50'
+                        ? 'bg-slate-900 border-slate-800/50'
                         : 'bg-white border-slate-200'
                       }`}
                     side="bottom"
@@ -894,7 +894,7 @@ const ConsoleOutput = ({
                             className={`ml-2 px-1.5 py-0 h-5 text-xs ${activeFilter === option.value
                                 ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
                                 : isDarkMode
-                                  ? 'bg-slate-700 text-slate-400 border-slate-600/50'
+                                  ? 'bg-slate-800 text-slate-400 border-slate-600/50'
                                   : 'bg-slate-100 text-slate-600 border-slate-200'
                               }`}
                           >
@@ -916,7 +916,7 @@ const ConsoleOutput = ({
                         : 'text-blue-600 bg-blue-500/10 border border-blue-500/30'
                       : isDarkMode
                         ? 'text-slate-400 hover:text-slate-300'
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={() => setIsAutoScrollEnabled(!isAutoScrollEnabled)}
                   title={isAutoScrollEnabled ? "Auto-scroll enabled" : "Auto-scroll disabled"}
@@ -934,7 +934,7 @@ const ConsoleOutput = ({
                         : 'text-amber-600 bg-amber-500/10 border border-amber-500/30'
                       : isDarkMode
                         ? 'text-slate-400 hover:text-slate-300'
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={() => setIsPinned(!isPinned)}
                   title={isPinned ? "Console pinned" : "Pin console"}
@@ -948,7 +948,7 @@ const ConsoleOutput = ({
                   size="sm"
                   className={`h-7 w-7 p-0 ${isDarkMode
                       ? 'text-slate-400 hover:text-slate-300'
-                      : 'text-slate-500 hover:text-slate-700'
+                      : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={toggleMaximized}
                   title={isMaximized ? "Restore console" : "Maximize console"}
@@ -969,7 +969,7 @@ const ConsoleOutput = ({
                         : 'text-blue-600 bg-blue-500/10 border border-blue-500/30'
                       : isDarkMode
                         ? 'text-slate-400 hover:text-slate-300'
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                   title="Console settings"
@@ -983,7 +983,7 @@ const ConsoleOutput = ({
                   size="sm"
                   className={`h-7 w-7 p-0 ${isDarkMode
                       ? 'text-slate-400 hover:text-slate-300'
-                      : 'text-slate-500 hover:text-slate-700'
+                      : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={exportLogs}
                   title="Export logs"
@@ -1011,7 +1011,7 @@ const ConsoleOutput = ({
                   size="sm"
                   className={`h-7 w-7 p-0 ${isDarkMode
                       ? 'text-slate-400 hover:text-slate-300'
-                      : 'text-slate-500 hover:text-slate-700'
+                      : 'text-slate-500 hover:text-slate-800'
                     }`}
                   onClick={onClose}
                   title="Close console"
@@ -1030,7 +1030,7 @@ const ConsoleOutput = ({
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   className={`border-b ${isDarkMode
-                      ? 'border-slate-700/50 bg-slate-800/50'
+                      ? 'border-slate-800/50 bg-slate-900/50'
                       : 'border-slate-200 bg-slate-100/50'
                     }`}
                 >
@@ -1083,7 +1083,7 @@ const ConsoleOutput = ({
             {/* Console Content */}
             <div
               ref={consoleContainerRef}
-              className={`flex-1 p-3 font-mono text-sm overflow-auto ${isDarkMode ? 'text-slate-300' : 'text-slate-800'
+              className={`flex-1 p-3 font-mono text-sm overflow-auto ${isDarkMode ? 'text-slate-300' : 'text-slate-900'
                 }`}
               style={{ fontSize: `${fontSize}px` }}
             >
@@ -1208,8 +1208,8 @@ const ConsoleEntry = ({ log, isDarkMode, showTimestamp = false, autoExpand = fal
                 ? 'bg-blue-500/10 border-blue-500/30 text-blue-400'
                 : 'bg-blue-500/10 border-blue-500/20 text-blue-600'
               : isDarkMode
-                ? 'bg-slate-800/70 border-slate-700/50 text-slate-300 hover:bg-slate-800'
-                : 'bg-slate-100/70 border-slate-200/50 text-slate-700 hover:bg-slate-100'
+                ? 'bg-slate-900/70 border-slate-800/50 text-slate-300 hover:bg-slate-900'
+                : 'bg-slate-100/70 border-slate-200/50 text-slate-800 hover:bg-slate-100'
       )}
     >
       {/* Log type indicator */}
@@ -1259,7 +1259,7 @@ const ConsoleEntry = ({ log, isDarkMode, showTimestamp = false, autoExpand = fal
                 variant="ghost"
                 size="sm"
                 className={`absolute -bottom-1 -right-1 h-5 text-xs px-1.5 py-0 ${isDarkMode
-                    ? 'bg-slate-800 hover:bg-slate-700 text-slate-400'
+                    ? 'bg-slate-900 hover:bg-slate-800 text-slate-400'
                     : 'bg-white hover:bg-slate-100 text-slate-500'
                   }`}
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -1306,7 +1306,7 @@ const ConsoleEntry = ({ log, isDarkMode, showTimestamp = false, autoExpand = fal
             : log.type === 'info'
               ? 'bg-blue-500'
               : isDarkMode
-                ? 'bg-slate-700'
+                ? 'bg-slate-800'
                 : 'bg-slate-300'
         }`} />
     </motion.div>

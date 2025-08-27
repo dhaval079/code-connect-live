@@ -13,9 +13,9 @@ import { HoverCard } from "./HoverCard"
 
 export default function WhyCodeConnect() { 
     return (
-        <motion.section id="why-codeconnect" className="mt-32 p-4">
+        <motion.section id="why-codeconnect" className="mt-32 p-12">
         <h2 className="text-4xl font-bold text-center mb-16">Why CodeConnect?</h2>
-        <div className="max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-2xl shadow-cyan-500/10">
+        <div className="max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-xl rounded-3xl p-10 shadow-2xl shadow-cyan-500/10">
           <p className="text-lg text-slate-300 mb-6">
             CodeConnect is built for developers, by developers. Whether you're working remotely, teaching, or
             conducting interviews, our platform enables smoother, faster, and more interactive coding sessions. We

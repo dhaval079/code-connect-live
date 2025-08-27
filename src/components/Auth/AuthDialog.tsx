@@ -565,6 +565,8 @@ import UltraPremiumGradient from "../Dashboard/animations/AnimatedGradient"
 import PureGradientFlow from "../Dashboard/animations/AnimatedGradient"
 import TrendyGradientFlow from "../Dashboard/animations/AnimatedGradient"
 import WaterGradient from "../Dashboard/animations/AnimatedGradient"
+import { Button } from "../ui/stateful-button"
+import PremiumOAuthButtons from "../Dashboard/buttons/OAuthButtons"
 
 type AuthView = "sign-in" | "sign-up" | "verify-otp"
 
@@ -589,7 +591,10 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
   }>({})
   const { isLoaded: isSignInLoaded, signIn, setActive: setSignInActive } = useSignIn()
   const { isLoaded: isSignUpLoaded, signUp, setActive: setSignUpActive } = useSignUp()
-
+  const [loadingStates, setLoadingStates] = useState({
+    google: false,
+    linkedin: false
+  });
   // Mouse follower effect
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -751,6 +756,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         })
         return
       }
+const providerKey = provider === "oauth_google" ? "google" : "linkedin"
+    setLoadingStates(prev => ({ ...prev, [providerKey]: true }))
 
       try {
         setIsLoading(true)
@@ -777,7 +784,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
             additionalScopes: ["openid", "profile", "email", "w_member_social"],
           },
         }
-
+        
         const config = providerConfig[provider]
 
         if (view === "sign-in") {
@@ -796,7 +803,9 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
           position: "top-center",
         })
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
+         const providerKey = provider === "oauth_google" ? "google" : "linkedin"
+      setLoadingStates(prev => ({ ...prev, [providerKey]: false }));
       }
     },
     [view, isSignInLoaded, isSignUpLoaded, signIn, signUp],
@@ -959,7 +968,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
 
         {/* Main content card */}
         <motion.div
-          className="relative w-full max-w-lg z-10 mt-4"
+          className="relative w-full max-w-xl p-4 z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -970,7 +979,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
             <div className="absolute -inset-1 bg-gradient-to-r from-slate-700/30 via-slate-700/40 to-slate-800/30 rounded-2xl blur-xl opacity-75" />
 
             {/* Main card */}
-            <div className="relative bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-gray-700/50 p-8 md:p-10 shadow-2xl">
+            <div className="relative bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-gray-700/50 p-10 md:p-16 shadow-2xl">
               {/* Logo and Title Section */}
               <motion.div
                 className="flex flex-col items-center mb-10"
@@ -1000,7 +1009,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                   >
                     <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg transform scale-125" />
                     <motion.div
-                      className="relative bg-gray-900/80 rounded-full p-4 border border-gray-700"
+                      className="relative bg-gray-900/80 rounded-full p-6 border border-gray-700"
                       whileHover={{
                         scale: 1.05,
                         boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
@@ -1021,8 +1030,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className="text-center"
                   >
-                    <h1 className={`text-4xl md:text-5xl font-bold bg-clip-text text-transparent mb-3 transition-all duration-500 ${view === "sign-in"
-                      ? "bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500"
+                    <h1 className={`text-4xl md:text-5xl font-semibold bg-clip-text text-transparent mb-3 transition-all duration-500 ${view === "sign-in"
+                      ? "bg-gradient-to-r from-cyan-400  to-purple-500"
                       : view === "sign-up"
                         ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
                         : "bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500"
@@ -1037,8 +1046,9 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
               </motion.div>
               {view !== "verify-otp" && (
                 <>
+                
                   <div className="grid grid-cols-2 gap-4 my-2 w-full">
-                    <motion.button
+                  {/* <motion.button
                       type="button"
                       onClick={() => handleOAuthSignIn("oauth_google")}
                       className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
@@ -1068,9 +1078,64 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                         <Image width={20} height={20} src="/linkedin.svg" alt="Google" className="w-5 h-5" />
                       </div>
                       <span className="font-medium">LinkedIn</span>
-                    </motion.button>
+                    </motion.button> */}
+  <motion.button
+                    type="button"
+                    onClick={() => handleOAuthSignIn("oauth_google")}
+                    disabled={loadingStates.google || loadingStates.linkedin}
+                    className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border transition-all duration-300 backdrop-blur-sm ${loadingStates.google
+                        ? 'bg-blue-600/80 border-blue-500/50 text-white cursor-not-allowed'
+                        : loadingStates.linkedin
+                          ? 'bg-gray-800/30 border-gray-600/30 text-gray-400 cursor-not-allowed'
+                          : 'bg-gray-800/50 hover:bg-gray-700/60 text-white border-gray-600/50'
+                      }`}
+                    whileHover={!loadingStates.google && !loadingStates.linkedin ? {
+                      scale: 1.02,
+                      boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                    } : {}}
+                    whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
+                  >
+                    <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                      {loadingStates.google ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
+                      )}
+                    </div>
+                    <span className="font-medium">
+                      {loadingStates.google ? 'Signing in...' : 'Google'}
+                    </span>
+                  </motion.button>
+
+                  <motion.button
+                    type="button"
+                    onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
+                    disabled={loadingStates.google || loadingStates.linkedin}
+                    className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border transition-all duration-300 backdrop-blur-sm ${loadingStates.linkedin
+                        ? 'bg-blue-600/80 border-blue-500/50 text-white cursor-not-allowed'
+                        : loadingStates.google
+                          ? 'bg-gray-800/30 border-gray-600/30 text-gray-400 cursor-not-allowed'
+                          : 'bg-gray-800/50 hover:bg-gray-700/60 text-white border-gray-600/50'
+                      }`}
+                    whileHover={!loadingStates.google && !loadingStates.linkedin ? {
+                      scale: 1.02,
+                      boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                    } : {}}
+                    whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
+                  >
+                    <div className="w-5 h-5 rounded-sm flex items-center justify-center">
+                      {loadingStates.linkedin ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Image width={20} height={20} src="/linkedin.svg" alt="LinkedIn" className="w-5 h-5" />
+                      )}
+                    </div>
+                    <span className="font-medium">
+                      {loadingStates.linkedin ? 'Signing in...' : 'LinkedIn'}
+                    </span>
+                  </motion.button>
                   </div>
-                  <div className="relative my-8">
+                  <div className="relative my-8 ">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-600/50" />
                     </div>

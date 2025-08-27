@@ -1,0 +1,60 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id // This will store Clerk ID directly (Option A)
+  email         String?
+  name          String?        // Combined name field (simpler than firstName/lastName)
+  avatar        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // Relations
+  conversations Conversation[]
+  messages      Message[]
+  
+  @@map("users")
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  title       String?
+  userId      String   // This stores the Clerk ID (references User.id)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  content        String
+  role           Role     // Using the enum
+  conversationId String
+  userId         String   // This stores the Clerk ID (references User.id)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relationships
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}
+
+enum Role {
+  USER
+  ASSISTANT
+  SYSTEM
+}

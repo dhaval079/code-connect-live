@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../cc-next-unusedComp/CodeViz.tsx", "../cc-next-unusedComp/MoveToTop.tsx", "../cc-next-unusedComp/ParticleField.tsx", "../cc-next-unusedComp/globe.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../cc-next-unusedComp/CodeViz.tsx", "../cc-next-unusedComp/MoveToTop.tsx", "../cc-next-unusedComp/ParticleField.tsx", "../cc-next-unusedComp/globe.tsx", "testsb.js"],
   "exclude": ["node_modules"]
 }

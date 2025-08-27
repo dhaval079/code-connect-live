@@ -1,5 +1,5 @@
 import { authMiddleware } from "@clerk/nextjs";
- 
+
 export default authMiddleware({
   publicRoutes: [
     "/",
@@ -7,6 +7,7 @@ export default authMiddleware({
     "/auth/(.*)",     // Allow all routes under auth
     "/api/webhook",
     "/sign-in(.*)",
+    "/api/(.*)",
     "/sign-up(.*)",
     "/sso-callback(.*)",
     "/api/webhooks(.*)"
@@ -17,7 +18,7 @@ export default authMiddleware({
   ],
   debug: true // Enable debug mode to see detailed logs
 });
- 
+
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

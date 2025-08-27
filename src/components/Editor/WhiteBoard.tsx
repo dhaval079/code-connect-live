@@ -410,7 +410,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ isOpen, onToggle }) => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed right-0 top-0 bottom-0 h-full max-w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 bg-gray-100 shadow-lg z-40 flex flex-col"
+          className="fixed right-0 top-0 bottom-0 h-full max-w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 bg-gray-100 shadow-lg z-90 flex flex-col"
         >
           {/* Whiteboard header - upgraded UI */}
           <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-md">

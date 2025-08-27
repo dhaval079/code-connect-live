@@ -14,8 +14,7 @@ export const metadata = {
   title: 'Code Connect - Real-time Collaborative Coding',
   description: 'Join a room, share your code, and build amazing projects together.',
   icons: [
-    { rel: 'icon', url: '/main.svg' },
-    { rel: 'icon', url: '/main.svg', sizes: '32x32', type: 'image/png' },
+    { rel: 'icon', url: '/main.svg', sizes: '48x48', type: 'image/png' },
   ],
 }
 export default function RootLayout({ children }: { children: React.ReactNode }) {

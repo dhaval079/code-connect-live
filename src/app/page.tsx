@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import CodeConnect from './landing'
-import UserProfile from '@/components/Dashboard/UserProfile'
+import UserProfile from '@/components/Dashboard/(dashboard)/UserProfile'
 import {
   Navbar,
   NavBody,
@@ -19,9 +19,29 @@ import {
 export default function Home() {
   const { isLoaded, isSignedIn } = useUser()
   const router = useRouter()
-
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Smooth scroll function with navbar offset
+  const smoothScrollTo = (elementId: string) => {
+    const element = document.getElementById(elementId.replace('#', ''));
+    if (element) {
+      const navbarHeight = 80; // Adjust this to match your navbar height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Handle navigation click
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: string) => {
+    e.preventDefault();
+    smoothScrollTo(link);
+    setIsMobileMenuOpen(false); // Close mobile menu if open
+  };
 
   // Redirect to auth page if not signed in
   useEffect(() => {
@@ -58,6 +78,10 @@ export default function Home() {
       link: "#how-it-works",
     },
     {
+      name: "About",
+      link: "#about",
+    },
+    {
       name: "FAQ",
       link: "#faq",
     },
@@ -69,8 +93,20 @@ export default function Home() {
       <Navbar className=''>
         {/* Desktop Navigation */}
         <NavBody>
-          <NavbarLogo visible={undefined} /> {/* We'll pass visible through context instead */}
-          <NavItems items={navItems} className="cursor-pointer" />
+          <NavbarLogo visible={undefined} />
+          {/* Custom NavItems with smooth scroll */}
+          <div className="hidden md:flex items-center justify-center mx-auto w-full mr-16 space-x-8">
+            {navItems.map((item, idx) => (
+              <a
+                key={`nav-link-${idx}`}
+                href={item.link}
+                onClick={(e) => handleNavClick(e, item.link)}
+                className="text-sm font-medium text-white hover:text-cyan-400 transition-colors duration-200 cursor-pointer"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
           <div className="flex items-center">
             <UserProfile />
           </div>
@@ -96,8 +132,8 @@ export default function Home() {
               <a
                 key={`mobile-link-${idx}`}
                 href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 text-lg font-medium text-white hover:text-cyan-400 transition-colors border-b border-gray-800 last:border-b-0"
+                onClick={(e) => handleNavClick(e, item.link)}
+                className="block py-3 text-lg font-medium text-white hover:text-cyan-400 transition-colors border-b border-gray-800 last:border-b-0 cursor-pointer"
               >
                 {item.name}
               </a>

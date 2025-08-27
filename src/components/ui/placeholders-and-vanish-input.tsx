@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { ArrowUp } from "lucide-react";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -23,12 +24,13 @@ export function PlaceholdersAndVanishInput({
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
     }, 3000);
   };
+  
   const handleVisibilityChange = () => {
     if (document.visibilityState !== "visible" && intervalRef.current) {
-      clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
+      clearInterval(intervalRef.current);
       intervalRef.current = null;
     } else if (document.visibilityState === "visible") {
-      startAnimation(); // Restart the interval when the tab becomes visible
+      startAnimation();
     }
   };
 
@@ -46,12 +48,27 @@ export function PlaceholdersAndVanishInput({
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const newDataRef = useRef<any[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
 
+  // Auto-resize textarea
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = 200; // max height in pixels
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [value]);
+
   const draw = useCallback(() => {
-    if (!inputRef.current) return;
+    if (!textareaRef.current) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -60,7 +77,7 @@ export function PlaceholdersAndVanishInput({
     canvas.width = 800;
     canvas.height = 800;
     ctx.clearRect(0, 0, 800, 800);
-    const computedStyles = getComputedStyle(inputRef.current);
+    const computedStyles = getComputedStyle(textareaRef.current);
 
     const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
     ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
@@ -151,18 +168,20 @@ export function PlaceholdersAndVanishInput({
     animateFrame(start);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !animating) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && !animating) {
+      e.preventDefault();
       vanishAndSubmit();
     }
   };
 
   const vanishAndSubmit = () => {
+    if (!value.trim()) return;
     setAnimating(true);
     draw();
 
-    const value = inputRef.current?.value || "";
-    if (value && inputRef.current) {
+    const currentValue = textareaRef.current?.value || "";
+    if (currentValue && textareaRef.current) {
       const maxX = newDataRef.current.reduce(
         (prev, current) => (current.x > prev ? current.x : prev),
         0
@@ -177,186 +196,157 @@ export function PlaceholdersAndVanishInput({
     onSubmit && onSubmit(e);
   };
 
-  // Get the active state for border animation
-  const isActive = animating || isFocused;
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!animating) {
+      setValue(e.target.value);
+      // Update hidden input for compatibility
+      if (hiddenInputRef.current) {
+        hiddenInputRef.current.value = e.target.value;
+        // Create a synthetic event for the hidden input
+        const syntheticEvent = {
+          ...e,
+          target: hiddenInputRef.current,
+          currentTarget: hiddenInputRef.current,
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange && onChange(syntheticEvent);
+      }
+    }
+  };
 
   return (
-    <div className="relative w-full mx-auto">
-      {/* Animated border - positioned behind the form */}
-      {/* Replace these two motion.div elements for enhanced pulsing */}
-
-      {/* Animated border - positioned behind the form */}
-      <motion.div
-        className="absolute inset-0 rounded-full overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: isActive ? 1 : isHovered ? 0.7 : 0,
-        }}
-        transition={{ duration: 0.2 }}
-      >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-400"
-          animate={{
-            backgroundPosition: isActive ? ["0% center", "100% center"] : "0% center"
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-          style={{ backgroundSize: "200% 100%" }}
-        />
-      </motion.div>
-
-      {/* Enhanced pulsing glow effect */}
-      <motion.div
-        className="absolute inset-[-6px] rounded-full pointer-events-none"
-        animate={{
-          scale: isActive ? [1, 1.02, 1] : 1,
-          opacity: isActive ? [0.7, 0.9, 0.7] : 0.4,
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        style={{
-          background: "linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa)",
-          backgroundSize: "400% 100%",
-          filter: "blur(8px)",
-          zIndex: -1
-        }}
-      />
-
-      {/* Add this new element for extra brightness */}
-      <motion.div
-        className="absolute inset-[-2px] rounded-full pointer-events-none"
-        animate={{
-          opacity: isActive ? [0.4, 0.8, 0.4] : 0,
-          backgroundPosition: ["0% center", "100% center"],
-        }}
-        transition={{
-          opacity: {
-            duration: 1,
-            repeat: Infinity,
-            repeatType: "reverse",
-          },
-          backgroundPosition: {
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }
-        }}
-        style={{
-          background: "linear-gradient(90deg, #3b82f680, #8b5cf680, #ec489980, #3b82f680)",
-          backgroundSize: "200% 100%",
-          filter: "blur(3px)",
-          zIndex: -1
-        }}
-      />
-
-      <form
-        className={cn(
-          "w-full relative bg-white dark:bg-zinc-800 py-4 rounded-full overflow-hidden transition duration-200 border-2 border-transparent",
-          value && "bg-gray-50 dark:bg-zinc-700"
-        )}
-        style={{ zIndex: 10 }}  // Ensure the form is above the animations
+    <div className="relative w-full max-w-4xl mx-auto">
+      <motion.form
         onSubmit={handleSubmit}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        animate={{
+          scale: isFocused ? 1.005 : 1,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 30,
+        }}
       >
-        <canvas
-          className={cn(
-            "absolute pointer-events-none text-base transform scale-50 top-[20%] left-2 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
-            !animating ? "opacity-0" : "opacity-100"
-          )}
-          ref={canvasRef}
-        />
+        {/* Hidden input for compatibility */}
         <input
-          onChange={(e) => {
-            if (!animating) {
-              setValue(e.target.value);
-              onChange && onChange(e);
-            }
-          }}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          ref={inputRef}
+          ref={hiddenInputRef}
+          type="hidden"
           value={value}
-          type="text"
-          className={cn(
-            "w-full relative text-sm sm:text-base z-50 border-none dark:text-white bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
-            animating && "text-transparent dark:text-transparent"
-          )}
+          onChange={() => {}} // Controlled by textarea
         />
 
-        <button
-          disabled={!value}
-          type="submit"
-          className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
+        <motion.div
+          className={cn(
+            "relative bg-[#303030] text-white rounded-3xl overflow-hidden transition-all duration-300 shadow-lg",
+            isFocused && "shadow-xl",
+            isHovered && !isFocused && "shadow-md"
+          )}
+          animate={{
+            borderColor: isFocused 
+              ? "rgb(82 82 91)" // zinc-600
+              : isHovered 
+                ? "rgb(63 63 70)" // zinc-700
+                : "rgb(63 63 70)", // zinc-700
+          }}
+          transition={{ duration: 0.2 }}
         >
-          <motion.svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-gray-300 h-4 w-4"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <motion.path
-              d="M5 12l14 0"
-              initial={{
-                strokeDasharray: "50%",
-                strokeDashoffset: "50%",
-              }}
-              animate={{
-                strokeDashoffset: value ? 0 : "50%",
-              }}
-              transition={{
-                duration: 0.3,
-                ease: "linear",
-              }}
-            />
-            <path d="M13 18l6 -6" />
-            <path d="M13 6l6 6" />
-          </motion.svg>
-        </button>
-
-        <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
-          <AnimatePresence mode="wait">
-            {!value && (
-              <motion.p
-                initial={{
-                  y: 5,
-                  opacity: 0,
-                }}
-                key={`current-placeholder-${currentPlaceholder}`}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                exit={{
-                  y: -15,
-                  opacity: 0,
-                }}
-                transition={{
-                  duration: 0.3,
-                  ease: "linear",
-                }}
-                className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate"
-              >
-                {placeholders[currentPlaceholder]}
-              </motion.p>
+          <canvas
+            className={cn(
+              "absolute pointer-events-none text-base transform scale-50 top-[20%] left-4 origin-top-left filter invert-0 pr-20 z-10",
+              !animating ? "opacity-0" : "opacity-100"
             )}
-          </AnimatePresence>
-        </div>
-      </form>
+            ref={canvasRef}
+          />
+          
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              value={value}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className={cn(
+                "w-full bg-transparent text-white resize-none border-none outline-none",
+                "text-base leading-6 placeholder:text-white",
+                "px-5 py-4 pr-14",
+                "min-h-[56px] max-h-[200px]",
+                "scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-track-transparent",
+                animating && "text-transparent"
+              )}
+              style={{
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              }}
+              rows={1}
+            />
+
+            {/* Placeholder */}
+            <div className="absolute inset-0 flex items-start pointer-events-none px-5 py-4">
+              <AnimatePresence mode="wait">
+                {!value && (
+                  <motion.div
+                    key={`placeholder-${currentPlaceholder}`}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: [0.23, 1, 0.32, 1],
+                    }}
+                    className="text-gray-300 text-base leading-6 select-none"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    }}
+                  >
+                    {placeholders[currentPlaceholder]}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Submit Button */}
+            <motion.button
+              type="submit"
+              disabled={!value.trim() || animating}
+              className={cn(
+                "absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
+                "bg-white text-zinc-900",
+                "hover:bg-gray-100",
+                "disabled:bg-zinc-600 disabled:text-zinc-400",
+                "shadow-sm hover:shadow-md"
+              )}
+              animate={{
+                scale: value.trim() && !animating ? 1 : 0.9,
+                opacity: value.trim() && !animating ? 1 : 0.5,
+              }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 25,
+              }}
+            >
+              <ArrowUp size={16} strokeWidth={2.5} />
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Focus ring */}
+        <motion.div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          animate={{
+            opacity: isFocused ? 1 : 0,
+            scale: isFocused ? 1.01 : 1,
+          }}
+          transition={{ duration: 0.2 }}
+          style={{
+            background: "linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.1), transparent)",
+            filter: "blur(1px)",
+            zIndex: -1,
+          }}
+        />
+      </motion.form>
     </div>
   );
 }

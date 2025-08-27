@@ -20,26 +20,27 @@ import {
 import {
   FloatingHexagon,
   CodeBlock,
-} from "@/components/Dashboard/Decorative"
+} from "@/components/Dashboard/(dashboard)/Decorative"
 import { HoverCard } from "@/components/Dashboard/cards/HoverCard"
 import { StatsCard } from "@/components/Dashboard/cards/StatsCard"
 import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
 import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import dynamic from "next/dynamic"
 import { Skeleton } from "@/components/ui/skeleton"
-import ScrollToTopButton from "@/components/Dashboard/ScrollToTop";
+import ScrollToTopButton from "@/components/Dashboard/(dashboard)/ScrollToTop";
+import { HeroScrollDemo } from "@/components/Dashboard/(dashboard)/HeroScroll";
 
 const RevealAnimation = dynamic(
   () => import('@/components/Dashboard/animations/RevealAnimation').then((mod) => mod.RevealAnimation),
 );
 
-const LoadingScreen = dynamic(() => import('@/components/Dashboard/LoadingScreen'), {
+const LoadingScreen = dynamic(() => import('@/components/Dashboard/(dashboard)/LoadingScreen'), {
   ssr: false,
   loading: () => <div></div>,
 });
 
 const EnhancedCursor = dynamic(
-  () => import('@/components/Dashboard/Cursor').then((mod) => mod.default),
+  () => import('@/components/Dashboard/(dashboard)/Cursor').then((mod) => mod.default),
   { ssr: false }
 );
 
@@ -55,7 +56,7 @@ const WhyCodeConnect = dynamic(
   }
 )
 
-const CodeConnectSlider = lazy(() => import('@/components/Dashboard/Slider'));
+const CodeConnectSlider = lazy(() => import('@/components/Dashboard/(dashboard)/Slider'));
 
 const MoreUseCases = dynamic(
   () => import('@/components/Dashboard/cards/MoreUseCases'),
@@ -86,7 +87,7 @@ const NeonGlow = dynamic(
 );
 
 const FAQSection = dynamic(
-  () => import('@/components/Dashboard/FaqSection'),
+  () => import('@/components/Dashboard/(dashboard)/FaqSection'),
   {
     loading: () => (
       <div className="w-full h-96 animate-pulse bg-gray-800/50 rounded-xl">
@@ -152,7 +153,6 @@ export default function CodeConnect() {
 
       {/* Main Content - starts after navbar */}
       <div className=""> {/* Increased padding to account for larger initial navbar */}
-        {/* Remove PremiumParallax wrapper that's interfering with scroll detection */}
         <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-700 to-slate-800 text-white overflow-hidden">
           <div className="items-center justify-center text-center">
             <AnimatedBackground />
@@ -183,7 +183,7 @@ export default function CodeConnect() {
                         className="
     text-4xl lg:text-5xl font-bold relative z-10 
     bg-clip-text text-transparent 
-    bg-gradient-to-b from-neutral-100 to-neutral-500 
+    bg-gradient-to-b from-neutral-50 to-neutral-500 
     font-sans
   "
                         variants={{
@@ -253,7 +253,7 @@ export default function CodeConnect() {
                         }}
                       >
                         <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent 
-    bg-gradient-to-b from-neutral-100 to-neutral-400 
+    bg-gradient-to-b from-neutral-50 to-neutral-400 
     font-sans">Join a Room</h2>
                         <div className="space-y-6">
                           <FuturisticInput
@@ -322,7 +322,7 @@ export default function CodeConnect() {
                                     ease: "easeOut"
                                   }}
                                 >
-                                  <CircleFadingPlus className="w-5 h-5 mr-2" />
+                                  <Sparkles className="w-5 h-5 mr-2" />
                                   Join Room
                                 </motion.div>
                               )}
@@ -354,11 +354,11 @@ export default function CodeConnect() {
 
             <RevealAnimation>
               <motion.section id="features" className="mt-32 px-12 justify-center items-center mx-auto">
-                <h2 className="text-4xl text-center mb-16 font-bold">Key Features<br/>
-                <span className="text-gray-400 text-sm mx-auto align-middle w-full">top features of the platform has to offer to users</span>
+                <h2 className="text-4xl text-center mb-16 font-bold">Key Features<br />
+                  {/* <span className="text-gray-400 text-sm mx-auto align-middle w-full">top features of the platform has to offer to users</span> */}
                 </h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-2 w-full">
                   <HoverCard
                     icon={Laptop}
                     title="Real-time Collaboration"
@@ -420,17 +420,26 @@ export default function CodeConnect() {
             </RevealAnimation>
 
             <RevealAnimation>
-              <WhyCodeConnect />
+              <motion.div id='about'>
+                <WhyCodeConnect />
+              </motion.div>
             </RevealAnimation>
+
+            {/*<RevealAnimation>*/}
+            <motion.div className="-mt-0">
+              <HeroScrollDemo />
+            </motion.div>
+            {/*</RevealAnimation>*/}
 
             <RevealAnimation>
               <MoreUseCases />
             </RevealAnimation>
 
             <RevealAnimation>
-              <FAQSection />
+              <motion.div id='faq'>
+                <FAQSection />
+              </motion.div>
             </RevealAnimation>
-
 
             <RevealAnimation>
               <CodeConnectSlider />
