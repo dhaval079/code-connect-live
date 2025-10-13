@@ -756,8 +756,8 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
         })
         return
       }
-const providerKey = provider === "oauth_google" ? "google" : "linkedin"
-    setLoadingStates(prev => ({ ...prev, [providerKey]: true }))
+      const providerKey = provider === "oauth_google" ? "google" : "linkedin"
+      setLoadingStates(prev => ({ ...prev, [providerKey]: true }))
 
       try {
         setIsLoading(true)
@@ -784,7 +784,7 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
             additionalScopes: ["openid", "profile", "email", "w_member_social"],
           },
         }
-        
+
         const config = providerConfig[provider]
 
         if (view === "sign-in") {
@@ -804,8 +804,8 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
         })
       } finally {
         setIsLoading(false);
-         const providerKey = provider === "oauth_google" ? "google" : "linkedin"
-      setLoadingStates(prev => ({ ...prev, [providerKey]: false }));
+        const providerKey = provider === "oauth_google" ? "google" : "linkedin"
+        setLoadingStates(prev => ({ ...prev, [providerKey]: false }));
       }
     },
     [view, isSignInLoaded, isSignUpLoaded, signIn, signUp],
@@ -816,7 +816,7 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
     switch (view) {
       case "sign-in":
         return {
-          title: "Welcome Back",
+          title: "Codeconnect",
           subtitle: "Sign in to continue your coding journey",
           buttonText: "Sign In",
         }
@@ -941,12 +941,11 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
             >
               <ChevronLeft className="w-4 h-4 group-hover:text-blue-400 transition-colors" />
             </motion.div>
-            <span className="group-hover:text-blue-400 transition-colors font-medium">Back to home</span>
           </a>
         </motion.div>
 
         {/* Enhanced Progress bar */}
-        <motion.div
+        {/* <motion.div
           className="absolute top-0 left-0 right-0 h-1 bg-gray-800/50 backdrop-blur-sm z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -964,25 +963,22 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
             animate={{ x: `${getProgress() * 8}px` }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
-        </motion.div>
+        </motion.div> */}
 
         {/* Main content card */}
         <motion.div
-          className="relative w-full max-w-xl p-4 z-10"
+          className="relative w-full max-w-lg px-4 z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {/* Glass card container */}
           <div className="relative">
-            {/* Card glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-slate-700/30 via-slate-700/40 to-slate-800/30 rounded-2xl blur-xl opacity-75" />
-
             {/* Main card */}
-            <div className="relative bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-gray-700/50 p-10 md:p-16 shadow-2xl">
+            <div className="relative rounded-2xl px-6 md:px-8 shadow-2xl">
               {/* Logo and Title Section */}
               <motion.div
-                className="flex flex-col items-center mb-10"
+                className="flex flex-col items-center mb-6"
                 initial="hidden"
                 animate="visible"
                 custom={0}
@@ -990,7 +986,7 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
               >
                 {/* Enhanced Logo */}
                 <motion.div
-                  className="flex flex-col items-center mb-10"
+                  className="flex flex-col items-center mb-4"
                   initial="hidden"
                   animate="visible"
                   custom={0}
@@ -1007,15 +1003,15 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                     }}
                     className="relative"
                   >
-                    <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg transform scale-125" />
+                    <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-md transform scale-125" />
                     <motion.div
-                      className="relative bg-gray-900/80 rounded-full p-6 border border-gray-700"
+                      className="relative bg-gray-900/80 rounded-full p-3 border border-gray-700"
                       whileHover={{
                         scale: 1.05,
                         boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
                       }}
                     >
-                      <Code className="w-10 h-10 text-blue-400" />
+                      <Code className="w-6 h-6 text-blue-400" />
                     </motion.div>
                   </motion.div>
                 </motion.div>
@@ -1030,7 +1026,7 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className="text-center"
                   >
-                    <h1 className={`text-4xl md:text-5xl font-semibold bg-clip-text text-transparent mb-3 transition-all duration-500 ${view === "sign-in"
+                    <h1 className={`text-2xl md:text-3xl font-semibold bg-clip-text text-transparent mb-2 transition-all duration-500 ${view === "sign-in"
                       ? "bg-gradient-to-r from-cyan-400  to-purple-500"
                       : view === "sign-up"
                         ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
@@ -1038,7 +1034,7 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                       }`}>
                       {title}
                     </h1>
-                    <p className="text-gray-300 text-lg font-medium">{subtitle}</p>
+                    <p className="text-gray-400 text-sm font-normal">{subtitle}</p>
 
 
                   </motion.div>
@@ -1046,9 +1042,9 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
               </motion.div>
               {view !== "verify-otp" && (
                 <>
-                
-                  <div className="grid grid-cols-2 gap-4 my-2 w-full">
-                  {/* <motion.button
+
+                  <div className="grid grid-rows-2 gap-3 my-5">
+                    {/* <motion.button
                       type="button"
                       onClick={() => handleOAuthSignIn("oauth_google")}
                       className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-800/50 hover:bg-gray-700/60 text-white rounded-xl border border-gray-600/50 transition-all duration-300 backdrop-blur-sm"
@@ -1079,69 +1075,66 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                       </div>
                       <span className="font-medium">LinkedIn</span>
                     </motion.button> */}
-  <motion.button
-                    type="button"
-                    onClick={() => handleOAuthSignIn("oauth_google")}
-                    disabled={loadingStates.google || loadingStates.linkedin}
-                    className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border transition-all duration-300 backdrop-blur-sm ${loadingStates.google
-                        ? 'bg-blue-600/80 border-blue-500/50 text-white cursor-not-allowed'
+                    <motion.button
+                      type="button"
+                      onClick={() => handleOAuthSignIn("oauth_google")}
+                      disabled={loadingStates.google || loadingStates.linkedin}
+                      className={`flex items-center justify-center gap-2 px-3 py-3 rounded-full border transition-all duration-300 backdrop-blur-sm ${loadingStates.google
+                        ? 'border-blue-500/50 text-white cursor-not-allowed'
                         : loadingStates.linkedin
                           ? 'bg-gray-800/30 border-gray-600/30 text-gray-400 cursor-not-allowed'
                           : 'bg-gray-800/50 hover:bg-gray-700/60 text-white border-gray-600/50'
-                      }`}
-                    whileHover={!loadingStates.google && !loadingStates.linkedin ? {
-                      scale: 1.02,
-                      boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                    } : {}}
-                    whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
-                  >
-                    <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                      {loadingStates.google ? (
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      ) : (
-                        <Image width={20} height={20} src="/google.svg" alt="Google" className="w-5 h-5" />
-                      )}
-                    </div>
-                    <span className="font-medium">
-                      {loadingStates.google ? 'Signing in...' : 'Google'}
-                    </span>
-                  </motion.button>
+                        }`}
+                      whileHover={!loadingStates.google && !loadingStates.linkedin ? {
+                        scale: 1.02,
+                        boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                      } : {}}
+                      whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
+                    >
+                      <div className="w-4 h-4 rounded-full flex items-center justify-center">
+                        {loadingStates.google ? (
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <Image width={16} height={16} src="/google.svg" alt="Google" className="w-4 h-4" />
+                        )}
+                      </div>
+                      <span className="font-medium text-sm">
+                        {loadingStates.google ? '' : 'Log in with Google'}
+                      </span>
+                    </motion.button>
 
-                  <motion.button
-                    type="button"
-                    onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
-                    disabled={loadingStates.google || loadingStates.linkedin}
-                    className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border transition-all duration-300 backdrop-blur-sm ${loadingStates.linkedin
+                    <motion.button
+                      type="button"
+                      onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
+                      disabled={loadingStates.google || loadingStates.linkedin}
+                      className={`flex items-center justify-center gap-2 px-3 py-3 rounded-full border transition-all duration-300 backdrop-blur-sm ${loadingStates.linkedin
                         ? 'bg-blue-600/80 border-blue-500/50 text-white cursor-not-allowed'
                         : loadingStates.google
                           ? 'bg-gray-800/30 border-gray-600/30 text-gray-400 cursor-not-allowed'
                           : 'bg-gray-800/50 hover:bg-gray-700/60 text-white border-gray-600/50'
-                      }`}
-                    whileHover={!loadingStates.google && !loadingStates.linkedin ? {
-                      scale: 1.02,
-                      boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
-                    } : {}}
-                    whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
-                  >
-                    <div className="w-5 h-5 rounded-sm flex items-center justify-center">
-                      {loadingStates.linkedin ? (
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      ) : (
-                        <Image width={20} height={20} src="/linkedin.svg" alt="LinkedIn" className="w-5 h-5" />
-                      )}
-                    </div>
-                    <span className="font-medium">
-                      {loadingStates.linkedin ? 'Signing in...' : 'LinkedIn'}
-                    </span>
-                  </motion.button>
+                        }`}
+                      whileHover={!loadingStates.google && !loadingStates.linkedin ? {
+                        scale: 1.02,
+                        boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
+                      } : {}}
+                      whileTap={!loadingStates.google && !loadingStates.linkedin ? { scale: 0.98 } : {}}
+                    >
+                      <div className="w-4 h-4 rounded-sm flex items-center justify-center">
+                        {loadingStates.linkedin ? (
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <Image width={16} height={16} src="/linkedin.svg" alt="LinkedIn" className="w-4 h-4" />
+                        )}
+                      </div>
+                      <span className="font-medium text-sm">
+                        {loadingStates.linkedin ? 'Signing in...' : 'Log in with LinkedIn'}
+                      </span>
+                    </motion.button>
                   </div>
-                  <div className="relative my-8 ">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-600/50" />
-                    </div>
+                  <div className="relative my-5">
                     <div className="relative flex justify-center">
-                      <span className="px-4 bg-gray-900/80 text-sm text-gray-400 font-medium">
-                        Or continue with
+                      <span className="px-3 text-xs text-gray-500 font-normal">
+                        Or continue with email
                       </span>
                     </div>
                   </div>
@@ -1152,39 +1145,39 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                 <motion.form
                   key={view}
                   onSubmit={view === "verify-otp" ? handleOTPVerification : handleEmailSubmit}
-                  className="space-y-6"
+                  className="space-y-4"
                   initial="hidden"
                   animate="visible"
                   variants={itemVariants}
                 >
                   {view === "verify-otp" ? (
-                    <motion.div custom={2} variants={itemVariants} className="space-y-6">
+                    <motion.div custom={2} variants={itemVariants} className="space-y-4">
                       {/* OTP Info */}
-                      <div className="text-center mb-6">
+                      <div className="text-center mb-4">
                         <motion.div
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                          className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 mb-4"
+                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 mb-3"
                         >
-                          <Shield className="w-8 h-8 text-emerald-400" />
+                          <Shield className="w-6 h-6 text-emerald-400" />
                         </motion.div>
-                        <p className="text-gray-300 mb-2">We've sent a verification code to</p>
-                        <p className="font-semibold text-white text-lg">{email}</p>
+                        <p className="text-gray-400 text-sm mb-1">We've sent a verification code to</p>
+                        <p className="font-medium text-white text-base">{email}</p>
                       </div>
 
                       <OTPInput value={otpCode} onChange={(e) => setOtpCode(e.target.value)} />
 
                       {/* OTP Actions */}
-                      <div className="flex items-center justify-between text-sm text-gray-400 pt-4">
+                      <div className="flex items-center justify-between text-xs text-gray-400 pt-2">
                         <motion.button
                           type="button"
                           onClick={() => setView("sign-in")}
                           className="text-blue-400 hover:text-blue-300 transition-colors font-medium flex items-center gap-1"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <Mail className="w-4 h-4" />
+                          <Mail className="w-3 h-3" />
                           Try different email
                         </motion.button>
 
@@ -1192,16 +1185,16 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                           type="button"
                           onClick={() => setOtpCode("")}
                           className="text-blue-400 hover:text-blue-300 transition-colors font-medium flex items-center gap-1"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <Zap className="w-4 h-4" />
+                          <Zap className="w-3 h-3" />
                           Resend code
                         </motion.button>
                       </div>
                     </motion.div>
                   ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {view === "sign-up" && (
                         <motion.div custom={2} variants={itemVariants}>
                           <FuturisticInput
@@ -1225,7 +1218,8 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
 
                       <motion.div custom={3} variants={itemVariants}>
                         <FuturisticInput
-                          label="Email Address"
+                          className="rounded-full"
+                          label="Email"
                           id="email"
                           icon={Mail}
                           type="email"
@@ -1315,9 +1309,9 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                   )}
 
                   {/* Submit Button and OAuth Section */}
-                  <motion.div custom={5} variants={itemVariants} className="space-y-6 pt-4">
+                  <motion.div custom={5} variants={itemVariants} className="space-y-4 pt-2">
                     <GlowingButton
-                      className="w-full py-3 text-lg"
+                      className="w-full py-2.5 text-base"
                       disabled={isLoading || !isSignInLoaded || !isSignUpLoaded}
                       type="submit"
                       color={view === "verify-otp" ? "green" : view === "sign-up" ? "purple" : "blue"}
@@ -1360,22 +1354,22 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
               {/* Footer */}
               {view !== "verify-otp" && (
                 <motion.div
-                  className="mt-8 pt-6 border-t border-gray-700/50 text-center"
+                  className="mt-6 pt-4 border-t border-gray-700/50 text-center"
                   initial="hidden"
                   animate="visible"
                   custom={6}
                   variants={itemVariants}
                 >
-                  <p className="text-gray-300 text-base">
+                  <p className="text-gray-400 text-sm">
                     {view === "sign-in" ? (
                       <>
                         Don't have an account?{" "}
                         <motion.button
                           type="button"
                           onClick={() => setView("sign-up")}
-                          className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           Sign up
                         </motion.button>
@@ -1386,9 +1380,9 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
                         <motion.button
                           type="button"
                           onClick={() => setView("sign-in")}
-                          className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                          className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           Sign in
                         </motion.button>
@@ -1400,26 +1394,6 @@ const providerKey = provider === "oauth_google" ? "google" : "linkedin"
             </div>
           </div>
         </motion.div>
-
-        {/* Decorative elements */}
-        <div className="absolute bottom-10 left-10 text-gray-600 opacity-50">
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          >
-            <Coffee className="w-6 h-6" />
-          </motion.div>
-        </div>
-
-        <div className="absolute top-20 right-20 text-gray-600 opacity-50">
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          >
-            <Star className="w-5 h-5" />
-          </motion.div>
-        </div>
-
       </div>
 
       {/* Right side - Content */}

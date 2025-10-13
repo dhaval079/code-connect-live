@@ -34,7 +34,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
             w-full bg-slate-900/30 
             border-1 border-cyan-500/30 
             text-cyan-50 placeholder:text-slate-500 
-            rounded-lg px-2 py-2 pl-12
+            rounded-full px-3 py-3 pl-12
             outline-none transition-all duration-300 
             hover:border-cyan-400/50
             focus:border-cyan-400 focus:ring-3 focus:ring-cyan-400/30
@@ -50,14 +50,14 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
         <AnimatePresence>
           {(isHovered || isFocused) && (
             <motion.div
-              className="absolute inset-0 rounded-lg pointer-events-none"
+              className="absolute inset-0 rounded-full pointer-events-none"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.3 }}
             >
               <motion.div
-                className="absolute inset-0 rounded-lg border-2 border-cyan-400"
+                className="absolute inset-0 rounded-full border-2 border-cyan-400"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -73,7 +73,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
         <AnimatePresence>
           {isFocused && (
             <motion.div
-              className="absolute inset-0 rounded-lg pointer-events-none"
+              className="absolute inset-0 rounded-full pointer-events-none"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -81,7 +81,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
             >
               {/* Pulsing glow */}
               <motion.div
-                className="absolute inset-0 rounded-lg"
+                className="absolute inset-0 rounded-full"
                 initial={{ boxShadow: "0 0 0 0 rgba(6,182,212,0.6)" }}
                 animate={{
                   boxShadow: [
@@ -98,7 +98,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
 
         {/* Neon-like glow on hover (behind input) */}
         <motion.div
-          className="absolute inset-0 rounded-lg pointer-events-none z-[-1]"
+          className="absolute inset-0 rounded-full pointer-events-none z-[-1]"
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
