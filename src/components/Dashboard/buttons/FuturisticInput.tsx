@@ -17,7 +17,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <div className="space-y-2 relative w-full">
+    <div className="space-y-1 relative w-full">
       <label className="text-sm font-medium text-cyan-300" htmlFor={props.id}>
         {label}
         {props.required && <span className="text-red-400 ml-1">*</span>}
@@ -31,11 +31,11 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
           onBlur={() => setIsFocused(false)}
           className={cn(
             `
-            w-full bg-slate-900/30 
-            border-1 border-cyan-500/30 
-            text-cyan-50 placeholder:text-slate-500 
+            w-full bg-slate-900/30
+            border border-slate-800
+            text-cyan-50 placeholder:text-slate-500
             rounded-full px-3 py-3 pl-12
-            outline-none transition-all duration-300 
+            outline-none transition-all duration-300
             hover:border-cyan-400/50
             focus:border-cyan-400 focus:ring-3 focus:ring-cyan-400/30
           `,
@@ -44,7 +44,7 @@ export const FuturisticInput: React.FC<FuturisticInputProps> = ({ label, icon: I
         />
 
         {/* Input Icon */}
-        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400 w-6 h-6 pointer-events-none" />
+        <Icon className="absolute left-5 top-1/2 -translate-y-1/2 text-cyan-300 w-4 h-4 pointer-events-none" />
 
         {/* Animated border */}
         <AnimatePresence>

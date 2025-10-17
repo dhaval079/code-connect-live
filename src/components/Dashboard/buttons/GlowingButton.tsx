@@ -30,7 +30,6 @@ export const GlowingButton: React.FC<{
       )}
       onClick={onClick}
       disabled={disabled}
-      whileHover={!disabled ? { scale: 1.05 } : {}}
       whileTap={!disabled ? { scale: 0.95 } : {}}
       onHoverStart={() => !disabled && setIsHovered(true)}
       onHoverEnd={() => !disabled && setIsHovered(false)}
@@ -40,7 +39,7 @@ export const GlowingButton: React.FC<{
         className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400"
         initial={{ x: "-100%" }}
         animate={{ x: isHovered ? "0%" : "-100%" }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.1 }}
       />
       <span className="relative z-10">{children}</span>
     </motion.button>
