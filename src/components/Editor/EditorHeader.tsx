@@ -157,33 +157,14 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
         transformStyle: 'preserve-3d'
       }}
       className={`
-        relative z-50 overflow-hidden border-b
+        relative z-40 overflow-hidden border-b
         ${isDarkMode
-          ? 'bg-slate-800 border-slate-800/50'
-          : 'bg-white/90 border-slate-200/50'
+          ? 'bg-black border-slate-900'
+          : 'bg-white/95 border-slate-200/60'
         }
-        backdrop-blur-2xl
+        backdrop-blur
       `}
     >
-      {/* Sophisticated background pattern */}
-      <div className="absolute inset-0 opacity-20">
-        <motion.div
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'linear'
-          }}
-          className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-blue-500/5 to-emerald-500/5"
-          style={{
-            backgroundSize: '400% 400%'
-          }}
-        />
-      </div>
-
       {/* Main content */}
       <div className="relative px-8 py-4">
         <div className="flex items-center justify-between max-w-full">
@@ -198,10 +179,9 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
               className={`
                 relative p-3 rounded-xl transition-all duration-300 group
                 ${isDarkMode
-                  ? 'bg-slate-900/50 hover:bg-slate-800/80 text-slate-400 hover:text-slate-200'
-                  : 'bg-slate-50/80 hover:bg-slate-100 text-slate-600 hover:text-slate-800'
+                  ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-slate-100 border border-slate-800'
+                  : 'bg-slate-50/80 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200/70'
                 }
-                border border-white/5 hover:border-white/10
               `}
             >
               <motion.div
@@ -215,7 +195,9 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
               </motion.div>
 
               {/* Subtle glow effect */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/0 via-blue-500/0 to-emerald-500/0 group-hover:from-violet-500/10 group-hover:via-blue-500/10 group-hover:to-emerald-500/10 transition-all duration-500" />
+                {isDarkMode && (
+                  <div className="absolute inset-0 rounded-xl bg-slate-800/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                )}
             </motion.button>
 
             {/* Run Code Button */}
@@ -273,10 +255,9 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
               className={`
                 flex items-center space-x-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-300
                 ${isDarkMode
-                  ? 'bg-slate-900/30 hover:bg-slate-800/50 text-slate-300 hover:text-slate-100'
-                  : 'bg-slate-50/50 hover:bg-slate-100/80 text-slate-600 hover:text-slate-800'
+                  ? 'bg-slate-900/60 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-800'
+                  : 'bg-slate-50/60 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200/70'
                 }
-                border border-white/5 hover:border-white/10
               `}
             >
               <Code2 className="h-4 w-4" />
@@ -306,10 +287,10 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
                 className={`
                   relative group px-6 py-3 rounded-xl transition-all duration-300 border
                   ${item.isActive
-                    ? `${getAccentClasses(item.accentColor, true)} border-transparent shadow-lg`
+                    ? `${getAccentClasses(item.accentColor, true)} border-transparent shadow`
                     : isDarkMode
-                      ? `bg-slate-900/20 text-slate-400 border-slate-800/30 ${getAccentClasses(item.accentColor)}`
-                      : `bg-slate-50/30 text-slate-600 border-slate-200/30 ${getAccentClasses(item.accentColor)}`
+                      ? `bg-slate-900/60 text-slate-300 border-slate-800 ${getAccentClasses(item.accentColor)}`
+                      : `bg-slate-50/60 text-slate-600 border-slate-200 ${getAccentClasses(item.accentColor)}`
                   }
                 `}
               >
@@ -372,10 +353,9 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
                 className={`
                   relative p-3 rounded-xl transition-all duration-300 group
                   ${isDarkMode
-                    ? 'bg-slate-900/30 hover:bg-slate-800/50 text-slate-400 hover:text-slate-200'
-                    : 'bg-slate-50/50 hover:bg-slate-100/80 text-slate-600 hover:text-slate-800'
+                    ? 'bg-slate-900/70 hover:bg-slate-800 text-slate-300 hover:text-slate-100 border border-slate-800'
+                    : 'bg-slate-50/70 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200/70'
                   }
-                  border border-white/5 hover:border-white/10
                 `}
                 title={item.label}
               >
@@ -387,19 +367,6 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
                 >
                   <item.icon className="h-4 w-4" />
                 </motion.div>
-
-                {/* Subtle pulse effect */}
-                <motion.div
-                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/0 to-blue-500/0 group-hover:from-violet-500/10 group-hover:to-blue-500/10"
-                  animate={{
-                    opacity: [0, 0.5, 0]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
               </motion.button>
             ))}
           </div>
@@ -407,21 +374,7 @@ const PremiumEditorHeader: React.FC<PremiumEditorHeaderProps> = ({
       </div>
 
       {/* Sophisticated bottom border gradient */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{
-          background: 'linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3) 20%, rgba(59, 130, 246, 0.3) 50%, rgba(16, 185, 129, 0.3) 80%, transparent)'
-        }}
-        animate={{
-          opacity: [0.3, 1, 0.3],
-          scaleX: [0.8, 1, 0.8]
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-slate-800" />
     </motion.div>
   );
 };

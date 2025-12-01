@@ -546,7 +546,6 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronDown,
-  ChevronRight,
   X,
   Copy,
   Trash,
@@ -556,24 +555,17 @@ import {
   Pin,
   Maximize,
   Minimize,
-  Play,
-  Pause,
   RefreshCw,
   AlertCircle,
   Info,
   Terminal,
-  ToggleRight,
   Settings,
   Clock,
   FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Tooltip } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
-import { Toggle } from '@/components/ui/toggle';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -595,21 +587,14 @@ const ConsoleOutput = ({
   onClose,
   consoleOutput,
   onClear,
-  isSidebarOpen,
-  height,
-  onHeightChange,
   isDarkMode
 }: ConsoleOutputProps) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStartY = useRef(0);
-  const dragStartHeight = useRef(height);
   const containerRef = useRef(null);
   const [isPinned, setIsPinned] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'log' | 'error' | 'warn'>('all');
-  const [activeTab, setActiveTab] = useState('console');
   const [showTimestamps, setShowTimestamps] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -655,39 +640,6 @@ const ConsoleOutput = ({
     }
   }, [filteredLogs, isAutoScrollEnabled]);
 
-  // Handle mouse movement for resizing
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const deltaY = dragStartY.current - e.clientY;
-      const maxHeight = window.innerHeight * 0.8; // Maximum 80% of viewport height
-      const newHeight = Math.min(Math.max(250, dragStartHeight.current + deltaY), maxHeight);
-      onHeightChange(newHeight);
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      document.body.style.cursor = 'default';
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = 'ns-resize';
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = 'default';
-    };
-  }, [isDragging, onHeightChange]);
-
-  const handleDragStart = (e: React.MouseEvent) => {
-    dragStartY.current = e.clientY;
-    dragStartHeight.current = height;
-    setIsDragging(true);
-  };
 
   // Export console logs as a file
   const exportLogs = () => {
@@ -716,20 +668,6 @@ const ConsoleOutput = ({
     setIsMaximized(!isMaximized);
   };
 
-  // Preview JSON for objects in console
-  const parseAndFormatJSON = (content: string) => {
-    try {
-      // Check if content is JSON
-      if (content.trim().startsWith('{') || content.trim().startsWith('[')) {
-        const parsed = JSON.parse(content);
-        return JSON.stringify(parsed, null, 2);
-      }
-    } catch (e) {
-      // Not valid JSON, return as is
-    }
-    return content;
-  };
-
   // Keyboard shortcut to clear console (Ctrl+L)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -755,39 +693,19 @@ const ConsoleOutput = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <div
           ref={containerRef}
-          initial={{ height: 0, opacity: 0 }}
-          animate={{
-            height: isMaximized ? '60vh' : height,
-            opacity: 1,
-            bottom: 0,
-          }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
-          className={`fixed ${isSidebarOpen ? 'left-80' : 'left-0'} right-0 ${isDarkMode
-              ? 'bg-slate-900 border-t border-slate-800/50'
+          className={`h-full w-full flex flex-col ${isDarkMode
+              ? 'bg-black border-t border-slate-900'
               : 'bg-white border-t border-slate-200'
-            } backdrop-blur-sm shadow-lg`}
-          style={{ zIndex: 10 }}
+            } backdrop-blur`}
         >
-          {/* Drag Handle */}
-          <div
-            className="absolute -top-3 left-0 right-0 h-3 cursor-ns-resize flex items-center justify-center"
-            onMouseDown={handleDragStart}
-          >
-            <div className={`w-20 h-1 ${isDarkMode
-                ? 'bg-slate-600 hover:bg-blue-500'
-                : 'bg-slate-300 hover:bg-blue-400'
-              } rounded-full transition-colors duration-300`} />
-          </div>
-
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col flex-1">
             {/* Console Header */}
             <div className={`flex items-center justify-between px-4 py-2 border-b ${isDarkMode
-                ? 'border-slate-700/50 bg-slate-800/90 rounded-md'
+                ? 'border-slate-900 bg-black'
                 : 'border-slate-200 bg-white/95'
-              } backdrop-blur-sm`}>
+              }`}>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="ghost"
@@ -827,8 +745,8 @@ const ConsoleOutput = ({
               <div className="flex items-center space-x-1.5">
                 {/* Search Filter */}
                 <div className="relative mr-2 group">
-                  <div className="flex items-center space-x-1 bg-slate-900/50 rounded-md border border-slate-800/50 px-2">
-                    <Search className="h-3.5 w-3.5 text-slate-400" />
+                  <div className={`flex items-center space-x-1 rounded-md px-2 border ${isDarkMode ? 'bg-black/60 border-slate-800' : 'bg-slate-200 border-slate-300/60'}`}>
+                    <Search className={`h-3.5 w-3.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`} />
                     <Input
                       placeholder="Filter logs..."
                       value={searchTerm}
@@ -855,8 +773,8 @@ const ConsoleOutput = ({
                       variant="outline"
                       size="sm"
                       className={`px-2 py-1 h-7 text-xs gap-1 ${isDarkMode
-                          ? 'bg-slate-900 border-slate-800/50 hover:bg-slate-800'
-                          : 'bg-slate-200 border-slate-300/50'
+                          ? 'bg-black/60 border-slate-800 hover:bg-slate-900'
+                          : 'bg-slate-200 border-slate-300/60'
                         }`}
                     >
                       <Filter className="h-3.5 w-3.5" />
@@ -870,7 +788,7 @@ const ConsoleOutput = ({
                   </PopoverTrigger>
                   <PopoverContent
                     className={`p-1 w-40 ${isDarkMode
-                        ? 'bg-slate-900 border-slate-800/50'
+                        ? 'bg-black border-slate-900'
                         : 'bg-white border-slate-200'
                       }`}
                     side="bottom"
@@ -1030,7 +948,7 @@ const ConsoleOutput = ({
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   className={`border-b ${isDarkMode
-                      ? 'border-slate-800/50 bg-slate-900/50'
+                      ? 'border-slate-900 bg-black/80'
                       : 'border-slate-200 bg-slate-100/50'
                     }`}
                 >
@@ -1135,7 +1053,7 @@ const ConsoleOutput = ({
               </AnimatePresence>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
@@ -1208,7 +1126,7 @@ const ConsoleEntry = ({ log, isDarkMode, showTimestamp = false, autoExpand = fal
                 ? 'bg-blue-500/10 border-blue-500/30 text-blue-400'
                 : 'bg-blue-500/10 border-blue-500/20 text-blue-600'
               : isDarkMode
-                ? 'bg-slate-900/70 border-slate-800/50 text-slate-300 hover:bg-slate-900'
+                ? 'bg-black border-slate-800 text-slate-300 hover:bg-slate-900/80'
                 : 'bg-slate-100/70 border-slate-200/50 text-slate-800 hover:bg-slate-100'
       )}
     >
@@ -1259,7 +1177,7 @@ const ConsoleEntry = ({ log, isDarkMode, showTimestamp = false, autoExpand = fal
                 variant="ghost"
                 size="sm"
                 className={`absolute -bottom-1 -right-1 h-5 text-xs px-1.5 py-0 ${isDarkMode
-                    ? 'bg-slate-900 hover:bg-slate-800 text-slate-400'
+                    ? 'bg-black hover:bg-slate-900 text-slate-300'
                     : 'bg-white hover:bg-slate-100 text-slate-500'
                   }`}
                 onClick={() => setIsExpanded(!isExpanded)}

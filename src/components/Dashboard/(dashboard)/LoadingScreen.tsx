@@ -51,7 +51,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               ease: [0.55, 0.06, 0.68, 0.19], // Custom easing for smooth exit
             }
           }}
-          className="fixed inset-1 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center z-50"
+          className="fixed inset-1 bg-slate-900 flex items-center justify-center z-50"
         >
           <motion.div
             exit={{

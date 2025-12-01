@@ -1,5 +1,4 @@
 // app/layout.tsx or app/layout.jsx
-import { Inter } from 'next/font/google'
 import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
@@ -7,8 +6,6 @@ import { SocketProvider } from "@/providers/socketProvider"
 import { ClerkProvider } from '@clerk/nextjs'
 // Remove next/head if you're fully relying on metadata
 // import Head from 'next/head'
-
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
   title: 'Code Connect - Real-time Collaborative Coding',
@@ -19,7 +16,7 @@ export const metadata = {
 }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning={true}>
+    <html lang="en" className="font-sans" suppressHydrationWarning={true}>
       <body className="antialiased">
         <ClerkProvider>
           <ThemeProvider attribute="class">

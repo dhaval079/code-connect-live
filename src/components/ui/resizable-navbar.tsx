@@ -268,19 +268,6 @@ export const MobileNavMenu = ({
             {children}
           </div>
         </motion.div>
-
-
-
-
-
-
-
-
-
-
-
-
-
       )}
     </AnimatePresence>
   );
@@ -729,6 +716,15 @@ export const NavbarLogo = ({ visible }: { visible?: boolean }) => {
   );
 };
 
+type NavbarButtonProps = {
+  href?: string;
+  as?: React.ElementType;
+  children: React.ReactNode;
+  className?: string;
+  variant?: "primary" | "secondary" | "dark" | "gradient";
+} & Omit<React.ComponentPropsWithoutRef<"a">, "children"> &
+  Omit<React.ComponentPropsWithoutRef<"button">, "children">;
+
 export const NavbarButton = ({
   href,
   as: Tag = "a",
@@ -736,16 +732,7 @@ export const NavbarButton = ({
   className,
   variant = "primary",
   ...props
-}: {
-  href?: string;
-  as?: React.ElementType;
-  children: React.ReactNode;
-  className?: string;
-  variant?: "primary" | "secondary" | "dark" | "gradient";
-} & (
-  | React.ComponentPropsWithoutRef<"a">
-  | React.ComponentPropsWithoutRef<"button">
-)) => {
+}: NavbarButtonProps) => {
   const baseStyles =
     "px-4 py-2 rounded-lg text-sm font-medium relative cursor-pointer transition-all duration-200 inline-block text-center";
 
@@ -761,13 +748,15 @@ export const NavbarButton = ({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      <Tag
-        href={href || undefined}
-        className={cn(baseStyles, variantStyles[variant], className)}
-        {...props}
-      >
-        {children}
-      </Tag>
+      {React.createElement(
+        Tag,
+        {
+          ...(href ? { href } : {}),
+          className: cn(baseStyles, variantStyles[variant], className),
+          ...props,
+        },
+        children
+      )}
     </motion.div>
   );
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo, useCallback, memo } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import { useSocket } from '@/providers/socketProvider';
 import { ACTIONS } from '@/lib/actions';
@@ -78,51 +78,71 @@ const oneDarkPro: editor.IStandaloneThemeData = {
   }
 };
 
-const MonacoEditor = ({ 
-  roomId, 
+const MonacoEditor = memo(({
+  roomId,
   language = 'javascript',
   fontSize = 14,
   value,
-  onChange 
+  onChange
 }: MonacoEditorProps) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const { socket } = useSocket();
-  const searchParams = new URLSearchParams(window.location.search);
-  const currentUsername = searchParams.get('username');
+  const searchParams = useRef(new URLSearchParams(typeof window !== 'undefined' ? window.location.search : ''));
+  const currentUsername = searchParams.current.get('username');
 
   // Define Monaco theme before editor mounts
   useEffect(() => {
+    let mounted = true;
     const defineTheme = async () => {
-      const monaco = await loader.init();
-      monaco.editor.defineTheme('onedarkpro', oneDarkPro);
+      try {
+        if (!mounted) return;
+        const monaco = await loader.init();
+        if (!mounted) return;
+        monaco.editor.defineTheme('onedarkpro', oneDarkPro);
+      } catch (err) {
+        if (mounted) {
+          console.error('Failed to define Monaco theme:', err);
+        }
+      }
     };
     defineTheme();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const handleEditorChange = (value: string | undefined) => {
+  const handleEditorChange = useCallback((value: string | undefined) => {
     if (!value || !currentUsername) return;
-    
-    // Emit code change
-    socket?.emit(ACTIONS.CODE_CHANGE, {
-      roomId,
-      code: value,
-    });
 
-    // Emit typing event with username
-    socket?.emit(ACTIONS.TYPING, {
-      roomId,
-      username: currentUsername
-    });
-    
-    onChange?.(value);
-  };
+    try {
+      // Emit code change
+      socket?.emit(ACTIONS.CODE_CHANGE, {
+        roomId,
+        code: value,
+      });
 
-  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
-    editorRef.current = editor;
-    monaco.editor.setTheme('onedarkpro');
-  };
+      // Emit typing event with username
+      socket?.emit(ACTIONS.TYPING, {
+        roomId,
+        username: currentUsername
+      });
 
-  const options: editor.IStandaloneEditorConstructionOptions = {
+      onChange?.(value);
+    } catch (err) {
+      console.error('Error in editor change:', err);
+    }
+  }, [roomId, socket, currentUsername, onChange]);
+
+  const handleEditorDidMount = useCallback((editor: editor.IStandaloneCodeEditor, monaco: typeof import('monaco-editor')) => {
+    try {
+      editorRef.current = editor;
+      monaco.editor.setTheme('onedarkpro');
+    } catch (err) {
+      console.error('Error mounting editor:', err);
+    }
+  }, []);
+
+  const options: editor.IStandaloneEditorConstructionOptions = useMemo(() => ({
     fontSize,
     minimap: { enabled: true },
     scrollBeyondLastLine: false,
@@ -140,10 +160,10 @@ const MonacoEditor = ({
     contextmenu: true,
     mouseWheelZoom: true,
     lineNumbers: 'on',
-    // renderIndentGuides: true,
     automaticLayout: true,
-    padding: { top: 16, bottom: 16 }
-  };
+    padding: { top: 16, bottom: 16 },
+    theme: 'onedarkpro'
+  }), [fontSize]);
 
   return (
     <Editor
@@ -156,8 +176,19 @@ const MonacoEditor = ({
       onChange={handleEditorChange}
       onMount={handleEditorDidMount}
       className="z-0 w-full h-full min-h-[300px] border border-gray-700 rounded-lg overflow-hidden"
+      loading="Loading editor..."
     />
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison - return true if props are identical (skip re-render)
+  return (
+    prevProps.roomId === nextProps.roomId &&
+    prevProps.language === nextProps.language &&
+    prevProps.fontSize === nextProps.fontSize &&
+    prevProps.value === nextProps.value
+  );
+});
+
+MonacoEditor.displayName = 'MonacoEditor';
 
 export default MonacoEditor;

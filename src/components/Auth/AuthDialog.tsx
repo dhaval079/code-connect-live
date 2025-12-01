@@ -1,16 +1,15 @@
-// components/Auth/AuthPage.tsx
 "use client"
 
 import type React from "react"
-
 import { useSignIn, useSignUp } from "@clerk/nextjs"
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useState, useCallback, useEffect } from "react"
-import { Code, Mail, Loader2, Check, ChevronLeft, AlertCircle, Eye, EyeOff, Zap, User, Shield, Globe2 } from "lucide-react"
+import { Code, Mail, Check, ChevronLeft, AlertCircle, Eye, EyeOff, Zap, User, Shield, Globe2 } from "lucide-react"
 import { GlowingButton } from "@/components/Dashboard/buttons/GlowingButton"
 import { FuturisticInput } from "@/components/Dashboard/buttons/FuturisticInput"
 import { toast } from "sonner"
 import OTPInput from "@/components/Dashboard/buttons/OTPInput"
+import IOSLoader from "@/components/Dashboard/buttons/IOSLoader"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import WaterGradient from "../Dashboard/animations/AnimatedGradient"
@@ -42,21 +41,6 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
     google: false,
     linkedin: false
   });
-  // Mouse follower effect
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [mouseX, mouseY])
 
   // Form validation
   const validateForm = () => {
@@ -314,15 +298,6 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-950">
-      {/* Mouse follower gradient */}
-      <motion.div
-        className="fixed hidden md:block pointer-events-none w-96 h-96 rounded-full opacity-20 z-0"
-        style={{
-          background: "radial-gradient(circle, rgba(56, 189, 248, 0.6) 0%, rgba(0, 0, 0, 0) 70%)",
-          left: useTransform(mouseX, (value) => value - 192),
-          top: useTransform(mouseY, (value) => value - 192),
-        }}
-      />
       {/* Left side - Auth form */}
       <div className="w-full min-h-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12 relative overflow-hidden">
         {/* Animated background */}
@@ -380,14 +355,6 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                   variants={itemVariants}
                 >
                   <motion.div
-                    // animate={{
-                    //   rotate: [0, 360],
-                    // }}
-                    // transition={{
-                    //   duration: 30,
-                    //   repeat: Number.POSITIVE_INFINITY,
-                    //   ease: "linear",
-                    // }}
                     className="relative"
                   >
                     <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-md transform scale-125" />
@@ -414,7 +381,7 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     className="text-center"
                   >
                     <h1 className={`text-2xl md:text-3xl font-semibold bg-clip-text text-transparent mb-2 transition-all duration-500 ${view === "sign-in"
-                      ? "bg-gradient-to-r from-cyan-400  to-purple-500"
+                      ? "bg-gradient-to-r from-cyan-500  to-purple-600"
                       : view === "sign-up"
                         ? "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400"
                         : "bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500"
@@ -445,13 +412,13 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     >
                       <div className="w-4 h-4 rounded-full flex items-center justify-center">
                         {loadingStates.google ? (
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <IOSLoader size="small" color="white" />
                         ) : (
                           <Image width={16} height={16} src="/google.svg" alt="Google" className="w-4 h-4" />
                         )}
                       </div>
                       <span className="font-medium text-sm">
-                        {loadingStates.google ? '' : 'Login with Google'}
+                        {loadingStates.google ? '' : 'Log in with Google'}
                       </span>
                     </motion.button>
 
@@ -459,9 +426,9 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                       type="button"
                       onClick={() => handleOAuthSignIn("oauth_linkedin_oidc")}
                       disabled={loadingStates.google || loadingStates.linkedin}
-                      className={`flex items-center justify-center gap-2 px-3 py-3 rounded-full border transition-all duration-300 backdrop-blur-sm ${loadingStates.linkedin
-                        ? 'bg-blue-600/80 border-blue-500/50 text-white cursor-not-allowed'
-                        : loadingStates.google
+                     className={`flex items-center justify-center gap-2 px-3 py-3 rounded-full border transition-all duration-300 backdrop-blur-sm ${loadingStates.google
+                        ? 'border-blue-500/50 text-white cursor-not-allowed'
+                        : loadingStates.linkedin
                           ? 'bg-gray-800/30 border-gray-600/30 text-gray-400 cursor-not-allowed'
                           : 'bg-gray-800/50 hover:bg-gray-700/60 text-white border-gray-600/50'
                         }`}
@@ -472,13 +439,13 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                     >
                       <div className="w-4 h-4 rounded-sm flex items-center justify-center">
                         {loadingStates.linkedin ? (
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <IOSLoader size="small" color="white" />
                         ) : (
                           <Image width={16} height={16} src="/linkedin.svg" alt="LinkedIn" className="w-4 h-4" />
                         )}
                       </div>
                       <span className="font-medium text-sm">
-                        {loadingStates.linkedin ? 'Signing in...' : 'Login with LinkedIn'}
+                        {loadingStates.linkedin ? '' : 'Log in with LinkedIn'}
                       </span>
                     </motion.button>
                   </div>
@@ -676,9 +643,9 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
                             exit={{ opacity: 0 }}
                             className="flex items-center justify-center gap-3"
                           >
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <IOSLoader size="small" color="white" />
                             <span>
-                              {view === "verify-otp" ? "Verifying..." : view === "sign-in" ? "Signing in..." : "Creating account..."}
+                              {view === "verify-otp" ? "Verifying..." : view === "sign-in" ? "" : "Creating account..."}
                             </span>
                           </motion.div>
                         ) : (
@@ -750,167 +717,13 @@ export default function AuthPage({ onSuccessfulAuth }: AuthPageProps) {
       <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 relative overflow-hidden">
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
-          <WaterGradient
-            colorScheme="blue-cyan"
-            className="rounded-lg shadow-xl"
-          />
-          {/* <Image
-            src="/_3.jpeg" // Add your image to the public folder
+          <Image
+            src="/astronaut5.jpeg" // Add your image to the public folder 
             alt="Code background"
             fill
             className="object-cover opacity-100"
             priority
-          /> */}
-
-          {/* Dark overlay gradient for better text readability */}
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-100 to-gray-100 z-10"></div> */}
-        </div>
-
-        {/* Radial gradient effects on top of the image */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2),transparent_40%),radial-gradient(circle_at_70%_70%,rgba(147,51,234,0.2),transparent_40%)] z-20"></div>
-
-        {/* Animated grid lines */}
-        <div className="absolute inset-0 opacity-20 z-30">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(75, 85, 99, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(75, 85, 99, 0.1) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          ></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative flex flex-col justify-center items-center w-full h-full p-12 z-40">
-          <div className="max-w-md space-y-8">
-            <div className="mx-auto w-full">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="w-full max-w-md mb-12"
-              >
-                <div className="relative">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.8 }}
-                    className="w-full max-w-md mb-12"
-                  >
-                    {/* Terminal window mockup */}
-                    <div className="relative bg-gray-900/90 backdrop-blur-sm rounded-xl border-2 border-gray-800 overflow-hidden shadow-2xl">
-                      {/* Terminal header */}
-                      <div className="flex items-center justify-between px-4 py-2 bg-gray-800/80 border-b border-gray-700">
-                        <div className="flex space-x-2">
-                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                        </div>
-                        {/* <div className="text-xs text-gray-400">~/codeconnect/project</div> */}
-                        <div className="w-4"></div>
-                      </div>
-
-                      {/* Terminal content */}
-                      <div className="p-4 font-mono text-sm">
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5, duration: 0.5 }}
-                          className="flex items-center text-green-400 mb-2"
-                        >
-                          <span className="text-blue-400 mr-2">~$</span>
-                          <motion.span
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{ delay: 0.6, duration: 1.5 }}
-                            className="overflow-hidden whitespace-nowrap"
-                          >
-                            npm create codeconnect-app
-                          </motion.span>
-                        </motion.div>
-
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          transition={{ delay: 2.2, duration: 0.5 }}
-                          className="text-gray-300 ml-4 mb-2"
-                        >
-                          <p>✓ Creating a new CodeConnect project...</p>
-                          <p>✓ Installing dependencies...</p>
-                          <p>✓ Setting up development environment...</p>
-                          <p className="text-green-400">✓ Success! Project ready.</p>
-                        </motion.div>
-
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 3.0, duration: 0.5 }}
-                          className="flex items-center text-green-400 mt-2"
-                        >
-                          <span className="text-blue-400 mr-2">~$</span>
-                          <motion.span
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{ delay: 3.1, duration: 1.2 }}
-                            className="overflow-hidden whitespace-nowrap"
-                          >
-                            cd codeconnect-app && npm run dev
-                          </motion.span>
-                        </motion.div>
-
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          transition={{ delay: 4.5, duration: 0.5 }}
-                          className="text-gray-300 ml-4"
-                        >
-                          <p>✓ Starting development server...</p>
-                          <p className="text-cyan-400">✓ Ready! Available at: http://localhost:3000</p>
-                        </motion.div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  {/* Glow effect */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl opacity-20 blur-lg -z-10"></div>
-                </div>
-              </motion.div>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="relative group w-full mx-auto align-middle justify-cente"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 w-full mx-auto align-middle justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-600 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4 w-full mx-auto align-middle justify-center">Code Together</h2>
-                <p className="text-gray-300 mx-auto w-full">
-                  Join our community of developers to collaborate on projects, share knowledge, and build amazing
-                  applications together.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="relative group"
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 opacity-30 blur group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 border-2 border-gray-800 hover:border-cyan-500/50 transition-colors duration-300">
-                <h2 className="text-2xl font-bold text-white mb-4">Learn & Grow</h2>
-                <p className="text-gray-300">
-                  Access tutorials, workshops, and resources to enhance your coding skills and stay updated with the
-                  latest technologies.
-                </p>
-              </div>
-            </motion.div>
-
-          </div>
+          />
         </div>
       </div>
     </div>

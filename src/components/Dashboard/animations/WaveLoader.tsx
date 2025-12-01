@@ -1,15 +1,4 @@
-import { useScroll, useTransform, useSpring } from "framer-motion"
-import { type ReactNode } from "react"
-import { Ease } from "gsap"
-import { motion, useReducedMotion } from "framer-motion"
-import { Hexagon } from "lucide-react"
-import { useRef, useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { AnimatePresence } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import { useAnimation } from "framer-motion"
-import { HTMLMotionProps } from "framer-motion";
-
+import { motion } from "framer-motion"
 
 export default function WaveLoader() {
     return (

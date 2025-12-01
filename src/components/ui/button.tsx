@@ -45,23 +45,13 @@ const buttonVariants = cva(
   }
 );
 
-interface IconProps {
-  icon: React.ElementType;
-  iconPlacement: 'left' | 'right';
-}
-
-interface IconRefProps {
-  icon?: never;
-  iconPlacement?: undefined;
-}
-
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  icon?: React.ElementType;
+  iconPlacement?: 'left' | 'right';
 }
 
-export type ButtonIconProps = IconProps | IconRefProps;
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, effect, size, icon: Icon, iconPlacement, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
@@ -70,20 +60,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps & ButtonIconProps
           iconPlacement === 'left' &&
           (effect === 'expandIcon' ? (
             <div className="w-0 translate-x-[0%] pr-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-100 group-hover:pr-2 group-hover:opacity-100">
-              <Icon />
+              {React.createElement(Icon)}
             </div>
           ) : (
-            <Icon />
+            React.createElement(Icon)
           ))}
         <Slottable>{props.children}</Slottable>
         {Icon &&
           iconPlacement === 'right' &&
           (effect === 'expandIcon' ? (
             <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-2 group-hover:opacity-100">
-              <Icon />
+              {React.createElement(Icon)}
             </div>
           ) : (
-            <Icon />
+            React.createElement(Icon)
           ))}
       </Comp>
     );

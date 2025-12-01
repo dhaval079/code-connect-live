@@ -2,7 +2,6 @@ import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  swcMinify: true,  // <--- Ensure minification is turned on
   webpack: (config, { isServer }) => {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     if (!isServer) {

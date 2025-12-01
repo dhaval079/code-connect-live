@@ -1,47 +1,20 @@
 "use client"
-import { useState, useRef, useEffect, useMemo, Suspense } from "react"
+import { useState, useRef, useEffect, useMemo, useCallback, Suspense, memo } from "react"
 import { motion, AnimatePresence, useAnimation, Variants } from "framer-motion"
 import { toast, Toaster } from "sonner"
 import { useParams, useSearchParams } from "next/navigation"
 import { ACTIONS } from "@/lib/actions"
 import {
   LogOut,
-  Play,
-  ChevronRight,
   ChevronLeft,
-  Maximize,
-  Minimize,
-  SunMoon,
-  Moon,
-  Settings,
-  Save,
-  Download,
   Share,
-  Upload,
   Terminal,
-  Bot,
-  Sparkles,
-  MessageSquare,
-  Edit,
-  PencilRuler,
-  Twitch,
-  BugPlay,
-  NotebookPen,
-  SquarePen,
-  MessageSquareMore,
-  MessageCircle,
-  Sparkle,
-  ArrowLeft,
-  ArrowRight,
-  PanelLeftClose,
 } from "lucide-react"
 import { useSocket } from "@/providers/socketProvider"
 import dynamic from "next/dynamic"
 import Whiteboard from "@/components/Editor/WhiteBoard"
 import ConsoleOutput from "@/components/Editor/ConsoleOutput"
 import PremiumEditorHeader from "@/components/Editor/EditorHeader"
-import CyanCursorSimple from "@/components/Dashboard/(dashboard)/Cursor"
-import EnhancedCursor from "@/components/Dashboard/(dashboard)/Cursor"
 const Button = dynamic(
   () => import("@/components/ui/button").then((mod) => mod.Button)
 );
@@ -82,10 +55,6 @@ const DialogTitle = dynamic(
   () =>
     import("@/components/ui/dialog").then((mod) => mod.DialogTitle)
 );
-const DialogDescription = dynamic(
-  () =>
-    import("@/components/ui/dialog").then((mod) => mod.DialogDescription)
-);
 const Input = dynamic(
   () => import("@/components/ui/input").then((mod) => mod.Input)
 );
@@ -93,6 +62,78 @@ const Client = dynamic(
   () => import("@/components/Editor/Client").then((mod) => mod.Client),
   { ssr: false }
 );
+
+// Memoized Editor Section to prevent re-renders from dialog state changes
+const EditorSection = memo(({
+  isLoading,
+  code,
+  roomId,
+  language,
+  fontSize,
+  theme,
+  handleCodeChange,
+  isConsoleOpen,
+  consoleHeight,
+  setConsoleHeight,
+  isDarkMode,
+  renderSkeleton,
+  editorRef
+}: any) => (
+  <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 overflow-hidden min-h-0" ref={editorRef}>
+      {isLoading ? (
+        <div className="h-full">{renderSkeleton()}</div>
+      ) : (
+        <div className="h-full w-full">
+          <MonacoEditor
+            roomId={roomId}
+            language={language}
+            fontSize={fontSize}
+            value={code}
+            onChange={handleCodeChange}
+            theme={theme}
+          />
+        </div>
+      )}
+    </div>
+
+    {isConsoleOpen && (
+      <motion.div
+        className={`h-1 cursor-ns-resize ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} transition-colors group`}
+        onMouseDown={(e) => {
+          const startY = e.clientY;
+          const startHeight = consoleHeight;
+
+          const handleMouseMove = (moveEvent: MouseEvent) => {
+            const deltaY = startY - moveEvent.clientY;
+            const newHeight = Math.max(100, Math.min(startHeight + deltaY, window.innerHeight - 200));
+            setConsoleHeight(newHeight);
+          };
+
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+          };
+
+          document.addEventListener('mousemove', handleMouseMove);
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+        whileHover={{ scaleY: 1.2 }}
+        transition={{ duration: 0.2 }}
+      />
+    )}
+  </div>
+), (prev: any, next: any) => {
+  return (
+    prev.code === next.code &&
+    prev.isLoading === next.isLoading &&
+    prev.language === next.language &&
+    prev.fontSize === next.fontSize &&
+    prev.isConsoleOpen === next.isConsoleOpen &&
+    prev.consoleHeight === next.consoleHeight &&
+    prev.isDarkMode === next.isDarkMode
+  );
+});
 const Chat = dynamic(
   () => import("@/components/Editor/Chat").then((mod) => mod.Chat),
   { ssr: false }
@@ -138,7 +179,7 @@ function EditorPageContent() {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "failed">("connecting")
   const username = searchParams.get("username")
   const [typingUser, setTypingUser] = useState<string | null>(null)
-  const [consoleHeight, setConsoleHeight] = useState(210)
+  const [consoleHeight, setConsoleHeight] = useState(120)
   const typingTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({})
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
   const [showConnectingSplash, setShowConnectingSplash] = useState(true);
@@ -429,20 +470,20 @@ function EditorPageContent() {
     toast.error(err.message || "Failed to connect to server. Please try again.")
   }
 
-  const copyRoomId = async () => {
+  const copyRoomId = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(roomId as string)
       toast.success("Room ID copied to clipboard")
     } catch (err: any) {
       toast.error("Failed to copy room ID")
     }
-  }
+  }, [roomId])
 
-  const leaveRoom = () => {
+  const leaveRoom = useCallback(() => {
     setIsLeaveDialogOpen(true)
-  }
+  }, [])
 
-  const confirmLeaveRoom = () => {
+  const confirmLeaveRoom = useCallback(() => {
     try {
       if (socket) {
         socket.emit(ACTIONS.LEAVE, { roomId })
@@ -453,7 +494,7 @@ function EditorPageContent() {
       console.error("Error leaving room:", error)
       toast.error("Failed to leave room")
     }
-  }
+  }, [socket, roomId])
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -581,13 +622,24 @@ function EditorPageContent() {
   }
 
   return (
-    <motion.div
-      className={`h-screen w-full overflow-hidden flex ${isDarkMode ? "bg-slate-950 text-white" : "bg-white text-black"
-        }`}
-      initial="hidden"
-      animate={isPageLoaded ? "visible" : "hidden"}
-      variants={pageVariants}
+    <div
+      style={{
+        height: '100vh',
+        width: '100vw',
+        overflow: 'hidden',
+        position: 'fixed',
+        top: 0,
+        left: 0
+      }}
+      className={isDarkMode ? "bg-slate-950" : "bg-white"}
     >
+      <motion.div
+        className={`h-full w-full overflow-hidden flex flex-row ${isDarkMode ? "bg-slate-950 text-white" : "bg-white text-black"
+          }`}
+        initial="hidden"
+        animate={isPageLoaded ? "visible" : "hidden"}
+        variants={pageVariants}
+      >
       {/* < CyanCursorSimple/> */}
 
       {/* Sidebar */}
@@ -598,125 +650,79 @@ function EditorPageContent() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className={`w-80 
-              ${isDarkMode ? "bg-gradient-to-b from-slate-800 to-slate-800 border-slate-700" : "bg-white border-slate-700 text-black"} text-black
-              border-r flex flex-col`}
+            className={`w-80 h-full border-r flex flex-col ${
+              isDarkMode
+                ? "border-slate-800 bg-black text-slate-200"
+                : "border-slate-200 bg-white text-black"
+            }`}
           >
             {/* Connected Users */}
-            <ScrollArea className="flex-1 p-4">
-              <motion.h2
-                variants={itemVariants}
-                className={`text-sm justify-center items-center text-center mx-auto font-semibold uppercase mb-4 ${isDarkMode
-                  ? "text-slate-400"
-                  : "text-slate-600 bg-white"
-                  }`}
-              >
-                <span className="bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text">Connected</span> <span className="text-slate-400 lowercase">({clients.length} users)</span>
-              </motion.h2>
-              <motion.div className={`max-h-[calc(100vh-200px)] overflow-y-auto space-y-5  `} variants={itemVariants}>
-                {clients.map((client) => (
-                  <motion.div key={client.socketId} variants={itemVariants}>
-                    <Client
-                      user={client.username}
-
-                      isActive={client.socketId === socket?.id}
-                      isTyping={typingUsers.has(client.username)}
-                      lastActive={new Date().toISOString()}
-                      messageCount={0}
-                      mood={null}
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
-            </ScrollArea>
-
-            {/* Room Controls */}
-            <motion.div
-              className="p-4 border-t border-slate-700 space-y-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              <motion.div
-                className="rounded-lg bg-gradient-to-br from-slate-100 to-slate-300 p-0.5 shadow-lg"
-                whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                transition={{ duration: 0.2 }}
-              >
-                <Button
-                  data-color="white"
-                  variant="secondary"
-                  className="bg-gradient-to-br from-white to-slate-100 text-black w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
-                  onClick={() => setIsShareDialogOpen(true)}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-50 via-white to-blue-50 opacity-0"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-
-                  <motion.div
-                    className="flex items-center justify-center relative z-10"
-                    initial={{ gap: "0.5rem" }}
-                    whileHover={{ gap: "0.75rem" }}
-                    transition={{ duration: 0.2 }}
+            <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+              <ScrollArea className="flex-1 sidebar-scrollbar">
+                <div className="p-4">
+                  <motion.h2
+                    variants={itemVariants}
+                    className={`text-sm justify-center items-center text-center mx-auto font-semibold uppercase mb-4 ${isDarkMode
+                      ? "text-slate-400"
+                      : "text-slate-600 bg-white"
+                      }`}
                   >
-                    <motion.div
-                      whileHover={{ rotate: 180 }}
-                      transition={{ duration: 0.6, ease: "circOut" }}
-                    >
-                      <Share className="h-5 w-5" />
-                    </motion.div>
-                    <span className="font-medium">Share Room</span>
+                    <span className="bg-gray-300 text-transparent bg-clip-text">Connected</span> <span className="text-slate-400 lowercase">({clients.length} users)</span>
+                  </motion.h2>
+                  <motion.div className={`space-y-5`} variants={itemVariants}>
+                    {clients.map((client) => (
+                      <motion.div key={client.socketId} variants={itemVariants}>
+                        <Client
+                          user={client.username}
+                          isActive={client.socketId === socket?.id}
+                          isTyping={typingUsers.has(client.username)}
+                          lastActive={new Date().toISOString()}
+                          mood={null}
+                          isDarkMode={isDarkMode}
+                        />
+                      </motion.div>
+                    ))}
                   </motion.div>
-                </Button>
-              </motion.div>
+                </div>
+              </ScrollArea>
+            </div>
 
-              <motion.div
-                className="rounded-lg bg-gradient-to-br from-red-500 to-red-600 p-0.5 shadow-lg"
-                whileHover={{
-                  boxShadow: "0 10px 25px -5px rgba(239, 68, 68, 0.4), 0 10px 10px -5px rgba(239, 68, 68, 0.1)",
-                }}
-                transition={{ duration: 0.2 }}
+            {/* Room Controls - Sticky to bottom */}
+            <div
+              className={`p-4 border-t space-y-2 flex-shrink-0 ${
+                isDarkMode ? "border-slate-800" : "border-slate-200"
+              }`}
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                className={`w-full ${
+                  isDarkMode
+                    ? "bg-slate-800 hover:bg-slate-700 border-slate-700"
+                    : "bg-slate-100 hover:bg-slate-200 border-slate-300"
+                }`}
+                onClick={() => setIsShareDialogOpen(true)}
               >
-                <Button
-                  data-color="red"
-                  variant="destructive"
-                  className="bg-gradient-to-br from-red-500 to-red-600 w-full h-10 rounded-lg border-none relative overflow-hidden shadow-inner"
-                  onClick={leaveRoom}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500"
-                    animate={{
-                      x: ["-100%", "100%"],
-                    }}
-                    transition={{
-                      repeat: Infinity,
-                      repeatType: "mirror",
-                      duration: 2,
-                      ease: "linear"
-                    }}
-                    style={{ opacity: 0.2 }}
-                  />
+                <Share className="h-4 w-4 mr-2" />
+                Share
+              </Button>
 
-                  <motion.div className="flex items-center justify-center relative z-10">
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      transition={{ repeat: Infinity, repeatType: "mirror", duration: 0.5 }}
-                    >
-                      <LogOut className="h-5 w-5 mr-2" />
-                    </motion.div>
-                    <span className="font-medium">Leave Room</span>
-                  </motion.div>
-                </Button>
-              </motion.div>
-            </motion.div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-[#EA4335] hover:bg-[#D33426] border-[#EA4335] hover:border-[#D33426] text-white transition-colors"
+                onClick={leaveRoom}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Leave
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Editor Section */}
-      <motion.div className="flex-1 h-full flex flex-col overflow-hidden" variants={itemVariants}>
+      <div className="flex-1 h-full flex flex-col overflow-hidden">
         {/* Editor Header */}
         <PremiumEditorHeader
           isDarkMode={isDarkMode}
@@ -734,25 +740,15 @@ function EditorPageContent() {
           language={language}
           handleRunCode={handleRunCode}
           toggleSettings={toggleSettings}
-        />        {/* just this editor header only not the entire code, redesign this and make way better UI UX design , like an awwards winning premium , sleek, clean UI UX with greater animations */}
+        />
         {/* Editor and Output */}
-        <motion.div className="flex-1 flex" variants={itemVariants}>
-          {/* Code Editor */}
-          <motion.div
-            className="flex-1 flex flex-col overflow-hidden"
-            variants={itemVariants}
-          >
-            <motion.div
-              className="flex-1"
-              ref={editorRef}
-              style={{
-                height: isConsoleOpen ? `calc(100vh - ${consoleHeight + 120}px)` : 'calc(100vh - 120px)',
-                transition: 'height 0.3s ease'
-              }}
-            >
-              {isLoading ? (
-                renderSkeleton()
-              ) : (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Code Editor - Takes remaining space */}
+          <div className="flex-1 overflow-hidden min-h-0" ref={editorRef}>
+            {isLoading ? (
+              <div className="h-full">{renderSkeleton()}</div>
+            ) : (
+              <div className="h-full w-full">
                 <MonacoEditor
                   roomId={roomId as string}
                   language={language}
@@ -761,8 +757,40 @@ function EditorPageContent() {
                   onChange={handleCodeChange}
                   theme={theme}
                 />
-              )}
-            </motion.div>
+              </div>
+            )}
+          </div>
+
+          {/* Resizable Divider */}
+          {isConsoleOpen && (
+            <motion.div
+              className={`h-1 cursor-ns-resize ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} transition-colors group`}
+              onMouseDown={(e) => {
+                const startY = e.clientY;
+                const startHeight = consoleHeight;
+
+                const handleMouseMove = (moveEvent: MouseEvent) => {
+                  const deltaY = startY - moveEvent.clientY;
+                  const newHeight = Math.max(100, Math.min(startHeight + deltaY, window.innerHeight - 200));
+                  setConsoleHeight(newHeight);
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }}
+              whileHover={{ scaleY: 1.2 }}
+              transition={{ duration: 0.2 }}
+            />
+          )}
+
+          {/* Console - Resizable height at bottom */}
+          {isConsoleOpen && (
+          <div style={{ height: `${consoleHeight}px` }} className="overflow-hidden flex-shrink-0">
 
             <ConsoleOutput
               isOpen={isConsoleOpen}
@@ -774,16 +802,18 @@ function EditorPageContent() {
               isSidebarOpen={isSidebarOpen}
               isDarkMode={isDarkMode}
             />
-            {!isConsoleOpen && (
-              <Button
-                className="fixed bottom-4 right-4 bg-white text-black hover:bg-white/80 hover:text-slate-700"
-                onClick={() => setIsConsoleOpen(true)}
-              >
-                <Terminal className="w-4 h-4 mr-2" />
-                Show Console
-              </Button>
-            )}
-          </motion.div>
+          </div>
+          )}
+
+          {!isConsoleOpen && (
+            <Button
+              className="fixed bottom-4 right-4 bg-white text-black hover:bg-white/80 hover:text-slate-700 z-40"
+              onClick={() => setIsConsoleOpen(true)}
+            >
+              <Terminal className="w-4 h-4 mr-2" />
+              Show Console
+            </Button>
+          )}
           {isChatOpen && (
             <Chat
               roomId={roomId as string}
@@ -799,12 +829,12 @@ function EditorPageContent() {
             userId={userId} // Use the generated userId
             username={username || ""} // Handle null case
           />
-        </motion.div>
+        </div>
         <Whiteboard
           isOpen={isWhiteboardOpen}
           onToggle={() => setIsWhiteboardOpen(!isWhiteboardOpen)}
         />
-      </motion.div>
+      </div>
 
       {/* Settings Panel */}
       <AnimatePresence>
@@ -883,17 +913,41 @@ function EditorPageContent() {
       {/* Share Dialog */}
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
         <DialogContent
-          className={`sm:max-w-[425px] bg-white border-slate-200 text-black`}>
+          className={`sm:max-w-[425px] rounded-lg border ${
+            isDarkMode
+              ? "bg-slate-900 border-slate-800 text-slate-100"
+              : "bg-white border-slate-200 text-slate-900"
+          }`}
+        >
           <DialogHeader>
-            <DialogTitle>Share Room</DialogTitle>
-            <DialogDescription>Copy the link below to invite others to this room.</DialogDescription>
+            <DialogTitle className="text-lg font-semibold">Share Room</DialogTitle>
           </DialogHeader>
-          <div className="flex items-center space-x-2">
-            <Input className="italic text-black bg-white" value={`${window.location.origin}/editor/${roomId}`} readOnly />
-            <Button className="bg-black text-white hover:bg-slate-950" onClick={copyRoomId}>Copy Room</Button>
-          </div>
-          <div className="text-sm text-slate-500 mt-2">
-            Room ID can be used to rejoin this session later.
+          <div className="space-y-4">
+            <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+              Invite others to join this room by sharing the link below:
+            </p>
+            <div className="flex items-center gap-2">
+              <Input
+                value={`${window.location.origin}/editor/${roomId}`}
+                readOnly
+                className={`text-sm font-mono ${
+                  isDarkMode
+                    ? "bg-slate-800 border-slate-700 text-slate-100"
+                    : "bg-slate-100 border-slate-300 text-slate-900"
+                }`}
+              />
+              <Button
+                type="button"
+                onClick={copyRoomId}
+                className={`px-3 h-9 flex-shrink-0 ${
+                  isDarkMode
+                    ? "bg-cyan-600 hover:bg-cyan-700 text-white"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
+              >
+                Copy
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -901,22 +955,43 @@ function EditorPageContent() {
       {/* Leave Room Dialog */}
       <Dialog open={isLeaveDialogOpen} onOpenChange={setIsLeaveDialogOpen}>
         <DialogContent
-          className={`sm:max-w-[425px] bg-white border-slate-200 text-black`}        >
+          className={`sm:max-w-[400px] rounded-lg border ${
+            isDarkMode
+              ? "bg-slate-900 border-slate-800 text-slate-100"
+              : "bg-white border-slate-200 text-slate-900"
+          }`}
+        >
           <DialogHeader>
-            <DialogTitle>Leave Room</DialogTitle>
-            <DialogDescription>Are you sure you want to leave this room?</DialogDescription>
+            <DialogTitle className="text-lg font-semibold">Leave Room</DialogTitle>
           </DialogHeader>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" className="bg-black text-white" onClick={() => setIsLeaveDialogOpen(false)}>
+          <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+            Are you sure you want to leave this room? You can rejoin later using the room ID.
+          </p>
+          <div className="flex gap-2 justify-end pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsLeaveDialogOpen(false)}
+              className={`px-4 h-9 ${
+                isDarkMode
+                  ? "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-100"
+                  : "bg-slate-100 border-slate-300 hover:bg-slate-200 text-slate-900"
+              }`}
+            >
               Cancel
             </Button>
-            <Button variant="destructive" className="bg-rose-500 hover:bg-rose-600 text-white" onClick={confirmLeaveRoom}>
+            <Button
+              type="button"
+              onClick={confirmLeaveRoom}
+              className="px-4 h-9 bg-red-600 hover:bg-red-700 text-white"
+            >
               Leave
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-    </motion.div>
+      </motion.div>
+    </div>
   )
 }
 
