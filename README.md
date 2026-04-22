@@ -1,4 +1,3 @@
-
 # CodeConnect
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
