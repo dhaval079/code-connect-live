@@ -6,7 +6,6 @@
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-4.8.1-black?style=flat-square&logo=socket.io)](https://socket.io/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=flat-square&logo=vercel)](https://code-connect.live)
 
-
 ## Real-Time Collaborative Coding Platform
 
 CodeConnect is a state-of-the-art real-time collaborative coding platform built for developers, by developers. Designed to transcend traditional pair programming, CodeConnect enables seamless collaboration among multiple users in one unified, secure environment.
