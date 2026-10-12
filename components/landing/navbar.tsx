@@ -9,9 +9,8 @@ import { ArrowUpRight } from "lucide-react";
 const NAV_LINKS = [
   { href: "#features", label: "Features" },
   { href: "#how", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#docs", label: "Docs" },
-  { href: "#changelog", label: "Changelog" },
+  { href: "#faq", label: "FAQ" },
+  { href: "mailto:dhaval@codeconnectai.tech", label: "Contact" },
 ];
 
 export function Navbar() {

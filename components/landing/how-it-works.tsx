@@ -4,19 +4,19 @@ const STEPS = [
   {
     num: "1",
     title: "Open a room",
-    desc: "No signup. No install. A link is a room is a codebase.",
+    desc: "Sign in, choose a username, and create a room in your browser.",
     Icon: Plus,
   },
   {
     num: "2",
     title: "Invite your team",
-    desc: "Share the URL. They land in the same file, same line, same second.",
+    desc: "Share the room link so your collaborators can join.",
     Icon: Users,
   },
   {
     num: "3",
     title: "Build",
-    desc: "Write, run, debug together. Export to GitHub when it's ready for the world.",
+    desc: "Write, run, and discuss code together.",
     Icon: Boxes,
   },
 ];

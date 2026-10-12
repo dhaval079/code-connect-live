@@ -4,26 +4,10 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 const FAQS = [
-  {
-    q: "Do I need to install anything?",
-    a: "No. CodeConnect runs entirely in your browser. A room is a URL — share it and your team is in.",
-  },
-  {
-    q: "What languages are supported?",
-    a: "TypeScript, JavaScript, Python, Go, Rust, Java, C++, Ruby, plus syntax-highlighting for ~40 more via Tree-sitter.",
-  },
-  {
-    q: "Is my code saved?",
-    a: "Rooms are ephemeral by default. Upgrade to persistent rooms — backed by your GitHub repo — from the dashboard.",
-  },
-  {
-    q: "How does the AI assistant see my code?",
-    a: "Context is scoped to the room. Nothing leaves your session unless you explicitly share a snippet. BYOK supported.",
-  },
-  {
-    q: "Can I self-host?",
-    a: "Yes. Team and Enterprise plans include a Helm chart and a single-binary option for air-gapped deployments.",
-  },
+  { q: "Do I need to install anything?", a: "No. Sign in and open CodeConnect in your browser, then create or join a room." },
+  { q: "How do I invite a collaborator?", a: "Share the room link or room ID. Your collaborator can join from the app." },
+  { q: "Is my code saved?", a: "Keep your own copy of important code. Do not rely on a room as permanent storage." },
+  { q: "Who builds CodeConnect?", a: "CodeConnect is built by Dhaval Rupapara. Contact dhaval@codeconnectai.tech with questions or feedback." },
 ];
 
 export function FaqList() {

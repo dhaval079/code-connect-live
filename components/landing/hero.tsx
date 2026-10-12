@@ -23,9 +23,9 @@ export function Hero() {
               className="bg-ink text-paper px-[7px] py-[3px] rounded-full font-semibold"
               style={{ fontSize: 10, letterSpacing: "0.06em" }}
             >
-              NEW
+              BROWSER APP
             </span>
-            AI assistant · shipped this week
+            Real-time collaborative coding
           </span>
 
           {/* Title */}
@@ -59,8 +59,8 @@ export function Hero() {
             className="text-ink-2 mb-8"
             style={{ fontSize: 19, lineHeight: 1.55, maxWidth: "52ch", fontFamily: "var(--font-sans)" }}
           >
-            A real-time collaborative editor for developers who ship. Peer-to-peer syncing,
-            shared cursors, and an AI that understands the whole room.
+            A collaborative editor for pair programming, teaching, and coding interviews.
+            Share a room, edit code together, and chat in your browser.
           </p>
 
           {/* CTAs */}
@@ -68,33 +68,13 @@ export function Hero() {
             <Button variant="primary" size="lg" onClick={onStart} className="flex items-center gap-2">
               Start a room <ArrowUpRight size={15} />
             </Button>
-            <Button variant="secondary" size="lg">Watch demo</Button>
-            <span className="inline-flex items-center gap-2">
-              <span
-                className="text-muted"
-                style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500, letterSpacing: "0.04em" }}
-              >
-                or press
-              </span>
-              {["⌘", "K"].map((k) => (
-                <kbd
-                  key={k}
-                  className="px-[6px] py-[3px] rounded bg-surface border border-line-2 font-semibold"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    boxShadow: "0 1px 0 rgba(10,15,30,0.06)",
-                  }}
-                >
-                  {k}
-                </kbd>
-              ))}
-            </span>
+
           </div>
         </div>
 
         {/* Right column — editor */}
         <div>
+          <p className="text-muted mb-3 text-sm">Illustrative editor preview</p>
           <EditorMock />
         </div>
       </div>

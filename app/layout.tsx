@@ -27,8 +27,8 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "CodeConnect — Collaborate in Real-Time",
   description:
-    "A real-time collaborative editor for developers who ship. Peer-to-peer syncing, shared cursors, and an AI that understands the whole room.",
-  keywords: ["collaborative coding", "real-time editor", "pair programming", "WebRTC", "code together"],
+    "A browser-based collaborative coding platform for pair programming, teaching, and coding interviews.",
+  keywords: ["collaborative coding", "real-time editor", "pair programming", "code together"],
   authors: [{ name: "Dhaval Rupapara", url: "https://github.com/dhaval079" }],
   openGraph: {
     title: "CodeConnect — Collaborate in Real-Time",

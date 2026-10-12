@@ -42,18 +42,9 @@ export function CtaBand() {
 
           <div className="flex items-center gap-3">
             <Button variant="accent" size="lg" onClick={onStart} className="flex items-center gap-2">
-              Start a free room <ArrowRight size={15} />
+              Open CodeConnect <ArrowRight size={15} />
             </Button>
-            <button
-              className="px-[22px] py-[14px] rounded-full border text-white cursor-pointer font-medium text-[14px] transition-all duration-[220ms] hover:bg-white/10"
-              style={{
-                background: "rgba(255,255,255,0.06)",
-                borderColor: "rgba(255,255,255,0.15)",
-                fontFamily: "var(--font-sans)",
-              }}
-            >
-              Read the docs
-            </button>
+
           </div>
         </div>
       </div>

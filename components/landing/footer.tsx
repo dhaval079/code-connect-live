@@ -1,9 +1,9 @@
 import { Logo } from "@/components/ui/logo";
 
 const LINKS = {
-  Product: ["Features", "Pricing", "Changelog", "Roadmap"],
-  Resources: ["Docs", "API", "Blog", "Status"],
-  Company: ["About", "Contact", "Privacy", "Terms"],
+  Product: [{ label: "Features", href: "#features" }, { label: "How it works", href: "#how" }, { label: "Open app", href: "https://app.codeconnectai.tech" }],
+  Resources: [{ label: "FAQ", href: "#faq" }, { label: "Source", href: "https://github.com/dhaval079/code-connect-live" }],
+  Company: [{ label: "Founder", href: "https://github.com/dhaval079" }, { label: "Contact", href: "mailto:dhaval@codeconnectai.tech" }],
 };
 
 export function Footer() {
@@ -35,13 +35,13 @@ export function Footer() {
             </h4>
             <ul className="list-none p-0 m-0 grid gap-2">
               {items.map((item) => (
-                <li key={item}>
+                <li key={item.label}>
                   <a
-                    href="#"
+                    href={item.href}
                     className="text-ink-2 hover:text-ink no-underline transition-colors duration-[200ms]"
                     style={{ fontSize: 13, lineHeight: 1 }}
                   >
-                    {item}
+                    {item.label}
                   </a>
                 </li>
               ))}

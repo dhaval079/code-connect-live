@@ -6,43 +6,43 @@ const FEATURES = [
   {
     icon: Users,
     title: "Real-time collaboration",
-    desc: "Shared cursors, live selections, CRDT-backed edits. Everyone sees the same file, down to the column.",
+    desc: "Edit code in the same room and see updates from your collaborators.",
     tag: "01 — FLAGSHIP",
     span: "hero-card",
     preview: true,
   },
   {
     icon: Zap,
-    title: "Zero-latency sync",
-    desc: "WebRTC peer-to-peer. 28ms median round-trip, no middleman server juggling keystrokes.",
+    title: "Live code updates",
+    desc: "Room participants receive code changes through a shared realtime connection.",
     tag: "02",
     span: "span-3",
   },
   {
     icon: Cpu,
-    title: "AI that knows your code",
-    desc: "Context-aware explain, debug, and generate — trained on the whole room, not just the visible file.",
+    title: "AI assistant",
+    desc: "Use the editor’s assistant to ask questions about your code.",
     tag: "03",
     span: "span-3",
   },
   {
     icon: Lock,
-    title: "Private rooms",
-    desc: "End-to-end encrypted. Invite via link, revoke in one click.",
+    title: "Shareable rooms",
+    desc: "Create a room and invite collaborators with its link. Share it only with people you trust.",
     tag: "04",
     span: "span-2",
   },
   {
     icon: MessageSquare,
-    title: "Voice + chat",
-    desc: "Huddle without switching tabs. PTT, text, reactions, threads.",
+    title: "Room chat",
+    desc: "Discuss your code with collaborators without leaving the editor.",
     tag: "05",
     span: "span-2",
   },
   {
     icon: GitBranch,
-    title: "Git native",
-    desc: "Pull, push, PR. Your room IS a branch.",
+    title: "Browser editor",
+    desc: "Write and run code from your browser without installing an editor.",
     tag: "06",
     span: "span-2",
   },
@@ -71,7 +71,7 @@ export function Features() {
           </h2>
         </div>
         <p className="text-ink-2 max-w-[42ch]" style={{ fontSize: 16, lineHeight: 1.55 }}>
-          Every feature earns its place. No chat-app veneer, no marketing cruft — just the primitives your team actually uses.
+          CodeConnect brings shared editing and conversation into one browser workspace.
         </p>
       </div>
 
