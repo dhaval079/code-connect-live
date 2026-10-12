@@ -53,13 +53,9 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span
-            className="hidden md:block text-muted text-[11px] font-medium tracking-[0.04em]"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            v2.4 · stable
-          </span>
-          <Button variant="ghost" size="sm">Sign in</Button>
+          <a href="https://app.codeconnectai.tech">
+            <Button variant="ghost" size="sm">Sign in</Button>
+          </a>
           <Button variant="primary" size="sm" onClick={onStart} className="flex items-center gap-2">
             Start a room <ArrowUpRight size={14} />
           </Button>
