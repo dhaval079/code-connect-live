@@ -3,7 +3,7 @@ import { Logo } from "@/components/ui/logo";
 const LINKS = {
   Product: [{ label: "Features", href: "#features" }, { label: "How it works", href: "#how" }, { label: "Open app", href: "https://app.codeconnectai.tech" }],
   Resources: [{ label: "FAQ", href: "#faq" }, { label: "Source", href: "https://github.com/dhaval079/code-connect-live" }],
-  Company: [{ label: "Founder", href: "https://github.com/dhaval079" }, { label: "Contact", href: "mailto:dhaval@codeconnectai.tech" }],
+  Company: [{ label: "Founder", href: "https://github.com/dhaval079" }, { label: "Contact", href: "mailto:dhaval@codeconnectai.tech" }, { label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }],
 };
 
 export function Footer() {
